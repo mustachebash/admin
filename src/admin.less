@@ -1,0 +1,696 @@
+// Import the base LESS file - customized variables per project
+@import 'base';
+
+// --------------------------------------------------
+// Global Styles
+
+body {
+	color: #fff;
+	background: @gray;
+	font: 16px @proxima;
+	-webkit-font-smoothing: antialiased;
+}
+
+.container-1230 {
+	max-width: 1230px;
+	box-sizing: border-box;
+	padding: 0 10px;
+	margin: 0 auto;
+}
+
+.row {
+	.make-row();
+}
+
+.img-responsive {
+	img {
+		width: 100%;
+		height: auto;
+	}
+}
+
+span.teal {
+	color: @teal;
+}
+span.red {
+	color: @red;
+}
+span.black {
+	color: @black;
+}
+span.white {
+	color: @white;
+}
+span.gray {
+	color: @gray;
+}
+span.super {
+	font-size: .5em;
+	vertical-align: super;
+}
+span.lowercase {
+	text-transform: none;
+}
+
+.logo {
+	background: url('./img/logo.png') transparent center center no-repeat;
+	background-size: 100% auto;
+	width: 118px;
+	height: 50px;
+}
+
+p {
+	font-size: 20px;
+	line-height: 1.6em;
+	margin: .8em auto;
+
+	@media (min-width: @mobile) {
+		font-size: 16px;
+		line-height: 1.25em;
+	}
+
+	&:last-child {
+		margin-bottom: 0;
+	}
+}
+
+h1 {
+	font: 900 50px @proxima;
+	margin: 0 auto 15px;
+	padding: 0;
+	line-height: .9em;
+
+	@media (min-width: @small-mobile) {
+		font-size: 60px;
+	}
+
+	@media (min-width: @mobile) {
+		font-size: 120px;
+		margin-bottom: 25px;
+	}
+}
+
+h2 {
+	font: 22px @league;
+	color: @light-gray;
+	text-transform: uppercase;
+	margin: 0 auto 20px;
+	line-height: 60px;
+	padding: 0;
+	letter-spacing: 4px;
+
+	@media (min-width: @small-mobile) {
+		font-size: 30px;
+	}
+
+	@media (min-width: @mobile) {
+		font-size: 60px;
+		margin-bottom: 45px;
+	}
+}
+
+h3 {
+	font-size: 30px;
+	font-weight: 900;
+	line-height: 1em;
+	margin: 0 auto 20px;
+	text-align: center;
+	border-bottom: 1px solid @white;
+
+	@media (min-width: @mobile) {
+		font-size: 36px;
+		text-align: left;
+	}
+}
+
+h4 {
+	font: 400 36px @league;
+	color: @light-gray;
+	text-transform: uppercase;
+	letter-spacing: 2px;
+	line-height: 1em;
+	text-align: center;
+	margin: 0;
+
+	@media (min-width: @mobile) {
+		font-size: 32px;
+		text-align: left;
+	}
+}
+
+h5 {
+	font: 400 30px @league;
+	color: @teal;
+	text-transform: uppercase;
+	letter-spacing: 2px;
+	line-height: 1em;
+	margin: 0 auto 5px;
+	text-align: center;
+
+	@media (min-width: @mobile) {
+		font-size: 22px;
+		text-align: left;
+	}
+}
+
+h6 {
+	font: 400 16px @league;
+	color: @teal;
+	text-transform: uppercase;
+	letter-spacing: 2px;
+	line-height: 1em;
+	margin: 0 auto 5px;
+	text-align: center;
+
+	@media (min-width: @mobile) {
+		font-size: 16px;
+		text-align: left;
+	}
+}
+
+::-webkit-input-placeholder {
+   color: rgba(255,255,255,.8);
+}
+
+::-moz-placeholder {
+   color: rgba(255,255,255,.8);
+}
+
+:-ms-input-placeholder {
+   color: rgba(255,255,255,.8);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+select {
+	appearance: none;
+	-webkit-appearance: none;
+	display: block;
+	height: 40px;
+	padding: 0 2em;
+	margin-bottom: 20px;
+	box-sizing: border-box;
+	width: 100%;
+	background: none;
+	border: 2px solid #fff;
+	border-radius: 0;
+	font: 400 16px @proxima;
+	color: #fff;
+	outline: 0;
+	transition: box-shadow 200ms;
+
+	@media (min-width: @mobile) {
+		font-weight: 600;
+	}
+
+	&:focus {
+		outline: 0;
+		box-shadow: 0 0 4px 1px #fff;
+	}
+
+	&:disabled {
+		opacity: .7;
+	}
+}
+
+select {
+	background-image: url('/img/arrow-down.png');
+	background-repeat: no-repeat;
+	background-position: right 15px center;
+	cursor: pointer;
+}
+
+button {
+	-webkit-appearance: none;
+	appearance: none;
+	background: none;
+	outline: 0;
+	border: 2px solid @light-gray;
+	color: @light-gray;
+	font: 700 14px @proxima;
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	text-align: center;
+	padding: .45em 0;
+	box-sizing: border-box;
+	width: 170px;
+	cursor: pointer;
+	transition: color 200ms ease-in-out, background-color 200ms ease-in-out;
+
+	&.white {
+		border-color: @white;
+		color: @white;
+	}
+
+	@media (min-width: @mobile) {
+		&:hover {
+			background: @light-gray;
+			color: @white;
+
+			&.white {
+				background: @white;
+				color: @gray;
+			}
+		}
+	}
+
+	&:focus,
+	&:active {
+		outline: 0;
+	}
+
+	&:active {
+		background: @light-gray;
+		color: @white;
+
+		&.white {
+			background: @white;
+			color: @gray;
+		}
+	}
+}
+
+nav {
+	max-height: 0;
+	transition: max-height 300ms;
+	overflow: hidden;
+
+	@media (min-width: @mobile) {
+		max-height: 1000px;
+		padding-top: 5px;
+	}
+
+	ul {
+		list-style: none;
+		text-align: center;
+		margin: 0;
+		padding: 25px 0 5px;
+		background: @light-gray;
+
+		@media (min-width: @mobile) {
+			padding: 0;
+			background: transparent;
+		}
+	}
+
+	li {
+		display: block;
+		padding: 0;
+		margin: 0 10px 20px;
+		text-transform: uppercase;
+		font: 30px @league;
+		letter-spacing: 2px;
+		text-align: center;
+
+		a {
+			text-decoration: none;
+			color: @white;
+
+			&.active {
+				border-bottom: 2px solid @white;
+			}
+		}
+
+		button {
+			width: auto;
+			padding-right: 2em;
+			padding-left: 2em;
+			position: relative;
+			top: -5px;
+		}
+
+		@media (min-width: @mobile) {
+			margin-bottom: 0;
+			display: inline-block;
+			font-size: 24px;
+		}
+
+		@media (min-width: 960px) {
+			// Space out the links the links if it's a wide monitor
+			margin: 0 20px;
+		}
+	}
+
+	&.open {
+		max-height: 500px;
+	}
+}
+
+// END Global Styles
+// --------------------------------------------------
+
+
+// --------------------------------------------------
+// Section Styles
+
+header {
+	padding: 25px 0 0;
+	margin-bottom: 2em;
+
+	@media (min-width: @mobile) {
+		margin-bottom: 4em;
+	}
+
+	.container-1230 {
+		padding: 0;
+
+		@media (min-width: @mobile) {
+			position: relative;
+			padding: 0 30px;
+		}
+	}
+
+	.logo {
+		margin: 0 auto 2em;
+		top: 0;
+		left: 50%;
+	}
+
+	#menu-icon {
+		position: absolute;
+		width: 30px;
+		top: 37px;
+		right: 20px;
+		cursor: pointer;
+
+		div {
+			height: 4px;
+			background: @white;
+			margin-bottom: 4px;
+			transition: all 300ms;
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+
+		@media (min-width: @mobile) {
+			display: none;
+		}
+
+		&.open {
+			div {
+				opacity: 0;
+
+				&:first-child,
+				&:last-child {
+					opacity: 1;
+				}
+
+				&:first-child {
+					transform: rotate(45deg) translate3d(5px, 6px, 0);
+				}
+
+				&:last-child {
+					transform: rotate(-45deg) translate3d(5px, -6px, 0);
+				}
+			}
+
+			+ nav {
+				max-height: 1000px;
+			}
+		}
+	}
+}
+
+#login {
+	padding-top: 20px;
+	max-width: 400px;
+	margin: 0 auto;
+	text-align: center;
+}
+
+#user-info {
+	margin-bottom: 40px;
+}
+
+// --------------------------------------------------
+// DASHBOARD
+
+.goals {
+	.make-row();
+	margin-bottom: 40px;
+
+	> div {
+		p {
+			margin-top: 0;
+			margin-bottom: 0;
+			font-size: 48px;
+
+			@media (max-width: @mobile) {
+				text-align: center;
+			}
+		}
+	}
+
+	.attendance {
+		.make-column(6);
+	}
+
+	.revenue {
+		.make-column(6);
+	}
+}
+
+.stats {
+	margin-bottom: 50px;
+
+	.row {
+		margin-bottom: 20px;
+
+		> div {
+			.make-column(3);
+
+			p {
+				margin-top: 0;
+				margin-bottom: 0;
+				font-size: 24px;
+
+				@media (max-width: @mobile) {
+					text-align: center;
+				}
+			}
+		}
+	}
+}
+
+.day-of {
+	.make-row();
+	margin-bottom: 50px;
+
+	.checked-in {
+		.make-column(2);
+
+		p {
+			margin-top: 0;
+			margin-bottom: 0;
+			font-size: 24px;
+
+			@media (max-width: @mobile) {
+				text-align: center;
+			}
+		}
+	}
+
+	.sales-on {
+		.make-column(2);
+
+		p {
+			@media (max-width: @mobile) {
+				text-align: center;
+			}
+		}
+	}
+}
+
+// END DASHBOARD
+// --------------------------------------------------
+
+
+
+// --------------------------------------------------
+// TRANSACTIONS & GUEST LIST
+
+.search,
+.search {
+	margin-left: 1em;
+	margin-right: 1em;
+	max-width: 25em;
+}
+
+.transactions-list,
+.guests-list {
+	margin-top: 0;
+	margin-bottom: 0;
+	padding: 0 1em;
+	list-style: none;
+
+	ul {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	li {
+		padding-right: 1em;
+		padding-left: 1em;
+		display: flex;
+		justify-content: space-between;
+
+		p {
+			margin: 0;
+		}
+
+		> div {
+			flex: 1 1 0;
+		}
+
+		.name {
+		}
+
+		.amount {
+			@media (max-width: @mobile) {
+				display: none;
+			}
+		}
+
+		.additional-guests {
+			font-size: 12px;
+		}
+
+		.date {
+			@media (max-width: @mobile) {
+				display: none;
+			}
+		}
+
+		.check-in {
+			span {
+				display: inline-block;
+				background: @teal;
+				padding: .25em .5em;
+				cursor: pointer;
+				height: 1.2em;
+				user-select: none;
+
+				&.checked {
+					background: @white;
+
+					&:before {
+						content: '';
+						position: relative;
+						display: inline-block;
+						top: -3px;
+						width: 5px;
+						height: 12px;
+						border: 3px solid transparent;
+						transform: rotate(45deg);
+						border-bottom-color: @teal;
+						border-right-color: @teal;
+					}
+				}
+			}
+		}
+
+		.transaction {
+			flex: 0 1 115px;
+
+			@media (max-width: @mobile) {
+				display: none;
+			}
+		}
+	}
+}
+
+.table-header {
+	background: @white;
+	padding: 10px;
+	cursor: default;
+
+	h5 {
+		position: relative;
+		padding: 0;
+		margin: 0;
+		user-select: none;
+		color: @gray;
+
+		&.sortable {
+			cursor: pointer;
+		}
+
+		&.asc,
+		&.desc {
+			&:after {
+				content: '';
+				position: relative;
+				display: inline-block;
+				width: 0;
+				height: 0;
+				border: 4px solid transparent;
+				margin-left: 5px;
+				margin-right: -13px; // Makes this essentially take up no space
+			}
+		}
+
+		&.sorted.asc {
+			&:after {
+				top: -6px;
+				border-bottom-color: @black;
+			}
+		}
+
+		&.sorted.desc {
+			&:after {
+				top: -2px;
+				border-top-color: @black;
+			}
+		}
+	}
+}
+
+.transaction,
+.guest {
+	padding: 10px;
+
+	&:nth-child(even) {
+		background: @light-gray;
+	}
+}
+
+// END TRANSACTIONS & GUEST LIST
+// --------------------------------------------------
+
+
+footer {
+	padding: 55px 0;
+	text-align: center;
+
+	nav {
+		margin-bottom: 8px;
+		max-height: 1000px;
+
+		ul {
+			background: transparent;
+			display: block;
+			margin-bottom: 50px;
+			padding: 0;
+		}
+
+		a {
+			color: @light-gray;
+		}
+	}
+
+	#copyright {
+		margin-top: 10px;
+		color: @light-gray;
+		font-size: 14px;
+		text-align: center;
+
+		@media (min-width: @mobile) {
+			font-size: 16px;
+		}
+	}
+}
