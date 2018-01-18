@@ -16,11 +16,11 @@ export default class GuestsListItem extends Component {
 
 	toggleCheckIn() {
 		// eslint-disable-next-line
-		if(this.props.guest.checked_in && confirm('Are you sure you want to mark this guest as not checked in?')) {
+		if(this.props.guest.checkedIn && confirm('Are you sure you want to mark this guest as not checked in?')) {
 			return this.props.checkOut(this.props.guest.id);
 		}
 
-		if(!this.props.guest.checked_in) {
+		if(!this.props.guest.checkedIn) {
 			return this.props.checkIn(this.props.guest.id);
 		}
 	}
@@ -31,18 +31,18 @@ export default class GuestsListItem extends Component {
 		return (
 			<li className="guest">
 				<div className="check-in">
-					<span className={guest.checked_in ? 'checked' : ''} onClick={this.toggleCheckIn}>
-						{guest.checked_in ? '' : 'Check In'}
+					<span className={guest.checkedIn ? 'checked' : ''} onClick={this.toggleCheckIn}>
+						{guest.checkedIn ? '' : 'Check In'}
 					</span>
 				</div>
 				<div className="name">
-					<p>{guest.first_name} {guest.last_name}</p>
+					<p>{guest.firstName} {guest.lastName}</p>
 				</div>
 				<div className="date">
-					<p>{moment.tz(guest.timestamp, 'America/Los_Angeles').format('MMM Do, h:mma')}</p>
+					<p>{moment.tz(guest.created, 'America/Los_Angeles').format('MMM Do, h:mma')}</p>
 				</div>
 				<div className="transaction">
-					<p>{guest.transaction_id}</p>
+					<p>{guest.transactionId}</p>
 				</div>
 			</li>
 		);

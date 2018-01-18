@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { NavLink, withRouter } from 'react-router-dom';
 import { logOut } from '../appDuck';
+import { checkScope } from '../utils';
 
 export class Header extends Component {
 	constructor(props) {
@@ -35,11 +36,11 @@ export class Header extends Component {
 							</div>
 							<nav className={this.state.navOpen ? 'open' : ''}>
 								<ul>
-									<li><Link to="/admin" activeClassName="active" onlyActiveOnIndex={true}>Dashboard</Link></li>
-									<li><Link to="/admin/guests" activeClassName="active">Guests</Link></li>
+									<li><NavLink exact to="/">Dashboard</NavLink></li>
+									<li><NavLink to="/guests">Guests</NavLink></li>
 
-									{['admin', 'planner'].includes(user.role) &&
-										<li><Link to="/admin/transactions" activeClassName="active">Transactions</Link></li>}
+									{checkScope(user.role, 'admin') &&
+										<li><NavLink to="/transactions">Transactions</NavLink></li>}
 
 									<li><button className="white" onClick={this.props.logOut}>Log Out</button></li>
 								</ul>
@@ -61,6 +62,6 @@ const mapStateToProps = (state, ownProps) => ({
 	user: state.session.user
 });
 
-export default connect(mapStateToProps, {
+export default withRouter(connect(mapStateToProps, {
 	logOut
-})(Header);
+})(Header));

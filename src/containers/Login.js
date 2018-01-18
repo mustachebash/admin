@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logIn } from '../appDuck';
 
@@ -25,12 +26,14 @@ export class Login extends Component {
 	logIn(e) {
 		e.preventDefault();
 
+		// eslint-disable-next-line
 		if(!this.state.username || !this.state.password) return alert('Username and Password is required');
 
 		this.props.logIn({username: this.state.username, password: this.state.password});
 	}
 
 	render() {
+		if(this.props.user) return <Redirect to={(this.props.location.state && this.props.location.state.from) || {pathname: '/'}} />;
 
 		return (
 			<section id="login">
@@ -53,6 +56,7 @@ Login.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => ({
+	user: state.session.user,
 	loginError: state.session.loginError
 });
 

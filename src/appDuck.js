@@ -114,14 +114,13 @@ export function socketDisconnected() {
 	};
 }
 
-export function logIn({username, password, push}) {
+export function logIn({username, password}) {
 	return (dispatch) => {
 		dispatch(logInRequest());
 
 		return apiClient.post('/authenticate', {username, password})
 			.then(({accessToken, refreshToken}) => ({accessToken, refreshToken, user: jwtDecode(accessToken)}))
 			.then(response => dispatch(receiveUser(response)))
-			.then(() => dispatch(push('/')))
 			.then(() => dispatch(socketConnect()))
 			.catch(e => {
 				if(e.statusCode === 401) return e.responseBody.then(response => dispatch(loginError(response.error)));

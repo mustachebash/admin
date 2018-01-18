@@ -7,3 +7,17 @@ export function formatThousands(number) {
 		return number;
 	}
 }
+
+export function checkScope(userRole, scopeRequired) {
+	const roles = [
+		'root',
+		'god',
+		'admin',
+		'doorman',
+		'read'
+	];
+
+	const userLevel = roles.indexOf(userRole);
+
+	return Boolean(~userLevel && userLevel <= roles.indexOf(scopeRequired));
+}

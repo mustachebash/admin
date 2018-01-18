@@ -37,7 +37,7 @@ const TransactionsList = (props) => {
 				</div>
 				<div className="additional-guests">
 					<h5>
-						Additional Guests
+						Order
 					</h5>
 				</div>
 				<div className="date">

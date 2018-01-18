@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import { controlReducer, sessionReducer } from './appDuck';
-import settingsReducer, { communicationReducer as settingsCommunicationReducer } from './settings/settingsDuck';
+import eventsReducer, { communicationReducer as eventsCommunicationReducer } from './events/eventsDuck';
+import productsReducer, { communicationReducer as productsCommunicationReducer } from './products/productsDuck';
 import transactionsReducer, { communicationReducer as transactionsCommunicationReducer } from './transactions/transactionsDuck';
 import guestsReducer, { communicationReducer as guestsCommunicationReducer } from './guests/guestsDuck';
 
@@ -19,7 +20,7 @@ const sampleState = {
 
 			}
 		],
-		settings: [
+		events: [
 			{
 
 			}
@@ -34,7 +35,7 @@ const sampleState = {
 		guests: {
 
 		},
-		settings: {
+		events: {
 
 		}
 	},
@@ -59,12 +60,14 @@ export default combineReducers({
 	data: combineReducers({
 		transactions: transactionsReducer,
 		guests: guestsReducer,
-		settings: settingsReducer
+		events: eventsReducer,
+		products: productsReducer
 	}),
 	communication: combineReducers({
 		transactions: transactionsCommunicationReducer,
 		guests: guestsCommunicationReducer,
-		settings: settingsCommunicationReducer
+		events: eventsCommunicationReducer,
+		products: productsCommunicationReducer
 	}),
 	control: controlReducer,
 	session: sessionReducer

@@ -32,15 +32,15 @@ export class TransactionsTable extends Component {
 				default:
 				case 'date':
 					// This will (should) never be the same
-					sort = a.timestamp > b.timestamp ? 1 : -1;
+					sort = a.created > b.created ? 1 : -1;
 					break;
 
 				case 'name':
-					sort = a.last_name > b.last_name ? -1 : a.last_name === b.last_name ? 0 : 1;
+					sort = a.lastName > b.lastName ? -1 : a.lastName === b.lastName ? 0 : 1;
 					break;
 
 				case 'amount':
-					sort = Number(a.transaction_amount) > Number(b.transaction_amount) ? 1 : Number(a.transaction_amount) === Number(b.transaction_amount) ? 0 : -1;
+					sort = a.amount > b.amount ? 1 : a.amount === b.amount ? 0 : -1;
 					break;
 			}
 
@@ -73,8 +73,8 @@ export class TransactionsTable extends Component {
 			const filter = this.state.filter.toLowerCase();
 
 			return (
-				(p.first_name + ' ' + p.last_name).toLowerCase().includes(filter) ||
-				p.transaction_id.toLowerCase().includes(filter)
+				(p.firstName + ' ' + p.lastName).toLowerCase().includes(filter) ||
+				p.braintreeTransactionId.toLowerCase().includes(filter)
 			);
 		}).sort(this.getTransactionComparator());
 

@@ -17,21 +17,21 @@ export default class TransactionsListItem extends Component {
 		return (
 			<li className="transaction">
 				<div className="name">
-					<p>{transaction.first_name} {transaction.last_name}</p>
+					<p>{transaction.firstName} {transaction.lastName}</p>
 				</div>
 				<div className="amount">
-					<p>${Number(transaction.transaction_amount).toFixed(0)}</p>
+					<p>${transaction.amount.toFixed(0)}</p>
 				</div>
 				<div className="additional-guests">
-					<ul>
-						{transaction.additional_guests && transaction.additional_guests.map((guest, i) => <li key={guest.first_name + guest.last_name + i}>{guest.first_name}&nbsp;{guest.last_name}</li>)}
-					</ul>
+					<pre>
+						{JSON.stringify(transaction.order, null, 2)}
+					</pre>
 				</div>
 				<div className="date">
-					<p>{moment.tz(transaction.timestamp, 'America/Los_Angeles').format('MMM Do, h:mma')}</p>
+					<p>{moment.tz(transaction.created, 'America/Los_Angeles').format('MMM Do, h:mma')}</p>
 				</div>
 				<div className="transaction">
-					<p>{transaction.transaction_id}</p>
+					<p>{transaction.braintreeTransactionId}</p>
 				</div>
 			</li>
 		);

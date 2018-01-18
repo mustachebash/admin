@@ -35,11 +35,11 @@ export class GuestsTable extends Component {
 				default:
 				case 'date':
 					// This will (should) never be the same
-					sort = a.timestamp > b.timestamp ? 1 : -1;
+					sort = a.created > b.created ? 1 : -1;
 					break;
 
 				case 'name':
-					sort = a.last_name > b.last_name ? -1 : a.last_name === b.last_name ? 0 : 1;
+					sort = a.lastName > b.lastName ? -1 : a.lastName === b.lastName ? 0 : 1;
 					break;
 			}
 
@@ -72,8 +72,8 @@ export class GuestsTable extends Component {
 			const filter = this.state.filter.toLowerCase();
 
 			return (
-				(g.first_name + ' ' + g.last_name).toLowerCase().includes(filter) ||
-				g.transaction_id.toLowerCase().includes(filter)
+				(g.firstName + ' ' + g.lastName).toLowerCase().includes(filter) ||
+				g.transactionId.toLowerCase().includes(filter)
 			);
 		}).sort(this.getGuestComparator());
 

@@ -3,7 +3,7 @@
  * DUCKS!!! https://github.com/erikras/ducks-modular-redux
  */
 
-import _ from 'lodash';
+import { unionWith } from 'lodash';
 import apiClient from 'utils/apiClient';
 
 // Actions
@@ -14,8 +14,6 @@ export const REQUEST_GUEST = 'mustachebash/guests/REQUEST_GUEST',
 	UPDATE_GUEST = 'mustachebash/guests/UPDATE_GUEST';
 
 export default function reducer(state = [], action = {}) {
-	let guestIndex;
-
 	switch (action.type) {
 		case REQUEST_GUEST:
 			return state;
@@ -24,22 +22,10 @@ export default function reducer(state = [], action = {}) {
 			return state;
 
 		case RECEIVE_GUEST:
-			guestIndex = state.findIndex(guest => guest.id === action.guest.id);
-			if(~guestIndex) {
-				return [
-					...state.slice(0, guestIndex),
-					action.guest,
-					...state.slice(guestIndex + 1)
-				];
-			} else {
-				return [
-					...state.slice(),
-					action.guest
-				];
-			}
+			return unionWith([action.guest], state, (a, b) => a.id === b.id);
 
 		case RECEIVE_GUESTS:
-			return _.unionWith(action.guests, state, (a, b) => a.id === b.id);
+			return unionWith(action.guests, state, (a, b) => a.id === b.id);
 
 		default:
 			return state;
@@ -50,17 +36,17 @@ export function communicationReducer(state = {}, action = {}) {
 	switch (action.type) {
 		case REQUEST_GUEST:
 		case REQUEST_GUESTS:
-			return Object.assign({}, state, {
+			return {
 				...state,
 				isFetching: true
-			});
+			};
 
 		case RECEIVE_GUEST:
 		case RECEIVE_GUESTS:
-			return Object.assign({}, state, {
+			return {
 				...state,
 				isFetching: false
-			});
+			};
 
 		default:
 			return state;
@@ -89,6 +75,7 @@ export function receiveGuest(guest) {
 }
 
 export function receiveGuests(guests) {
+	console.log(guests);
 	return {
 		type: RECEIVE_GUESTS,
 		guests
@@ -107,14 +94,14 @@ export function checkIn(guestId) {
 		const {data: { guests }, session: { socketConnected }} = getState(),
 			guest = Object.assign({}, guests.find(g => g.id === guestId));
 
-		guest.checked_in = true;
+		guest.checkedIn = true;
 
 		dispatch(updateGuest(guest));
 
 		// If there's no socket connected, resort to HTTP
 		if(!socketConnected) {
-			apiClient.patch(`/guests/${guestId}`, {checked_in: true}, {requiresAuth: true})
-				.then(response => dispatch(receiveGuest(response.guest)))
+			apiClient.patch(`/guests/${guestId}`, {checkedIn: true}, {requiresAuth: true})
+				.then(g => dispatch(receiveGuest(g)))
 				.catch(e => console.error(e));
 		}
 	};
@@ -125,14 +112,14 @@ export function checkOut(guestId) {
 		const {data: { guests }, session: { socketConnected }} = getState(),
 			guest = Object.assign({}, guests.find(g => g.id === guestId));
 
-		guest.checked_in = false;
+		guest.checkedIn = false;
 
 		dispatch(updateGuest(guest));
 
 		// If there's no socket connected, resort to HTTP
 		if(!socketConnected) {
-			apiClient.patch(`/guests/${guestId}`, {checked_in: false}, {requiresAuth: true})
-				.then(response => dispatch(receiveGuest(response.guest)))
+			apiClient.patch(`/guests/${guestId}`, {checkedIn: false}, {requiresAuth: true})
+				.then(g => dispatch(receiveGuest(g)))
 				.catch(e => console.error(e));
 		}
 	};
@@ -143,7 +130,7 @@ export function fetchGuest(guestId) {
 		dispatch(requestGuest(guestId));
 
 		return apiClient.get(`/guests/${guestId}`, {requiresAuth: true})
-			.then(response => dispatch(receiveGuest(response.guest)))
+			.then(guest => dispatch(receiveGuest(guest)))
 			.catch(e => console.error(e));
 	};
 }
@@ -153,7 +140,7 @@ export function fetchGuests(forceRefresh) {
 		dispatch(requestGuests());
 
 		return apiClient.get('/guests', {requiresAuth: true})
-			.then(response => dispatch(receiveGuests(response.guests)))
+			.then(guests => dispatch(receiveGuests(guests)))
 			.catch(e => console.error(e));
 	};
 }

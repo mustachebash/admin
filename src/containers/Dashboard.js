@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import moment from 'moment-timezone';
 import { fetchTransactions } from 'transactions/transactionsDuck';
 import { fetchGuests } from 'guests/guestsDuck';
-import { fetchSettings, turnOffSales, turnOnSales } from 'settings/settingsDuck';
+import { fetchEvents } from 'events/eventsDuck';
 import { formatThousands } from 'utils';
 
 export class Dashboard extends Component {
@@ -16,7 +16,7 @@ export class Dashboard extends Component {
 
 	componentDidMount() {
 		this.props.fetchGuests();
-		this.props.fetchSettings();
+		this.props.fetchEvents();
 		this.userCanView() && this.props.fetchTransactions();
 	}
 
@@ -25,7 +25,7 @@ export class Dashboard extends Component {
 	}
 
 	render() {
-		const { transactions, guests, settings } = this.props,
+		const { transactions, guests, events } = this.props,
 			startOfToday = moment().tz('America/Los_Angeles').startOf('day'),
 			startOfLast7 = moment().tz('America/Los_Angeles').subtract(7, 'days').startOf('day'),
 			totalRevenue = transactions.map(p => Number(p.transaction_amount)).reduce((total, cur) => total + cur, 0),
@@ -51,13 +51,13 @@ export class Dashboard extends Component {
 		const projectedRevenue = totalRevenue + Math.round((revenueSinceLastWeek/7)*(daysLeft + 1)),
 			projectedAttendance = totalGuests + Math.round((guestsLast7/7)*(daysLeft + 1));
 
-		// Get the salesOn value
-		const salesOnSetting = settings.find(s => s.key === 'salesOn');
-
-		let salesOn = false;
-		if(salesOnSetting) {
-			salesOn = salesOnSetting.value;
-		}
+		// // Get the salesOn value
+		// const salesOnEvent = events.find(s => s.key === 'salesOn');
+		//
+		// let salesOn = false;
+		// if(salesOnEvent) {
+		// 	salesOn = salesOnEvent.value;
+		// }
 
 		return (
 			<div>
@@ -127,10 +127,10 @@ export class Dashboard extends Component {
 						<div className="sales-on">
 							<h5>Sales</h5>
 							<p>
-								{salesOn
+								{/* {salesOn
 									? <button onClick={this.props.turnOffSales} className="white">Sales are ON</button>
 									: <button onClick={this.props.turnOnSales}>Sales are OFF</button>
-								}
+								} */}
 
 							</p>
 						</div>
@@ -146,25 +146,21 @@ Dashboard.propTypes = {
 	transactions: PropTypes.array.isRequired,
 	guests: PropTypes.array.isRequired,
 	user: PropTypes.object.isRequired,
-	settings: PropTypes.array.isRequired,
+	events: PropTypes.array.isRequired,
 	fetchTransactions: PropTypes.func.isRequired,
 	fetchGuests: PropTypes.func.isRequired,
-	fetchSettings: PropTypes.func.isRequired,
-	turnOffSales: PropTypes.func.isRequired,
-	turnOnSales: PropTypes.func.isRequired
+	fetchEvents: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => ({
 	transactions: state.data.transactions,
 	guests: state.data.guests,
-	settings: state.data.settings,
+	events: state.data.events,
 	user: state.session.user
 });
 
 export default connect(mapStateToProps, {
 	fetchTransactions,
 	fetchGuests,
-	fetchSettings,
-	turnOffSales,
-	turnOnSales
+	fetchEvents
 })(Dashboard);

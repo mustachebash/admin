@@ -79,7 +79,7 @@ function makeRequest(path, { method = 'GET', headers = {}, body, requiresAuth, q
 			// If there is no refresh token (user has been logged out already for a 403), skip the request
 			if(err.statusCode === 401 && requestCount++ < 10 && getRefreshToken()) {
 				return makeRequest('/refresh-access-token', {method: 'POST', body: {refreshToken: getRefreshToken()}})
-					.then(({ accessToken }) => window.localStorage.setItem('accessToken', accessToken))
+					.then((accessToken) => window.localStorage.setItem('accessToken', accessToken))
 					.then(() => makeRequest(path, {method, headers, body, requiresAuth, query, requestCount}));
 			} else if(err.statusCode === 401){
 				// After 10 attempts, clear the user data and redirect the page

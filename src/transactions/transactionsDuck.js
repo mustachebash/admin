@@ -3,7 +3,7 @@
  * DUCKS!!! https://github.com/erikras/ducks-modular-redux
  */
 
-import _ from 'lodash';
+import { unionWith } from 'lodash';
 import apiClient from 'utils/apiClient';
 
 // Actions
@@ -13,8 +13,6 @@ const REQUEST_TRANSACTION = 'mustachebash/transactions/REQUEST_TRANSACTION',
 	RECEIVE_TRANSACTIONS = 'mustachebash/transactions/RECEIVE_TRANSACTIONS';
 
 export default function reducer(state = [], action = {}) {
-	let transactionIndex;
-
 	switch (action.type) {
 		case REQUEST_TRANSACTION:
 			return state;
@@ -23,22 +21,10 @@ export default function reducer(state = [], action = {}) {
 			return state;
 
 		case RECEIVE_TRANSACTION:
-			transactionIndex = state.findIndex(transaction => transaction.id === action.transaction.id);
-			if(~transactionIndex) {
-				return [
-					...state.slice(0, transactionIndex),
-					action.transaction,
-					...state.slice(transactionIndex + 1)
-				];
-			} else {
-				return [
-					...state.slice(),
-					action.transaction
-				];
-			}
+			return unionWith([action.transaction], state, (a, b) => a.id === b.id);
 
 		case RECEIVE_TRANSACTIONS:
-			return _.unionWith(action.transactions, state, (a, b) => a.id === b.id);
+			return unionWith(action.transactions, state, (a, b) => a.id === b.id);
 
 		default:
 			return state;
@@ -103,7 +89,7 @@ export function fetchTransaction(transactionId, forceRefresh) {
 			dispatch(requestTransaction(transactionId));
 
 			return apiClient.get(`/transactions/${transactionId}`, {requiresAuth: true})
-				.then(response => dispatch(receiveTransaction(response.transaction)))
+				.then(transaction => dispatch(receiveTransaction(transaction)))
 				.catch(e => console.error(e));
 		}
 	};
@@ -114,7 +100,7 @@ export function fetchTransactions(forceRefresh) {
 		dispatch(requestTransactions());
 
 		return apiClient.get('/transactions', {requiresAuth: true})
-			.then(response => dispatch(receiveTransactions(response.transactions)))
+			.then(transactions => dispatch(receiveTransactions(transactions)))
 			.catch(e => console.error(e));
 	};
 }
