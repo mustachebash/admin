@@ -3,7 +3,7 @@
  * DUCKS!!! https://github.com/erikras/ducks-modular-redux
  */
 
-import _ from 'lodash';
+import unionWith from 'lodash/unionWith';
 import apiClient from 'utils/apiClient';
 
 // Actions
@@ -14,26 +14,12 @@ const REQUEST_EVENTS = 'mustachebash/events/REQUEST_EVENTS',
 	UPDATE_EVENT = 'mustachebash/events/UPDATE_EVENT';
 
 export default function reducer(state = [], action = {}) {
-	let eventsIndex;
-
 	switch (action.type) {
 		case RECEIVE_EVENT:
-			eventsIndex = state.findIndex(event => event.key === action.event.key);
-			if(~eventsIndex) {
-				return [
-					...state.slice(0, eventsIndex),
-					action.event,
-					...state.slice(eventsIndex + 1)
-				];
-			} else {
-				return [
-					...state.slice(),
-					action.event
-				];
-			}
+			return unionWith([action.event], state, (a, b) => a.id === b.id);
 
 		case RECEIVE_EVENTS:
-			return _.unionWith(action.events, state, (a, b) => a.key === b.key);
+			return unionWith(action.events, state, (a, b) => a.id === b.id);
 
 		default:
 			return state;
@@ -100,7 +86,7 @@ export function fetchEvent(id) {
 		dispatch(requestEvent(id));
 
 		return apiClient.get(`/events/${id}`)
-			.then(response => dispatch(receiveEvent(response.event)))
+			.then(event => dispatch(receiveEvent(event)))
 			.catch(e => console.error('Events API Error', e));
 	};
 }
@@ -115,7 +101,7 @@ export function fetchEvents(status) {
 		}
 
 		return apiClient.get('/events', query)
-			.then(response => dispatch(receiveEvents(response.events)))
+			.then(events => dispatch(receiveEvents(events)))
 			.catch(e => console.error('Events API Error', e));
 	};
 }

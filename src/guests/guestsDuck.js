@@ -134,11 +134,11 @@ export function fetchGuest(guestId) {
 	};
 }
 
-export function fetchGuests(forceRefresh) {
-	return (dispatch, getState) => {
+export function fetchGuests(query) {
+	return (dispatch) => {
 		dispatch(requestGuests());
 
-		return apiClient.get('/guests')
+		return apiClient.get('/guests', query)
 			.then(guests => dispatch(receiveGuests(guests)))
 			.catch(e => console.error('Guest API Error', e));
 	};

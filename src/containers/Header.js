@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { NavLink, withRouter } from 'react-router-dom';
-import { logOut } from '../appDuck';
+import { logOut, toggleEvent } from '../appDuck';
+import { fetchEvents } from 'events/eventsDuck';
 import { checkScope } from '../utils';
 
 export class Header extends Component {
@@ -14,10 +15,23 @@ export class Header extends Component {
 		};
 
 		this.toggleNavMenu = this.toggleNavMenu.bind(this);
+		this.toggleEvent = this.toggleEvent.bind(this);
+	}
+
+	componentDidMount() {
+		if(this.props.user) this.props.fetchEvents();
+	}
+
+	componentWillUpdate(nextProps) {
+		if(nextProps.user !== this.props.user) this.props.fetchEvents();
 	}
 
 	toggleNavMenu() {
 		this.setState({navOpen: !this.state.navOpen});
+	}
+
+	toggleEvent(e) {
+		this.props.toggleEvent(e.currentTarget.value, e.currentTarget.checked);
 	}
 
 	render() {
@@ -48,6 +62,14 @@ export class Header extends Component {
 									<li><button className="white" onClick={this.props.logOut}>Log Out</button></li>
 								</ul>
 							</nav>
+							<div id="events-selector">
+								{this.props.events.map(e => (
+									<div key={e.id}>
+										<input id={'checkbox-' + e.id} type="checkbox" value={e.id} checked={this.props.selectedEvents.includes(e.id)} onChange={this.toggleEvent} />
+										<label htmlFor={'checkbox-' + e.id}>{e.name}</label>
+									</div>
+								))}
+							</div>
 						</div>
 					}
 				</div>
@@ -62,9 +84,13 @@ Header.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => ({
-	user: state.session.user
+	user: state.session.user,
+	events: state.data.events,
+	selectedEvents: state.control.selectedEvents
 });
 
 export default withRouter(connect(mapStateToProps, {
-	logOut
+	logOut,
+	fetchEvents,
+	toggleEvent
 })(Header));

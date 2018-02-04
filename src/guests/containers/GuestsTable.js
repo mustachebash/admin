@@ -13,7 +13,7 @@ export class GuestsTable extends Component {
 
 		this.state = {
 			filter: '',
-			sortBy: 'date',
+			sortBy: 'name',
 			sortOrder: -1 // DESC
 		};
 
@@ -23,7 +23,7 @@ export class GuestsTable extends Component {
 	}
 
 	componentDidMount() {
-		this.props.fetchGuests(this.state.statusFilter);
+		this.props.fetchGuests({eventId: this.props.selectedEvents});
 		this.props.connectToSocket();
 	}
 
@@ -32,12 +32,12 @@ export class GuestsTable extends Component {
 			let sort = 0;
 
 			switch(this.state.sortBy) {
-				default:
 				case 'date':
 					// This will (should) never be the same
 					sort = a.created > b.created ? 1 : -1;
 					break;
 
+				default:
 				case 'name':
 					sort = a.lastName > b.lastName ? -1 : a.lastName === b.lastName ? 0 : 1;
 					break;
@@ -104,7 +104,8 @@ GuestsTable.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => ({
-	guests: state.data.guests
+	guests: state.data.guests,
+	selectedEvents: state.control.selectedEvents
 });
 
 export default connect(mapStateToProps, {

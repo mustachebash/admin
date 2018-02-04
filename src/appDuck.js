@@ -9,16 +9,21 @@ import apiClient from 'utils/apiClient';
 export const LOG_IN_REQUEST = 'mustachebash/app/LOG_IN_REQUEST',
 	LOGIN_ERROR = 'mustachebash/app/LOGIN_ERROR',
 	RECEIVE_USER = 'mustachebash/app/RECEIVE_USER',
+	SELECT_EVENT = 'mustachebash/app/SELECT_EVENT',
+	DESELECT_EVENT = 'mustachebash/app/DESELECT_EVENT',
 	SOCKET_CONNECT = 'mustachebash/app/SOCKET_CONNECT',
 	SOCKET_CONNECTED = 'mustachebash/app/SOCKET_CONNECTED',
 	SOCKET_DISCONNECT = 'mustachebash/app/SOCKET_DISCONNECT',
 	SOCKET_DISCONNECTED = 'mustachebash/app/SOCKET_DISCONNECTED';
 
 const defaultSessionState = {
-	loginError: '',
-	user: null,
-	socketConnected: false
-};
+		loginError: '',
+		user: null,
+		socketConnected: false
+	},
+	defaultControlState = {
+		selectedEvents: []
+	};
 
 export default function reducer(state = {}, action = {}) {
 	switch (action.type) {
@@ -60,8 +65,28 @@ export function sessionReducer(state = defaultSessionState, action = {}) {
 	}
 }
 
-export function controlReducer(state = {}, action = {}) {
+export function controlReducer(state = defaultControlState, action = {}) {
+	let eventIndex;
+
 	switch (action.type) {
+		case SELECT_EVENT:
+			if(~state.selectedEvents.indexOf(action.id)) return state;
+			return {
+				...state,
+				selectedEvents: [
+					...state.selectedEvents,
+					action.id
+				]
+			};
+
+		case DESELECT_EVENT:
+			eventIndex = state.selectedEvents.indexOf(action.id);
+			if(!~eventIndex) return state;
+			return {
+				...state,
+				selectedEvents: state.selectedEvents.filter(e => e !== action.id)
+			};
+
 		default:
 			return state;
 	}
@@ -74,6 +99,20 @@ export function receiveUser({ accessToken, refreshToken, user }) {
 	return {
 		type: RECEIVE_USER,
 		user
+	};
+}
+
+export function selectEvent(id) {
+	return {
+		type: SELECT_EVENT,
+		id
+	};
+}
+
+export function deselectEvent(id) {
+	return {
+		type: DESELECT_EVENT,
+		id
 	};
 }
 
@@ -127,6 +166,14 @@ export function logIn({username, password}) {
 
 				dispatch(loginError('Something went wrong, please try again'));
 			});
+	};
+}
+
+export function toggleEvent(id, selected) {
+	return (dispatch) => {
+		if(selected) return dispatch(selectEvent(id));
+
+		dispatch(deselectEvent(id));
 	};
 }
 

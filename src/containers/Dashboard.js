@@ -2,9 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import moment from 'moment-timezone';
-import { fetchTransactions } from 'transactions/transactionsDuck';
-import { fetchGuests } from 'guests/guestsDuck';
-import { fetchEvents } from 'events/eventsDuck';
 import { formatThousands } from 'utils';
 
 export class Dashboard extends Component {
@@ -15,8 +12,6 @@ export class Dashboard extends Component {
 	}
 
 	componentDidMount() {
-		this.props.fetchGuests();
-		this.props.fetchEvents();
 		this.userCanView() && this.props.fetchTransactions();
 	}
 
@@ -148,8 +143,7 @@ Dashboard.propTypes = {
 	user: PropTypes.object.isRequired,
 	events: PropTypes.array.isRequired,
 	fetchTransactions: PropTypes.func.isRequired,
-	fetchGuests: PropTypes.func.isRequired,
-	fetchEvents: PropTypes.func.isRequired
+	fetchGuests: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -160,7 +154,4 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 export default connect(mapStateToProps, {
-	fetchTransactions,
-	fetchGuests,
-	fetchEvents
 })(Dashboard);
