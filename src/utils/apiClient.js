@@ -29,6 +29,8 @@ class APIError extends Error {
 	}
 }
 
+const API_VERSION = 'v1';
+
 function getAccessToken() {
 	return window.localStorage.getItem('accessToken');
 }
@@ -37,23 +39,25 @@ function getRefreshToken() {
 	return window.localStorage.getItem('refreshToken');
 }
 
-function makeRequest(path, { method = 'GET', headers = {}, body, requiresAuth, query, requestCount = 0 }) {
-	const fetchOpts = {
+function makeRequest(path, { method = 'GET', body, query, requestCount = 0 }) {
+	const reqOpts = {
 			method,
-			headers
+			headers: new Headers()
 		},
 		queryString = query ? urlUtil.format({query}) : '';
 
 	if(body) {
-		fetchOpts.headers['Content-Type'] = 'application/json';
-		fetchOpts.body = JSON.stringify(body);
+		reqOpts.headers.append('Content-Type', 'application/json');
+		reqOpts.body = JSON.stringify(body);
 	}
 
-	if(requiresAuth) {
-		fetchOpts.headers['Authorization'] = `Bearer ${getAccessToken()}`;
+	if(getAccessToken()) {
+		reqOpts.headers.append('Authorization', `Bearer ${getAccessToken()}`);
 	}
 
-	return fetch(API_HOST + '/v1' + path + queryString, fetchOpts)
+	const request = new Request(new URL(`/${API_VERSION}${path}${queryString}`, API_HOST), reqOpts);
+
+	return fetch(request)
 		.then(response => {
 			// If it's not JSON, throw and catch an error to default before it just bellyflops trying to parse the response
 			if(!response.headers.get('Content-Type').includes('application/json')) {
@@ -69,18 +73,17 @@ function makeRequest(path, { method = 'GET', headers = {}, body, requiresAuth, q
 		})
 		.then(response => {
 			// Check for HTTP error statuses, throw errors to skip processing response body
-			if(response.status >= 400) throw new APIError({message: response.statusText, responseBody: response.json(), statusCode: response.status});
+			if(!response.ok) throw new APIError({message: response.statusText, responseBody: response.json(), statusCode: response.status});
 
-			return response;
+			return response.json();
 		})
-		.then(response => response.json())
 		.catch(err => {
 			// If it was a 401, get a new access token here, then make the original request again
 			// If there is no refresh token (user has been logged out already for a 403), skip the request
 			if(err.statusCode === 401 && requestCount++ < 10 && getRefreshToken()) {
 				return makeRequest('/refresh-access-token', {method: 'POST', body: {refreshToken: getRefreshToken()}})
 					.then((accessToken) => window.localStorage.setItem('accessToken', accessToken))
-					.then(() => makeRequest(path, {method, headers, body, requiresAuth, query, requestCount}));
+					.then(() => makeRequest(path, {method, body, query, requestCount}));
 			} else if(err.statusCode === 401){
 				// After 10 attempts, clear the user data and redirect the page
 				window.localStorage.removeItem('accessToken');
@@ -93,16 +96,16 @@ function makeRequest(path, { method = 'GET', headers = {}, body, requiresAuth, q
 }
 
 const apiClient = {
-	get(path, { query, requiresAuth }) {
-		return makeRequest(path, { query, requiresAuth });
+	get(path, query) {
+		return makeRequest(path, { query });
 	},
 
-	post(path, body, { requiresAuth } = {}) {
-		return makeRequest(path, { method: 'POST', body, requiresAuth });
+	post(path, body) {
+		return makeRequest(path, { method: 'POST', body });
 	},
 
-	patch(path, body, { requiresAuth } = {}) {
-		return makeRequest(path, { method: 'PATCH', body, requiresAuth });
+	patch(path, body) {
+		return makeRequest(path, { method: 'PATCH', body });
 	}
 };
 

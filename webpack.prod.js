@@ -5,7 +5,7 @@ const path = require('path'),
 	common = require('./webpack.common');
 
 const config = {
-	entry: './src/index.js',
+	entry: ['whatwg-fetch', './src/index.js'],
 	output: {
 		path: path.resolve(__dirname, 'dist'),
 		filename: 'app.[chunkhash].js',

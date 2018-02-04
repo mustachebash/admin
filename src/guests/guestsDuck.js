@@ -75,7 +75,6 @@ export function receiveGuest(guest) {
 }
 
 export function receiveGuests(guests) {
-	console.log(guests);
 	return {
 		type: RECEIVE_GUESTS,
 		guests
@@ -100,9 +99,9 @@ export function checkIn(guestId) {
 
 		// If there's no socket connected, resort to HTTP
 		if(!socketConnected) {
-			apiClient.patch(`/guests/${guestId}`, {checkedIn: true}, {requiresAuth: true})
+			apiClient.patch(`/guests/${guestId}`, {checkedIn: true})
 				.then(g => dispatch(receiveGuest(g)))
-				.catch(e => console.error(e));
+				.catch(e => console.error('Guest API Error', e));
 		}
 	};
 }
@@ -118,9 +117,9 @@ export function checkOut(guestId) {
 
 		// If there's no socket connected, resort to HTTP
 		if(!socketConnected) {
-			apiClient.patch(`/guests/${guestId}`, {checkedIn: false}, {requiresAuth: true})
+			apiClient.patch(`/guests/${guestId}`, {checkedIn: false})
 				.then(g => dispatch(receiveGuest(g)))
-				.catch(e => console.error(e));
+				.catch(e => console.error('Guest API Error', e));
 		}
 	};
 }
@@ -129,9 +128,9 @@ export function fetchGuest(guestId) {
 	return (dispatch) => {
 		dispatch(requestGuest(guestId));
 
-		return apiClient.get(`/guests/${guestId}`, {requiresAuth: true})
+		return apiClient.get(`/guests/${guestId}`)
 			.then(guest => dispatch(receiveGuest(guest)))
-			.catch(e => console.error(e));
+			.catch(e => console.error('Guest API Error', e));
 	};
 }
 
@@ -139,8 +138,8 @@ export function fetchGuests(forceRefresh) {
 	return (dispatch, getState) => {
 		dispatch(requestGuests());
 
-		return apiClient.get('/guests', {requiresAuth: true})
+		return apiClient.get('/guests')
 			.then(guests => dispatch(receiveGuests(guests)))
-			.catch(e => console.error(e));
+			.catch(e => console.error('Guest API Error', e));
 	};
 }

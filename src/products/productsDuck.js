@@ -95,28 +95,22 @@ export function updateProduct(product) {
 	};
 }
 
-export function fetchProduct(productKey, forceRefresh) {
-	return (dispatch, getState) => {
-		const state = getState();
+export function fetchProduct(id) {
+	return (dispatch) => {
+		dispatch(requestProduct(id));
 
-		if(!forceRefresh && ~state.data.splitTests.findIndex(test => test.id === productKey)) {
-			return Promise.resolve();
-		} else {
-			dispatch(requestProduct(productKey));
-
-			return apiClient.get(`/products/${productKey}`, {requiresAuth: true})
-				.then(response => dispatch(receiveProduct(response.product)))
-				.catch(e => console.error(e));
-		}
+		return apiClient.get(`/products/${id}`)
+			.then(response => dispatch(receiveProduct(response.product)))
+			.catch(e => console.error('Products API Error', e));
 	};
 }
 
-export function fetchProducts(forceRefresh) {
-	return (dispatch, getState) => {
+export function fetchProducts() {
+	return (dispatch) => {
 		dispatch(requestProducts());
 
-		return apiClient.get('/products', {requiresAuth: true})
+		return apiClient.get('/products')
 			.then(response => dispatch(receiveProducts(response.products)))
-			.catch(e => console.error(e));
+			.catch(e => console.error('Products API Error', e));
 	};
 }

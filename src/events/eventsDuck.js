@@ -95,28 +95,27 @@ export function updateEvent(event) {
 	};
 }
 
-export function fetchEvent(eventKey, forceRefresh) {
-	return (dispatch, getState) => {
-		const state = getState();
+export function fetchEvent(id) {
+	return (dispatch) => {
+		dispatch(requestEvent(id));
 
-		if(!forceRefresh && ~state.data.splitTests.findIndex(test => test.id === eventKey)) {
-			return Promise.resolve();
-		} else {
-			dispatch(requestEvent(eventKey));
-
-			return apiClient.get(`/events/${eventKey}`, {requiresAuth: true})
-				.then(response => dispatch(receiveEvent(response.event)))
-				.catch(e => console.error(e));
-		}
+		return apiClient.get(`/events/${id}`)
+			.then(response => dispatch(receiveEvent(response.event)))
+			.catch(e => console.error('Events API Error', e));
 	};
 }
 
-export function fetchEvents(forceRefresh) {
-	return (dispatch, getState) => {
+export function fetchEvents(status) {
+	return (dispatch) => {
 		dispatch(requestEvents());
 
-		return apiClient.get('/events', {requiresAuth: true})
+		let query;
+		if(status) {
+			query = {status};
+		}
+
+		return apiClient.get('/events', query)
 			.then(response => dispatch(receiveEvents(response.events)))
-			.catch(e => console.error(e));
+			.catch(e => console.error('Events API Error', e));
 	};
 }

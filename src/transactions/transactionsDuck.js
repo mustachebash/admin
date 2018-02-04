@@ -79,28 +79,22 @@ export function receiveTransactions(transactions) {
 	};
 }
 
-export function fetchTransaction(transactionId, forceRefresh) {
-	return (dispatch, getState) => {
-		const state = getState();
+export function fetchTransaction(transactionId) {
+	return (dispatch) => {
+		dispatch(requestTransaction(transactionId));
 
-		if(!forceRefresh && ~state.data.splitTests.findIndex(test => test.id === transactionId)) {
-			return Promise.resolve();
-		} else {
-			dispatch(requestTransaction(transactionId));
-
-			return apiClient.get(`/transactions/${transactionId}`, {requiresAuth: true})
-				.then(transaction => dispatch(receiveTransaction(transaction)))
-				.catch(e => console.error(e));
-		}
+		return apiClient.get(`/transactions/${transactionId}`)
+			.then(transaction => dispatch(receiveTransaction(transaction)))
+			.catch(e => console.error('Transactions API Error', e));
 	};
 }
 
-export function fetchTransactions(forceRefresh) {
-	return (dispatch, getState) => {
+export function fetchTransactions() {
+	return (dispatch) => {
 		dispatch(requestTransactions());
 
-		return apiClient.get('/transactions', {requiresAuth: true})
+		return apiClient.get('/transactions')
 			.then(transactions => dispatch(receiveTransactions(transactions)))
-			.catch(e => console.error(e));
+			.catch(e => console.error('Transactions API Error', e));
 	};
 }
