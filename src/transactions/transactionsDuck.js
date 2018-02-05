@@ -89,11 +89,11 @@ export function fetchTransaction(transactionId) {
 	};
 }
 
-export function fetchTransactions() {
+export function fetchTransactions(query) {
 	return (dispatch) => {
 		dispatch(requestTransactions());
 
-		return apiClient.get('/transactions')
+		return apiClient.get('/transactions', query)
 			.then(transactions => dispatch(receiveTransactions(transactions)))
 			.catch(e => console.error('Transactions API Error', e));
 	};

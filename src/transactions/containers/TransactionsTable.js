@@ -21,7 +21,7 @@ export class TransactionsTable extends Component {
 	}
 
 	componentDidMount() {
-		this.props.fetchTransactions(this.state.statusFilter);
+		this.props.selectedEvents.length && this.props.fetchTransactions({eventId: this.props.selectedEvents});
 	}
 
 	getTransactionComparator() {
@@ -67,16 +67,20 @@ export class TransactionsTable extends Component {
 	}
 
 	render() {
-		const transactions = this.props.transactions.filter(p => {
+		const filter = new RegExp(this.state.filter, 'i');
+
+		let transactions = this.props.transactions.filter(t => {
 			if(!this.state.filter) return true;
 
-			const filter = this.state.filter.toLowerCase();
-
 			return (
-				(p.firstName + ' ' + p.lastName).toLowerCase().includes(filter) ||
-				p.braintreeTransactionId.toLowerCase().includes(filter)
+				filter.test(t.firstName + ' ' + t.lastName) ||
+				filter.test(t.braintreeTransactionId)
 			);
-		}).sort(this.getTransactionComparator());
+		});
+
+		if(this.state.sortBy !== 'date' || this.state.sortOrder !== -1) {
+			transactions = transactions.sort(this.getTransactionComparator());
+		}
 
 		return (
 			<div>
@@ -96,11 +100,13 @@ export class TransactionsTable extends Component {
 
 TransactionsTable.propTypes = {
 	transactions: PropTypes.array.isRequired,
+	selectedEvents: PropTypes.array.isRequired,
 	fetchTransactions: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => ({
-	transactions: state.data.transactions
+	transactions: state.data.transactions,
+	selectedEvents: state.control.selectedEvents
 });
 
 export default connect(mapStateToProps, {
