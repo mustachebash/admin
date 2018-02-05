@@ -62,14 +62,16 @@ export class Header extends Component {
 									<li><button className="white" onClick={this.props.logOut}>Log Out</button></li>
 								</ul>
 							</nav>
-							<div id="events-selector">
-								{this.props.events.map(e => (
-									<div key={e.id}>
-										<input id={'checkbox-' + e.id} type="checkbox" value={e.id} checked={this.props.selectedEvents.includes(e.id)} onChange={this.toggleEvent} />
-										<label htmlFor={'checkbox-' + e.id}>{e.name}</label>
-									</div>
-								))}
-							</div>
+							{checkScope(user.role, 'root') &&
+								<div id="events-selector">
+									{this.props.events.map(e => (
+										<div key={e.id}>
+											<input id={'checkbox-' + e.id} type="checkbox" value={e.id} checked={this.props.selectedEvents.includes(e.id)} onChange={this.toggleEvent} />
+											<label htmlFor={'checkbox-' + e.id}>{e.name}</label>
+										</div>
+									))}
+								</div>
+							}
 						</div>
 					}
 				</div>
