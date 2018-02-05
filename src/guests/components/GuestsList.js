@@ -4,7 +4,10 @@ import classnames from 'classnames';
 import GuestsListItem from './GuestsListItem';
 
 const GuestsList = (props) => {
-	const guests = props.guests;
+	const guests = props.guests,
+		eventsById = {};
+
+	props.events.forEach(e => eventsById[e.id] = e);
 
 	return (
 		<ul className="guests-list">
@@ -40,13 +43,18 @@ const GuestsList = (props) => {
 						Date Added
 					</h5>
 				</div>
+				<div className="event">
+					<h5>
+						Event
+					</h5>
+				</div>
 				<div className="transaction">
 					<h5>
 						Confirmation
 					</h5>
 				</div>
 			</li>
-			{guests.map(guest => <GuestsListItem key={guest.id} guest={guest} checkIn={props.checkIn} checkOut={props.checkOut} />)}
+			{guests.map(guest => <GuestsListItem key={guest.id} event={eventsById[guest.eventId]} guest={guest} checkIn={props.checkIn} checkOut={props.checkOut} user={props.user} />)}
 		</ul>
 	);
 };
@@ -54,7 +62,9 @@ const GuestsList = (props) => {
 export default GuestsList;
 
 GuestsList.propTypes = {
+	user: PropTypes.object.isRequired,
 	guests: PropTypes.array.isRequired,
+	events: PropTypes.array.isRequired,
 	sortGuests: PropTypes.func.isRequired,
 	switchGuestsOrder: PropTypes.func.isRequired,
 	sortBy: PropTypes.string.isRequired,

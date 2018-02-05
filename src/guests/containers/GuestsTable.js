@@ -71,7 +71,9 @@ export class GuestsTable extends Component {
 	}
 
 	render() {
-		const filter = new RegExp(this.state.filter, 'i');
+		const events = this.props.events.filter(e => this.props.selectedEvents.includes(e.id)),
+			filter = new RegExp(this.state.filter, 'i');
+
 		let guests = this.props.guests.filter(g => {
 			if(!this.props.selectedEvents.includes(g.eventId)) return false;
 			if(!this.state.filter) return true;
@@ -91,7 +93,9 @@ export class GuestsTable extends Component {
 				<Search handleQueryChange={this.handleFilterChange} />
 
 				<GuestsList
+					user={this.props.user}
 					guests={guests}
+					events={events}
 					sortGuests={this.sortGuests}
 					switchGuestsOrder={this.switchGuestsOrder}
 					sortBy={this.state.sortBy}
@@ -105,7 +109,9 @@ export class GuestsTable extends Component {
 }
 
 GuestsTable.propTypes = {
+	user: PropTypes.object.isRequired,
 	guests: PropTypes.array.isRequired,
+	events: PropTypes.array.isRequired,
 	fetchGuests: PropTypes.func.isRequired,
 	checkIn: PropTypes.func.isRequired,
 	checkOut: PropTypes.func.isRequired,
@@ -113,7 +119,9 @@ GuestsTable.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => ({
+	user: state.session.user,
 	guests: state.data.guests,
+	events: state.data.events,
 	selectedEvents: state.control.selectedEvents
 });
 
