@@ -22,7 +22,10 @@ const defaultSessionState = {
 		socketConnected: false
 	},
 	defaultControlState = {
-		selectedEvents: []
+		selectedEvents: [
+			'b345946a-8220-4d50-84ea-502138201f3f',
+			'c67d8952-539c-40b4-a7d1-1b2c9dc5e803'
+		]
 	};
 
 export default function reducer(state = {}, action = {}) {

@@ -14,7 +14,7 @@ export class GuestsTable extends Component {
 		this.state = {
 			filter: '',
 			sortBy: 'name',
-			sortOrder: -1 // DESC
+			sortOrder: 1 // asc
 		};
 
 		this.sortGuests = this.sortGuests.bind(this);
@@ -23,8 +23,12 @@ export class GuestsTable extends Component {
 	}
 
 	componentDidMount() {
-		this.props.fetchGuests({eventId: this.props.selectedEvents});
+		this.props.selectedEvents.length && this.props.fetchGuests({eventId: this.props.selectedEvents});
 		this.props.connectToSocket();
+	}
+
+	componentWillUpdate(nextProps) {
+		if(nextProps.selectedEvents !== this.props.selectedEvents && nextProps.selectedEvents.length) this.props.fetchGuests({eventId: nextProps.selectedEvents});
 	}
 
 	getGuestComparator() {
@@ -39,7 +43,7 @@ export class GuestsTable extends Component {
 
 				default:
 				case 'name':
-					sort = a.lastName > b.lastName ? -1 : a.lastName === b.lastName ? 0 : 1;
+					sort = a.lastName > b.lastName ? 1 : a.lastName === b.lastName ? 0 : -1;
 					break;
 			}
 
@@ -49,6 +53,7 @@ export class GuestsTable extends Component {
 
 	sortGuests(sortBy) {
 		this.setState({
+			sortOrder: 1,
 			sortBy
 		});
 	}
@@ -66,16 +71,20 @@ export class GuestsTable extends Component {
 	}
 
 	render() {
-		const guests = this.props.guests.filter(g => {
+		const filter = new RegExp(this.state.filter, 'i');
+		let guests = this.props.guests.filter(g => {
+			if(!this.props.selectedEvents.includes(g.eventId)) return false;
 			if(!this.state.filter) return true;
 
-			const filter = this.state.filter.toLowerCase();
-
 			return (
-				(g.firstName + ' ' + g.lastName).toLowerCase().includes(filter) ||
-				g.transactionId.toLowerCase().includes(filter)
+				filter.test(g.firstName + ' ' + g.lastName) ||
+				filter.test(g.transactionId)
 			);
-		}).sort(this.getGuestComparator());
+		});
+
+		if(this.state.sortBy !== 'name' || this.state.sortOrder !== 1) {
+			guests = guests.sort(this.getGuestComparator());
+		}
 
 		return (
 			<div>

@@ -33,8 +33,7 @@ const store = createStore(rootReducer, initialState, enhancer);
 function isAuthenticated() {
 	return !!(
 		window.localStorage.getItem('accessToken')
-		// && window.localStorage.getItem('refreshToken')
-		// && window.localStorage.getItem('user')
+		&& window.localStorage.getItem('refreshToken')
 	);
 }
 

@@ -11,6 +11,7 @@ const REQUEST_EVENTS = 'mustachebash/events/REQUEST_EVENTS',
 	REQUEST_EVENT = 'mustachebash/events/REQUEST_EVENT',
 	RECEIVE_EVENTS = 'mustachebash/events/RECEIVE_EVENTS',
 	RECEIVE_EVENT = 'mustachebash/events/RECEIVE_EVENT',
+	RECEIVE_EVENT_SUMMARY = 'mustachebash/events/RECEIVE_EVENT_SUMMARY',
 	UPDATE_EVENT = 'mustachebash/events/UPDATE_EVENT';
 
 export default function reducer(state = [], action = {}) {
@@ -20,6 +21,16 @@ export default function reducer(state = [], action = {}) {
 
 		case RECEIVE_EVENTS:
 			return unionWith(action.events, state, (a, b) => a.id === b.id);
+
+		default:
+			return state;
+	}
+}
+
+export function summaryReducer(state = [], action = {}) {
+	switch (action.type) {
+		case RECEIVE_EVENT_SUMMARY:
+			return unionWith([action.eventSummary], state, (a, b) => a.eventId === b.eventId);
 
 		default:
 			return state;
@@ -47,10 +58,10 @@ export function communicationReducer(state = {}, action = {}) {
 	}
 }
 
-export function requestEvent(eventKey) {
+export function requestEvent(id) {
 	return {
 		type: REQUEST_EVENT,
-		eventKey
+		id
 	};
 }
 
@@ -64,6 +75,13 @@ export function receiveEvent(event) {
 	return {
 		type: RECEIVE_EVENT,
 		event
+	};
+}
+
+export function receiveEventSummary(eventSummary) {
+	return {
+		type: RECEIVE_EVENT_SUMMARY,
+		eventSummary
 	};
 }
 
@@ -87,6 +105,16 @@ export function fetchEvent(id) {
 
 		return apiClient.get(`/events/${id}`)
 			.then(event => dispatch(receiveEvent(event)))
+			.catch(e => console.error('Events API Error', e));
+	};
+}
+
+export function fetchEventSummary(id) {
+	return (dispatch) => {
+		dispatch(requestEvent(id));
+
+		return apiClient.get(`/events/${id}/summary`)
+			.then(eventSummary => dispatch(receiveEventSummary(eventSummary)))
 			.catch(e => console.error('Events API Error', e));
 	};
 }
