@@ -80,7 +80,7 @@ export class GuestsTable extends Component {
 
 			return (
 				filter.test(g.firstName + ' ' + g.lastName) ||
-				filter.test(g.transactionId)
+				filter.test(g.confirmationId)
 			);
 		});
 
