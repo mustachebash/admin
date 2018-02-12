@@ -12,6 +12,7 @@ const REQUEST_EVENTS = 'mustachebash/events/REQUEST_EVENTS',
 	RECEIVE_EVENTS = 'mustachebash/events/RECEIVE_EVENTS',
 	RECEIVE_EVENT = 'mustachebash/events/RECEIVE_EVENT',
 	RECEIVE_EVENT_SUMMARY = 'mustachebash/events/RECEIVE_EVENT_SUMMARY',
+	RECEIVE_EVENT_CHART = 'mustachebash/events/RECEIVE_EVENT_CHART',
 	UPDATE_EVENT = 'mustachebash/events/UPDATE_EVENT';
 
 export default function reducer(state = [], action = {}) {
@@ -31,6 +32,16 @@ export function summaryReducer(state = [], action = {}) {
 	switch (action.type) {
 		case RECEIVE_EVENT_SUMMARY:
 			return unionWith([action.eventSummary], state, (a, b) => a.eventId === b.eventId);
+
+		default:
+			return state;
+	}
+}
+
+export function chartReducer(state = [], action = {}) {
+	switch (action.type) {
+		case RECEIVE_EVENT_CHART:
+			return unionWith([action.eventChart], state, (a, b) => a.eventId === b.eventId);
 
 		default:
 			return state;
@@ -85,6 +96,13 @@ export function receiveEventSummary(eventSummary) {
 	};
 }
 
+export function receiveEventChart(eventChart) {
+	return {
+		type: RECEIVE_EVENT_CHART,
+		eventChart
+	};
+}
+
 export function receiveEvents(events) {
 	return {
 		type: RECEIVE_EVENTS,
@@ -115,6 +133,16 @@ export function fetchEventSummary(id) {
 
 		return apiClient.get(`/events/${id}/summary`)
 			.then(eventSummary => dispatch(receiveEventSummary(eventSummary)))
+			.catch(e => console.error('Events API Error', e));
+	};
+}
+
+export function fetchEventChart(id) {
+	return (dispatch) => {
+		dispatch(requestEvent(id));
+
+		return apiClient.get(`/events/${id}/chart`)
+			.then(eventChart => dispatch(receiveEventChart(eventChart)))
 			.catch(e => console.error('Events API Error', e));
 	};
 }
