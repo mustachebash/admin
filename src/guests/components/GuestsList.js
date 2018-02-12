@@ -48,7 +48,7 @@ const GuestsList = (props) => {
 						Event
 					</h5>
 				</div>
-				<div className="transaction">
+				<div className="confirmation">
 					<h5>
 						Confirmation
 					</h5>

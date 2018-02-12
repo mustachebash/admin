@@ -1,11 +1,7 @@
-// Import the base LESS file - customized variables per project
-@import 'base';
-
-// --------------------------------------------------
-// Global Styles
+@import 'variables';
 
 body {
-	color: #fff;
+	color: @white;
 	background: @gray;
 	font: 100% @proxima;
 	-webkit-font-smoothing: antialiased;
@@ -22,159 +18,60 @@ body {
 	display: flex;
 }
 
-span.teal {
-	color: @teal;
-}
-span.red {
-	color: @red;
-}
-span.black {
-	color: @black;
-}
-span.white {
-	color: @white;
-}
-span.gray {
-	color: @gray;
-}
-span.super {
-	font-size: .5em;
-	vertical-align: super;
-}
-span.lowercase {
-	text-transform: none;
-}
-
 .logo {
 	width: 118px;
 	height: 50px;
 }
 
 p {
-	font-size: 1.25em; /* 20/16 */
-	line-height: 1.6em;
+	line-height: 1.25em;
 	margin: .8em auto;
-
-	@media (min-width: @mobile) {
-		font-size: 1em; /* 16/16 */
-		line-height: 1.25em;
-	}
 
 	&:last-child {
 		margin-bottom: 0;
 	}
 }
 
-h1 {
-	font: 900 3.125em @proxima; /* 50/16 */
-	margin: 0 auto 0.9375rem; /* 15/16 */
-	padding: 0;
-	line-height: .9em;
-
-	@media (min-width: @small-mobile) {
-		font-size: 3.75em; /* 60/16 */
-	}
-
-	@media (min-width: @mobile) {
-		font-size: 7.5em; /* 120/16 */
-		margin-bottom: 1.5625rem; /* 25/16 */
-	}
-}
-
 h2 {
-	font: 1.375em @league; /* 22/16 */
-	color: @light-gray;
-	text-transform: uppercase;
-	margin: 0 auto 1.25rem; /* 20/16 */
-	line-height: 3.75rem; /* 60/16 */
-	padding: 0;
-	letter-spacing: 4px;
-
-	@media (min-width: @small-mobile) {
-		font-size: 1.875em; /* 30/16 */
-	}
-
-	@media (min-width: @mobile) {
-		font-size: 3.75em; /* 60/16 */
-		margin-bottom: 2.8125rem; /* 45/16 */
-	}
-}
-
-h3 {
-	font-size: 1.875em; /* 30/16 */
+	font-size: 2.25em; /* 36/16 */
 	font-weight: 900;
-	line-height: 1em;
-	margin: 0 auto 1.25rem; /* 20/16 */
-	text-align: center;
+	margin: .5em 0;
 	border-bottom: 1px solid @white;
 
-	@media (min-width: @mobile) {
-		font-size: 2.25em; /* 36/16 */
-		text-align: left;
+	@media (max-width: @mobile) {
+		text-align: center;
 	}
 }
 
 h4 {
-	font: 400 2.25em @league; /* 36/16 */
-	color: @light-gray;
+	font: 400 2em @league; /* 36/16 */
 	text-transform: uppercase;
 	letter-spacing: 2px;
-	line-height: 1em;
-	text-align: center;
-	margin: 0;
+	margin: .5em 0;
 
-	@media (min-width: @mobile) {
-		font-size: 2em; /* 32/16 */
-		text-align: left;
+	@media (max-width: @mobile) {
+		text-align: center;
 	}
 }
 
 h5 {
-	font: 400 1.875em @league; /* 30/16 */
+	font: 400 1.375em @league;
 	color: @teal;
 	text-transform: uppercase;
 	letter-spacing: 2px;
-	line-height: 1em;
 	margin: 0 auto 0.3125rem; /* 5/16 */
-	text-align: center;
 
-	@media (min-width: @mobile) {
-		font-size: 1.375em; /* 22/16 */
-		text-align: left;
+	@media (max-width: @mobile) {
+		text-align: center;
 	}
 }
 
-h6 {
-	font: 400 1em @league; /* 16/16 */
-	color: @teal;
-	text-transform: uppercase;
-	letter-spacing: 2px;
-	line-height: 1em;
-	margin: 0 auto 0.3125rem; /* 5/16 */
-	text-align: center;
-
-	@media (min-width: @mobile) {
-		font-size: 1em; /* 16/16 */
-		text-align: left;
-	}
-}
-
-::-webkit-input-placeholder {
-   color: rgba(255,255,255,.8);
-}
-
-::-moz-placeholder {
-   color: rgba(255,255,255,.8);
-}
-
-:-ms-input-placeholder {
-   color: rgba(255,255,255,.8);
+::placeholder {
+   color: rgba(255,255,255,.4);
 }
 
 input[type="text"],
-input[type="email"],
 input[type="password"],
-input[type="tel"],
 select {
 	-webkit-appearance: none;
 	display: block;
@@ -184,10 +81,10 @@ select {
 	box-sizing: border-box;
 	width: 100%;
 	background: none;
-	border: 2px solid #fff;
+	border: 2px solid @white;
 	border-radius: 0;
 	font: 400 1em @proxima; /* 16/16 */
-	color: #fff;
+	color: @white;
 	outline: 0;
 	transition: box-shadow 200ms;
 
@@ -197,7 +94,7 @@ select {
 
 	&:focus {
 		outline: 0;
-		box-shadow: 0 0 4px 1px #fff;
+		box-shadow: 0 0 4px 1px @white;
 	}
 
 	&:disabled {
@@ -223,6 +120,7 @@ select {
 		transform: translateY(-25%);
 		border: 5px solid transparent;
 		border-top-color: @white;
+		pointer-events: none;
 	}
 }
 
@@ -340,13 +238,6 @@ nav {
 		max-height: 31.25rem; /* 500/16 */
 	}
 }
-
-// END Global Styles
-// --------------------------------------------------
-
-
-// --------------------------------------------------
-// Section Styles
 
 header {
 	padding: 1.5625em 0 0; /* 25/16 */
@@ -508,10 +399,7 @@ header {
 // --------------------------------------------------
 // TRANSACTIONS & GUEST LIST
 
-.search,
 .search {
-	margin-left: 1em;
-	margin-right: 1em;
 	max-width: 25em;
 }
 
@@ -519,7 +407,7 @@ header {
 .guests-list {
 	margin-top: 0;
 	margin-bottom: 0;
-	padding: 0 1em;
+	padding: 0;
 	list-style: none;
 
 	ul {
@@ -586,8 +474,12 @@ header {
 			}
 		}
 
-		.transaction {
+		.confirmation {
 			flex: 0 1 115px;
+
+			p {
+				text-align: right;
+			}
 
 			@media (max-width: @mobile) {
 				display: none;
@@ -651,6 +543,29 @@ header {
 	}
 }
 
+.comped-guest-form {
+	margin-bottom: 4em;
+
+	input {
+		margin-bottom: 0;
+		margin-right: .5em;
+		flex: 1 .5;
+	}
+
+	.select-wrap {
+		flex: 1 0;
+		margin-right: .5em;
+
+		select {
+			margin-bottom: 0;
+		}
+	}
+
+	button {
+		display: block;
+	}
+}
+
 // END TRANSACTIONS & GUEST LIST
 // --------------------------------------------------
 
@@ -678,11 +593,10 @@ footer {
 	#copyright {
 		margin-top: 0.625rem; /* 10/16 */
 		color: @light-gray;
-		font-size: 0.875em; /* 14/16 */
 		text-align: center;
 
-		@media (min-width: @mobile) {
-			font-size: 1em; /* 16/16 */
+		@media (max-width: @mobile) {
+			font-size: 0.875em; /* 14/16 */
 		}
 	}
 }

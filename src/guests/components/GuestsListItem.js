@@ -46,7 +46,7 @@ export default class GuestsListItem extends Component {
 				<div className="event">
 					<p>{event.name}</p>
 				</div>
-				<div className="transaction">
+				<div className="confirmation">
 					<p>{guest.confirmationId}</p>
 				</div>
 			</li>

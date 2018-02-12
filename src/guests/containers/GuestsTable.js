@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { connect } from 'react-redux';
-import { fetchGuests, checkIn, checkOut } from '../guestsDuck';
+import { fetchGuests, addGuest, checkIn, checkOut } from '../guestsDuck';
 import { connectToSocket } from 'appDuck';
+import { checkScope } from 'utils';
+import CompedGuestForm from '../components/CompedGuestForm';
 import GuestsList from '../components/GuestsList';
 import Search from 'components/Search';
 
@@ -80,7 +82,7 @@ export class GuestsTable extends Component {
 
 			return (
 				filter.test(g.firstName + ' ' + g.lastName) ||
-				filter.test(g.transactionId)
+				filter.test(g.confirmationId)
 			);
 		});
 
@@ -89,7 +91,14 @@ export class GuestsTable extends Component {
 		}
 
 		return (
-			<div>
+			<React.Fragment>
+				{checkScope(this.props.user.role, 'admin') &&
+					<React.Fragment>
+						<h4>Comp a Guest</h4>
+						<CompedGuestForm events={events} addGuest={this.props.addGuest}/>
+					</React.Fragment>
+				}
+
 				<Search handleQueryChange={this.handleFilterChange} />
 
 				<GuestsList
@@ -103,7 +112,7 @@ export class GuestsTable extends Component {
 					checkIn={this.props.checkIn}
 					checkOut={this.props.checkOut}
 				/>
-			</div>
+			</React.Fragment>
 		);
 	}
 }
@@ -113,6 +122,7 @@ GuestsTable.propTypes = {
 	guests: PropTypes.array.isRequired,
 	events: PropTypes.array.isRequired,
 	fetchGuests: PropTypes.func.isRequired,
+	addGuest: PropTypes.func.isRequired,
 	checkIn: PropTypes.func.isRequired,
 	checkOut: PropTypes.func.isRequired,
 	connectToSocket: PropTypes.func.isRequired
@@ -127,6 +137,7 @@ const mapStateToProps = (state, ownProps) => ({
 
 export default connect(mapStateToProps, {
 	fetchGuests,
+	addGuest,
 	checkIn,
 	checkOut,
 	connectToSocket

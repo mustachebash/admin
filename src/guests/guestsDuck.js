@@ -15,12 +15,6 @@ export const REQUEST_GUEST = 'mustachebash/guests/REQUEST_GUEST',
 
 export default function reducer(state = [], action = {}) {
 	switch (action.type) {
-		case REQUEST_GUEST:
-			return state;
-
-		case REQUEST_GUESTS:
-			return state;
-
 		case RECEIVE_GUEST:
 			return unionWith([action.guest], state, (a, b) => a.id === b.id);
 
@@ -140,6 +134,14 @@ export function fetchGuests(query) {
 
 		return apiClient.get('/guests', query)
 			.then(guests => dispatch(receiveGuests(guests)))
+			.catch(e => console.error('Guest API Error', e));
+	};
+}
+
+export function addGuest(guest) {
+	return (dispatch) => {
+		return apiClient.post('/guests', guest)
+			.then(guest => dispatch(receiveGuest(guest)))
 			.catch(e => console.error('Guest API Error', e));
 	};
 }

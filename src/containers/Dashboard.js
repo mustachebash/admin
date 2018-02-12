@@ -29,7 +29,7 @@ export class Dashboard extends Component {
 				<div className="summaries">
 					{eventSummaries.map(e => (
 						<div key={e.eventId}>
-							<h3>{e.name}</h3>
+							<h2>{e.name}</h2>
 							<div className="stats flex-row">
 								<div className="attendance">
 									<h5>Attendance</h5>
