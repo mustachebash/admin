@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const Loader = ({ fillColor = '#ffffff', size = 55 }) => (
 	<object style={{width: Number(size), height: (Number(size) * 80)/55, display: 'block', margin: '1em auto'}}>
@@ -32,5 +33,10 @@ const Loader = ({ fillColor = '#ffffff', size = 55 }) => (
 		</svg>
 	</object>
 );
+
+Loader.propTypes = {
+	size: PropTypes.number,
+	fillColor: PropTypes.string
+};
 
 export default Loader;
