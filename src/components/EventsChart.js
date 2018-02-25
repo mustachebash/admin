@@ -9,7 +9,11 @@ const availableTypes = [
 	},
 	{
 		id: 'tickets',
-		name: 'Ticket Sales'
+		name: 'Daily Ticket Sales'
+	},
+	{
+		id: 'ticketsTotal',
+		name: 'Acc. Ticket Sales'
 	},
 	{
 		id: 'guests',
@@ -62,6 +66,7 @@ export default class EventsChart extends Component {
 			pointInterval: 1000 * 60 * 60,
 			yAxis: 0,
 			name: `${event.name}: Revenue`,
+			visible: (new Date(event.date)) > Date.now() - (1.5 * 365 * 24 * 60 * 60 * 1000),
 			tooltip: {
 				valuePrefix: '$'
 			}
@@ -74,6 +79,23 @@ export default class EventsChart extends Component {
 			pointStart: Date.parse(event.transactions[0][0]),
 			pointInterval: 1000 * 60 * 60,
 			yAxis: 1,
+			visible: (new Date(event.date)) > Date.now() - (1.5 * 365 * 24 * 60 * 60 * 1000),
+			name: `${event.name}: Tickets Sold`
+		}));
+	}
+
+	generateTotalTicketsArea(){
+		return this.props.chartData.map(event => ({
+			data: event.transactions.reduce((acc, day) => {
+				acc.total += day[1].quantity;
+				acc.set.push([(new Date(day[0])).setUTCFullYear(1972), acc.total]);
+
+				return acc;
+			}, {set: [], total: 0}).set,
+			pointStart: Date.parse(event.transactions[0][0]),
+			pointInterval: 1000 * 60 * 60,
+			yAxis: 1,
+			visible: (new Date(event.date)) > Date.now() - (1.5 * 365 * 24 * 60 * 60 * 1000),
 			name: `${event.name}: Tickets Sold`
 		}));
 	}
@@ -82,12 +104,14 @@ export default class EventsChart extends Component {
 		return this.props.chartData.map(event => ({
 			data: event.guests.map(day => ([(new Date(day[0])).setUTCFullYear(1972), day[1]])),
 			yAxis: 1,
+			visible: (new Date(event.date)) > Date.now() - (1.5 * 365 * 24 * 60 * 60 * 1000),
 			name: `${event.name}: Guests Added`
 		}));
 	}
 
 	render() {
 		const series = [];
+		let chartType = 'line';
 		switch(this.state.graphType) {
 			case 'revenue':
 				series.push(...this.generateRevenueSeries());
@@ -100,6 +124,11 @@ export default class EventsChart extends Component {
 			case 'guests':
 				series.push(...this.generateGuestsSeries());
 				break;
+
+			case 'ticketsTotal':
+				series.push(...this.generateTotalTicketsArea());
+				chartType = 'area';
+				break;
 		}
 
 		//config object passed into HighCharts instance
@@ -109,6 +138,7 @@ export default class EventsChart extends Component {
 			},
 			chart: {
 				zoomType: 'x',
+				type: chartType,
 				resetZoomButton: {
 					theme: {
 						r: 3

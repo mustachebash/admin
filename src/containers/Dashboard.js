@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { formatThousands } from 'utils';
 import { fetchEventSummary, fetchEventChart } from 'events/eventsDuck';
 import EventsChart from 'components/EventsChart';
+import Loader from 'components/Loader';
 
 export class Dashboard extends Component {
 	constructor(props) {
@@ -25,7 +26,10 @@ export class Dashboard extends Component {
 
 		return (
 			<div>
-				<EventsChart chartData={this.props.eventCharts} />
+				{this.props.events.length === this.props.eventCharts.length
+					? <EventsChart chartData={this.props.eventCharts} />
+					: <Loader />
+				}
 				<div className="summaries">
 					{eventSummaries.map(e => (
 						<div key={e.eventId}>
