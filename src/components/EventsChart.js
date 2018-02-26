@@ -18,6 +18,10 @@ const availableTypes = [
 	{
 		id: 'guests',
 		name: 'Guests'
+	},
+	{
+		id: 'checkIns',
+		name: 'Check Ins'
 	}
 ];
 
@@ -36,6 +40,9 @@ export default class EventsChart extends Component {
 		ReactHighcharts.Highcharts.setOptions({
 			lang: {
 				thousandsSep: ','
+			},
+			time: {
+				timezoneOffset: 6 * 60
 			}
 		});
 
@@ -100,6 +107,21 @@ export default class EventsChart extends Component {
 		}));
 	}
 
+	generateCheckInsSeries(){
+		return this.props.chartData.filter(e => e.checkIns.length).map(event => ({
+			data: event.checkIns.map(half => ([Date.UTC(1972, 2, 24, half.hour + 7, half.minutes), half.checkedIn])),
+			pointStart: Date.UTC(1972, 2, 24, event.checkIns[0].hour + 7, 0),
+			pointInterval: 1000 * 60 * 30,
+			yAxis: 1,
+			visible: (new Date(event.date)) > Date.now() - (1.5 * 365 * 24 * 60 * 60 * 1000),
+			name: `${event.name}: Check Ins`,
+			tooltip: {
+				xDateFormat: '%H:%M',
+				split: true
+			}
+		}));
+	}
+
 	generateGuestsSeries(){
 		return this.props.chartData.map(event => ({
 			data: event.guests.map(day => ([(new Date(day[0])).setUTCFullYear(1972), day[1]])),
@@ -123,6 +145,10 @@ export default class EventsChart extends Component {
 
 			case 'guests':
 				series.push(...this.generateGuestsSeries());
+				break;
+
+			case 'checkIns':
+				series.push(...this.generateCheckInsSeries());
 				break;
 
 			case 'ticketsTotal':
