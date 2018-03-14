@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { connect } from 'react-redux';
-import { fetchGuests, addGuest, checkIn, checkOut } from '../guestsDuck';
+import { fetchGuests, addGuest, checkIn, checkOut, updateGuestName } from '../guestsDuck';
 import { connectToSocket } from 'appDuck';
 import { checkScope } from 'utils';
 import CompedGuestForm from '../components/CompedGuestForm';
@@ -45,7 +45,11 @@ export class GuestsTable extends Component {
 
 				default:
 				case 'name':
-					sort = a.lastName > b.lastName ? 1 : a.lastName === b.lastName ? 0 : -1;
+					sort = a.lastName > b.lastName
+						? 1
+						: a.lastName === b.lastName
+							? 0
+							: -1;
 					break;
 			}
 
@@ -86,9 +90,10 @@ export class GuestsTable extends Component {
 			);
 		});
 
-		if(this.state.sortBy !== 'name' || this.state.sortOrder !== 1) {
-			guests = guests.sort(this.getGuestComparator());
-		}
+		guests = guests.sort(this.getGuestComparator());
+
+		// No one needs to see more than 100 guests at a time
+		guests = guests.slice(0, 100);
 
 		return (
 			<React.Fragment>
@@ -101,6 +106,8 @@ export class GuestsTable extends Component {
 
 				<Search handleQueryChange={this.handleFilterChange} />
 
+				<p>Showing {guests.length} of {this.props.guests.length} total</p>
+
 				<GuestsList
 					user={this.props.user}
 					guests={guests}
@@ -111,6 +118,7 @@ export class GuestsTable extends Component {
 					sortOrder={this.state.sortOrder}
 					checkIn={this.props.checkIn}
 					checkOut={this.props.checkOut}
+					updateGuestName={this.props.updateGuestName}
 				/>
 			</React.Fragment>
 		);
@@ -140,5 +148,6 @@ export default connect(mapStateToProps, {
 	addGuest,
 	checkIn,
 	checkOut,
+	updateGuestName,
 	connectToSocket
 })(GuestsTable);

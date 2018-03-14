@@ -32,6 +32,16 @@ p {
 	}
 }
 
+a {
+	color: @teal;
+	text-decoration: none;
+	transition: color 200ms;
+
+	&:hover {
+		color: lighten(@teal, 10%);
+	}
+}
+
 h2 {
 	font-size: 2.25em; /* 36/16 */
 	font-weight: 900;
@@ -485,6 +495,18 @@ header {
 				display: none;
 			}
 		}
+
+		.edit-guest {
+			flex: 0 1 30px;
+
+			p {
+				text-align: right;
+			}
+
+			@media (max-width: @mobile) {
+				display: none;
+			}
+		}
 	}
 }
 
@@ -569,6 +591,23 @@ header {
 // END TRANSACTIONS & GUEST LIST
 // --------------------------------------------------
 
+.modal-wrap {
+	position: fixed;
+	width: 100%;
+	height: 100vh;
+	top: 0;
+	left: 0;
+	background: fade(@teal, 80%);
+
+	.modal {
+		position: relative;
+		margin: 0 auto;
+		padding: 1em 2em;
+		top: 50%;
+		transform: translateY(-50%);
+		max-width: 500px;
+	}
+}
 
 footer {
 	padding: 3.4375em 0; /* 55/16 */

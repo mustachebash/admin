@@ -2,9 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import GuestsListItem from './GuestsListItem';
+import { checkScope } from 'utils';
 
 const GuestsList = (props) => {
-	const guests = props.guests,
+	const { guests, user } = props,
 		eventsById = {};
 
 	props.events.forEach(e => eventsById[e.id] = e);
@@ -12,11 +13,13 @@ const GuestsList = (props) => {
 	return (
 		<ul className="guests-list">
 			<li className="table-header">
-				<div className="checked-in">
-					<h5>
-						Checked In
-					</h5>
-				</div>
+				{false && checkScope(user.role, 'doorman') &&
+					<div className="checked-in">
+						<h5>
+							Checked In
+						</h5>
+					</div>
+				}
 				<div className="name">
 					<h5
 						className={classnames({
@@ -53,8 +56,21 @@ const GuestsList = (props) => {
 						Confirmation
 					</h5>
 				</div>
+				{checkScope(user.role, 'admin') &&
+					<div className="edit-guest">
+						{/* Empty header */}
+					</div>
+				}
 			</li>
-			{guests.map(guest => <GuestsListItem key={guest.id} event={eventsById[guest.eventId]} guest={guest} checkIn={props.checkIn} checkOut={props.checkOut} user={props.user} />)}
+			{guests.map(guest => <GuestsListItem
+				key={guest.id}
+				event={eventsById[guest.eventId]}
+				guest={guest}
+				checkIn={props.checkIn}
+				checkOut={props.checkOut}
+				updateGuestName={props.updateGuestName}
+				user={props.user}
+			/>)}
 		</ul>
 	);
 };
@@ -70,5 +86,6 @@ GuestsList.propTypes = {
 	sortBy: PropTypes.string.isRequired,
 	sortOrder: PropTypes.number.isRequired,
 	checkIn: PropTypes.func.isRequired,
-	checkOut: PropTypes.func.isRequired
+	checkOut: PropTypes.func.isRequired,
+	updateGuestName: PropTypes.func.isRequired
 };

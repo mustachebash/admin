@@ -118,6 +118,26 @@ export function checkOut(guestId) {
 	};
 }
 
+export function updateGuestName(guestId, { firstName, lastName }) {
+	return (dispatch, getState) => {
+		const {data: { guests }, session: { socketConnected }} = getState(),
+			guest = {
+				...guests.find(g => g.id === guestId),
+				firstName,
+				lastName
+			};
+
+		dispatch(updateGuest(guest));
+
+		// If there's no socket connected, resort to HTTP
+		if(!socketConnected) {
+			apiClient.patch(`/guests/${guestId}`, {firstName, lastName})
+				.then(g => dispatch(receiveGuest(g)))
+				.catch(e => console.error('Guest API Error', e));
+		}
+	};
+}
+
 export function fetchGuest(guestId) {
 	return (dispatch) => {
 		dispatch(requestGuest(guestId));
