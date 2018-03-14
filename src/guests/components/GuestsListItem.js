@@ -2,16 +2,24 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment-timezone';
 import { checkScope } from 'utils';
+import Modal from 'components/Modal';
+import GuestUpdateModal from './GuestUpdateModal';
 
 export default class GuestsListItem extends Component {
 	constructor(props) {
 		super(props);
 
+		this.state = {
+			showEditModal: false
+		};
+
 		this.toggleCheckIn = this.toggleCheckIn.bind(this);
+		this.showEditModal = this.showEditModal.bind(this);
+		this.closeEditModal = this.closeEditModal.bind(this);
 	}
 
-	shouldComponentUpdate(nextProps) {
-		return nextProps.guest !== this.props.guest;
+	shouldComponentUpdate(nextProps, nextState) {
+		return nextProps.guest !== this.props.guest || nextState.showEditModal !== this.state.showEditModal;
 	}
 
 	toggleCheckIn() {
@@ -25,31 +33,51 @@ export default class GuestsListItem extends Component {
 		}
 	}
 
+	showEditModal() {
+		this.setState({showEditModal: true});
+	}
+
+	closeEditModal() {
+		this.setState({showEditModal: false});
+	}
+
 	render() {
-		const { guest, user, event } = this.props;
+		const { guest, user, event, updateGuestName } = this.props;
 
 		return (
-			<li className="guest">
-				<div className="check-in">
+			<React.Fragment>
+				<li className="guest">
 					{false && checkScope(user.role, 'doorman') &&
-						<span className={guest.checkedIn ? 'checked' : ''} onClick={this.toggleCheckIn}>
-							{guest.checkedIn ? '' : 'Check In'}
-						</span>
+						<div className="check-in">
+							<span className={guest.checkedIn ? 'checked' : ''} onClick={this.toggleCheckIn}>
+								{guest.checkedIn ? '' : 'Check In'}
+							</span>
+						</div>
 					}
-				</div>
-				<div className="name">
-					<p>{guest.firstName} {guest.lastName}</p>
-				</div>
-				<div className="date">
-					<p>{moment.tz(guest.created, 'America/Los_Angeles').format('MMM Do, h:mma')}</p>
-				</div>
-				<div className="event">
-					<p>{event.name}</p>
-				</div>
-				<div className="confirmation">
-					<p>{guest.confirmationId}</p>
-				</div>
-			</li>
+					<div className="name">
+						<p>{guest.firstName} {guest.lastName}</p>
+					</div>
+					<div className="date">
+						<p>{moment.tz(guest.created, 'America/Los_Angeles').format('MMM Do, h:mma')}</p>
+					</div>
+					<div className="event">
+						<p>{event.name}</p>
+					</div>
+					<div className="confirmation">
+						<p>{guest.confirmationId}</p>
+					</div>
+					{checkScope(user.role, 'admin') &&
+						<div className="edit-guest">
+							<p><a href="#" onClick={this.showEditModal}>&#9998;</a></p>
+						</div>
+					}
+				</li>
+				{this.state.showEditModal &&
+					<Modal closeModal={this.closeEditModal}>
+						<GuestUpdateModal onCancel={this.closeEditModal} onSave={this.closeEditModal} updateGuestName={updateGuestName} id={guest.id}/>
+					</Modal>
+				}
+			</React.Fragment>
 		);
 	}
 }
@@ -59,5 +87,6 @@ GuestsListItem.propTypes = {
 	event: PropTypes.object.isRequired,
 	guest: PropTypes.object.isRequired,
 	checkIn: PropTypes.func.isRequired,
-	checkOut: PropTypes.func.isRequired
+	checkOut: PropTypes.func.isRequired,
+	updateGuestName: PropTypes.func.isRequired
 };
