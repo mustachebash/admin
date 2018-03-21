@@ -13,7 +13,7 @@ const REQUEST_EVENTS = 'mustachebash/events/REQUEST_EVENTS',
 	RECEIVE_EVENT = 'mustachebash/events/RECEIVE_EVENT',
 	RECEIVE_EVENT_SUMMARY = 'mustachebash/events/RECEIVE_EVENT_SUMMARY',
 	RECEIVE_EVENT_CHART = 'mustachebash/events/RECEIVE_EVENT_CHART',
-	UPDATE_EVENT = 'mustachebash/events/UPDATE_EVENT';
+	REQUEST_UPDATE_EVENT = 'mustachebash/events/REQUEST_UPDATE_EVENT';
 
 export default function reducer(state = [], action = {}) {
 	switch (action.type) {
@@ -110,10 +110,10 @@ export function receiveEvents(events) {
 	};
 }
 
-export function updateEvent(event) {
+export function requestUpdateEvent(eventId) {
 	return {
-		type: UPDATE_EVENT,
-		event
+		type: REQUEST_UPDATE_EVENT,
+		eventId
 	};
 }
 
@@ -158,6 +158,16 @@ export function fetchEvents(status) {
 
 		return apiClient.get('/events', query)
 			.then(events => dispatch(receiveEvents(events)))
+			.catch(e => console.error('Events API Error', e));
+	};
+}
+
+export function updateEvent(eventId, updates) {
+	return (dispatch) => {
+		dispatch(requestUpdateEvent(eventId));
+
+		return apiClient.patch(`/events/${eventId}`, updates)
+			.then(event => dispatch(receiveEvent(event)))
 			.catch(e => console.error('Events API Error', e));
 	};
 }

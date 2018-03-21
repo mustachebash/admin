@@ -9,6 +9,7 @@ import rootReducer from './rootReducer';
 import AppLayout from './AppLayout';
 import Login from './containers/Login';
 import DashboardView from './views/DashboardView';
+import SettingsView from './views/SettingsView';
 import TransactionsView from './transactions/views/TransactionsView';
 import GuestsView from './guests/views/GuestsView';
 
@@ -69,6 +70,7 @@ const App = () => (
 				<PrivateRoute exact path="/" component={DashboardView} />
 				<PrivateRoute path="/transactions" component={TransactionsView} />
 				<PrivateRoute path="/guests" component={GuestsView} />
+				<PrivateRoute path="/settings" component={SettingsView} />
 				<Route path="/login" component={Login} />
 			</AppLayout>
 		</Router>

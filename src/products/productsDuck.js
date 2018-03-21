@@ -3,7 +3,7 @@
  * DUCKS!!! https://github.com/erikras/ducks-modular-redux
  */
 
-import _ from 'lodash';
+import unionWith from 'lodash/unionWith';
 import apiClient from 'utils/apiClient';
 
 // Actions
@@ -14,26 +14,12 @@ const REQUEST_PRODUCTS = 'mustachebash/products/REQUEST_PRODUCTS',
 	UPDATE_PRODUCT = 'mustachebash/products/UPDATE_PRODUCT';
 
 export default function reducer(state = [], action = {}) {
-	let productsIndex;
-
 	switch (action.type) {
 		case RECEIVE_PRODUCT:
-			productsIndex = state.findIndex(product => product.key === action.product.key);
-			if(~productsIndex) {
-				return [
-					...state.slice(0, productsIndex),
-					action.product,
-					...state.slice(productsIndex + 1)
-				];
-			} else {
-				return [
-					...state.slice(),
-					action.product
-				];
-			}
+			return unionWith([action.product], state, (a, b) => a.id === b.id);
 
 		case RECEIVE_PRODUCTS:
-			return _.unionWith(action.products, state, (a, b) => a.key === b.key);
+			return unionWith(action.products, state, (a, b) => a.id === b.id);
 
 		default:
 			return state;
@@ -100,7 +86,7 @@ export function fetchProduct(id) {
 		dispatch(requestProduct(id));
 
 		return apiClient.get(`/products/${id}`)
-			.then(response => dispatch(receiveProduct(response.product)))
+			.then(product => dispatch(receiveProduct(product)))
 			.catch(e => console.error('Products API Error', e));
 	};
 }
@@ -110,7 +96,7 @@ export function fetchProducts() {
 		dispatch(requestProducts());
 
 		return apiClient.get('/products')
-			.then(response => dispatch(receiveProducts(response.products)))
+			.then(products => dispatch(receiveProducts(products)))
 			.catch(e => console.error('Products API Error', e));
 	};
 }
