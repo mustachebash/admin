@@ -57,12 +57,16 @@ export class Header extends Component {
 									<li><NavLink to="/guests">Guests</NavLink></li>
 
 									{checkScope(user.role, 'admin') &&
-										<li><NavLink to="/transactions">Transactions</NavLink></li>}
+										<React.Fragment>
+											<li><NavLink to="/transactions">Transactions</NavLink></li>
+											<li><NavLink to="/settings">Settings</NavLink></li>
+										</React.Fragment>
+									}
 
 									<li><button className="white" onClick={this.props.logOut}>Log Out</button></li>
 								</ul>
 							</nav>
-							{checkScope(user.role, 'root') &&
+							{false && checkScope(user.role, 'root') &&
 								<div id="events-selector">
 									{this.props.events.map(e => (
 										<div key={e.id}>

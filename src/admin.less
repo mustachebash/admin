@@ -116,6 +116,12 @@ select {
 	cursor: pointer;
 }
 
+label {
+	display: block;
+	font-weight: 700;
+	margin-bottom: .5em;
+}
+
 .select-wrap {
 	position: relative;
 
@@ -179,6 +185,36 @@ button {
 		&.white {
 			background: @white;
 			color: @gray;
+		}
+	}
+}
+
+.toggle {
+	position: relative;
+	width: 3rem;
+	height: 1.5rem;
+	background-color: @gray;
+	border-radius: 1000px;
+	border: 1px solid @white;
+	cursor: pointer;
+	user-select: none;
+	transition: background-color 200ms;
+
+	&:after {
+		content: '';
+		display: block;
+		height: 1.5rem;
+		width: 1.5rem;
+		background: @white;
+		border-radius: 100%;
+		transition: transform 200ms;
+	}
+
+	&.on {
+		background-color: @green;
+
+		&:after {
+			transform: translateX(100%);
 		}
 	}
 }
@@ -351,7 +387,6 @@ header {
 .events-chart {
 	margin: 2em 0;
 	padding: 1em 2em;
-	// background: @light-gray;
 	border: 2px solid @light-gray;
 
 	.chart-type-selector {
@@ -589,6 +624,41 @@ header {
 }
 
 // END TRANSACTIONS & GUEST LIST
+// --------------------------------------------------
+
+// --------------------------------------------------
+// SETTINGS
+
+#settings-view {
+	@media (max-width: @mobile) {
+		.flex-row {
+			display: block;
+		}
+	}
+}
+
+.settings-group {
+	flex: 1 1 auto;
+
+	.settings-item {
+		margin-bottom: 2em;
+
+		ul {
+			margin-bottom: 0;
+		}
+	}
+
+	.event-ticket {
+		flex: 2 0 auto;
+		margin-right: 2em;
+	}
+
+	.event-sales-toggle {
+		flex: 1 1 auto;
+	}
+}
+
+// END SETTINGS
 // --------------------------------------------------
 
 .modal-wrap {
