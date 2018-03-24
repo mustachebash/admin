@@ -81,6 +81,7 @@ export class GuestsTable extends Component {
 			filter = new RegExp(this.state.filter, 'i');
 
 		let guests = this.props.guests.filter(g => {
+			if(g.status === 'archived') return false;
 			if(!this.props.selectedEvents.includes(g.eventId)) return false;
 			if(!this.state.filter) return true;
 

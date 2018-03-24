@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Redirect } from 'react-router-dom';
+import { Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logIn } from '../appDuck';
 
@@ -33,18 +33,16 @@ export class Login extends Component {
 	}
 
 	render() {
-		if(this.props.user) return <Redirect to={(this.props.location.state && this.props.location.state.from) || {pathname: '/'}} />;
+		if(this.props.user) return <Redirect to={(this.props.user.role === 'doorman' && {pathname: '/guests'}) || (this.props.location.state && this.props.location.state.from) || {pathname: '/'}} />;
 
 		return (
 			<section id="login">
-				<div className="container-1230">
-					{this.props.loginError && <p>{this.props.loginError}</p>}
-					<form onSubmit={this.logIn}>
-						<input type="text" onChange={this.handleInputChange} name="username" value={this.state.username} placeholder="Username" />
-						<input type="password" onChange={this.handleInputChange} name="password" value={this.state.password} placeholder="Password" />
-						<button className="white" type="submit">Submit</button>
-					</form>
-				</div>
+				{this.props.loginError && <p>{this.props.loginError}</p>}
+				<form onSubmit={this.logIn}>
+					<input type="text" onChange={this.handleInputChange} name="username" value={this.state.username} placeholder="Username" />
+					<input type="password" onChange={this.handleInputChange} name="password" value={this.state.password} placeholder="Password" />
+					<button className="white" type="submit">Submit</button>
+				</form>
 			</section>
 		);
 	}
@@ -60,6 +58,6 @@ const mapStateToProps = (state, ownProps) => ({
 	loginError: state.session.loginError
 });
 
-export default connect(mapStateToProps, {
+export default withRouter(connect(mapStateToProps, {
 	logIn
-})(Login);
+})(Login));

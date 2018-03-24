@@ -4,10 +4,11 @@ import { applyMiddleware, createStore, compose } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import jwtDecode from 'jwt-decode';
+import { isAuthenticated, checkScope } from 'utils';
 import { socketMiddleware } from './utils/socketClient';
 import rootReducer from './rootReducer';
 import AppLayout from './AppLayout';
-import Login from './containers/Login';
+import LoginView from './views/LoginView';
 import DashboardView from './views/DashboardView';
 import SettingsView from './views/SettingsView';
 import TransactionsView from './transactions/views/TransactionsView';
@@ -31,47 +32,30 @@ if(accessToken) {
 
 const store = createStore(rootReducer, initialState, enhancer);
 
-function isAuthenticated() {
-	return !!(
-		window.localStorage.getItem('accessToken')
-		&& window.localStorage.getItem('refreshToken')
-	);
-}
+const PrivateRoute = ({ component: Component, scope = 'read', exclude = [], ...rest }) => (
+	<Route {...rest} render={props => {
+		if(isAuthenticated()) {
+			const userScope = jwtDecode(window.localStorage.getItem('accessToken')).role;
 
-const PrivateRoute = ({ component: Component, ...rest }) => (
-	<Route {...rest} render={props => (
-		isAuthenticated()
-			? <Component {...props} />
-			: <Redirect to={{
+			return checkScope(userScope, scope) && !exclude.includes(userScope) && <Component {...props} />;
+		} else {
+			return <Redirect to={{
 				pathname: '/login',
 				state: {from: props.location}
-			}} />
-	)} />
+			}} />;
+		}
+	}} />
 );
-
-// const checkPlannerScope = (nextState, replace) => {
-// 	let user;
-// 	try {
-// 		user = jwtDecode(window.localStorage.getItem('accessToken'));
-// 	} catch(e) {
-// 		// Shouldn't get here, logout
-// 		window.localStorage.removeItem('accessToken');
-// 		window.localStorage.removeItem('refreshToken');
-// 		window.location.assign('/');
-// 	}
-//
-// 	if(!['admin', 'planner'].includes(user.role)) return replace('/admin');
-// };
 
 const App = () => (
 	<Provider store={store}>
 		<Router>
 			<AppLayout>
-				<PrivateRoute exact path="/" component={DashboardView} />
-				<PrivateRoute path="/transactions" component={TransactionsView} />
+				<PrivateRoute exclude={['doorman']} exact path="/" component={DashboardView} />
+				<PrivateRoute scope="admin" path="/transactions" component={TransactionsView} />
 				<PrivateRoute path="/guests" component={GuestsView} />
-				<PrivateRoute path="/settings" component={SettingsView} />
-				<Route path="/login" component={Login} />
+				<PrivateRoute scope="admin" path="/settings" component={SettingsView} />
+				<Route path="/login" component={LoginView} />
 			</AppLayout>
 		</Router>
 	</Provider>

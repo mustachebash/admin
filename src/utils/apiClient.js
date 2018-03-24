@@ -84,7 +84,7 @@ function makeRequest(path, { method = 'GET', body, query, requestCount = 0 }) {
 				return makeRequest('/refresh-access-token', {method: 'POST', body: {refreshToken: getRefreshToken()}})
 					.then((accessToken) => window.localStorage.setItem('accessToken', accessToken))
 					.then(() => makeRequest(path, {method, body, query, requestCount}));
-			} else if(err.statusCode === 401 ||err.statusCode === 403) {
+			} else if((err.statusCode === 401 ||err.statusCode === 403) && getRefreshToken()) {
 				// After 10 attempts, clear the user data and redirect the page
 				window.localStorage.removeItem('accessToken');
 				window.localStorage.removeItem('refreshToken');

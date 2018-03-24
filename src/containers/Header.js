@@ -53,7 +53,7 @@ export class Header extends Component {
 							</div>
 							<nav className={this.state.navOpen ? 'open' : ''}>
 								<ul>
-									<li><NavLink exact to="/">Dashboard</NavLink></li>
+									{user.role !== 'doorman' && <li><NavLink exact to="/">Dashboard</NavLink></li>}
 									<li><NavLink to="/guests">Guests</NavLink></li>
 
 									{checkScope(user.role, 'admin') &&
@@ -63,7 +63,7 @@ export class Header extends Component {
 										</React.Fragment>
 									}
 
-									<li><button className="white" onClick={this.props.logOut}>Log Out</button></li>
+									<li><button className="white" onClick={this.props.logOut}>Log Out<br />{user.name}</button></li>
 								</ul>
 							</nav>
 							{false && checkScope(user.role, 'root') &&
