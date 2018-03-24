@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { NavLink, withRouter } from 'react-router-dom';
-import { logOut, toggleEvent } from '../appDuck';
+import { logOut, toggleEvent, connectToSocket } from '../appDuck';
 import { fetchEvents } from 'events/eventsDuck';
 import { checkScope } from '../utils';
 
@@ -35,7 +35,7 @@ export class Header extends Component {
 	}
 
 	render() {
-		const user = this.props.user;
+		const { user, socketConnected } = this.props;
 
 		/* eslint-disable max-len */
 		return (
@@ -63,7 +63,8 @@ export class Header extends Component {
 										</React.Fragment>
 									}
 
-									<li><button className="white" onClick={this.props.logOut}>Log Out<br />{user.name}</button></li>
+									<li><button className="white" onClick={this.props.logOut} title={`Logged in as ${user.name}`}>Log Out</button></li>
+									{!socketConnected && <li><button className="red" onClick={this.props.connectToSocket}>&#x26A0; Reconnect</button></li>}
 								</ul>
 							</nav>
 							{false && checkScope(user.role, 'root') &&
@@ -86,11 +87,13 @@ export class Header extends Component {
 
 Header.propTypes = {
 	user: PropTypes.object,
-	logOut: PropTypes.func.isRequired
+	logOut: PropTypes.func.isRequired,
+	connectToSocket: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => ({
 	user: state.session.user,
+	socketConnected: state.session.socketConnected,
 	events: state.data.events,
 	selectedEvents: state.control.selectedEvents
 });
@@ -98,5 +101,6 @@ const mapStateToProps = (state, ownProps) => ({
 export default withRouter(connect(mapStateToProps, {
 	logOut,
 	fetchEvents,
-	toggleEvent
+	toggleEvent,
+	connectToSocket
 })(Header));

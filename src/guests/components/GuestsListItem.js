@@ -47,11 +47,14 @@ export default class GuestsListItem extends Component {
 		return (
 			<React.Fragment>
 				<li className="guest">
-					{false && checkScope(user.role, 'doorman') &&
+					{checkScope(user.role, 'doorman') &&
 						<div className="check-in">
-							<span className={guest.checkedIn ? 'checked' : ''} onClick={this.toggleCheckIn}>
-								{guest.checkedIn ? '' : 'Check In'}
-							</span>
+							{guest.status === 'archived'
+								? <span className="no-entry">&#x26D4; No entry</span>
+								: <span className={guest.checkedIn ? 'checked' : ''} onClick={this.toggleCheckIn}>
+									{guest.checkedIn ? '' : 'Check In'}
+								</span>
+							}
 						</div>
 					}
 					<div className="name">
