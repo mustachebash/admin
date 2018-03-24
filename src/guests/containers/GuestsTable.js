@@ -30,7 +30,11 @@ export class GuestsTable extends Component {
 	}
 
 	componentWillUpdate(nextProps) {
-		if(nextProps.selectedEvents !== this.props.selectedEvents && nextProps.selectedEvents.length) this.props.fetchGuests({eventId: nextProps.selectedEvents});
+		if((nextProps.selectedEvents !== this.props.selectedEvents && nextProps.selectedEvents.length) ||
+			(nextProps.socketConnected && !this.props.socketConnected)
+		) {
+			this.props.fetchGuests({eventId: nextProps.selectedEvents});
+		}
 	}
 
 	getGuestComparator() {
@@ -138,6 +142,7 @@ GuestsTable.propTypes = {
 
 const mapStateToProps = (state, ownProps) => ({
 	user: state.session.user,
+	socketConnected: state.session.socketConnected,
 	guests: state.data.guests,
 	events: state.data.events,
 	selectedEvents: state.control.selectedEvents
