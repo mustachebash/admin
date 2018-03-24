@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { formatThousands } from 'utils';
+import { formatThousands, checkScope } from 'utils';
 import { fetchEventSummary, fetchEventChart } from 'events/eventsDuck';
 import EventsChart from 'components/EventsChart';
 import Loader from 'components/Loader';
@@ -55,7 +55,7 @@ export class Dashboard extends Component {
 										<p>${formatThousands(e.revenueToday)}</p>
 									</div>
 								}
-								{Date.parse(e.date) < Date.now() &&
+								{checkScope(this.props.user.role, 'root') &&
 									<div className="checked-in">
 										<h5>Checked In</h5>
 										<p>{formatThousands(e.checkedIn)}</p>
@@ -71,6 +71,7 @@ export class Dashboard extends Component {
 }
 
 Dashboard.propTypes = {
+	user: PropTypes.object.isRequired,
 	events: PropTypes.array.isRequired,
 	eventSummaries: PropTypes.array.isRequired,
 	eventCharts: PropTypes.array.isRequired,
@@ -78,6 +79,7 @@ Dashboard.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => ({
+	user: state.session.user,
 	events: state.data.events,
 	eventSummaries: state.data.eventSummaries,
 	eventCharts: state.data.eventCharts,
