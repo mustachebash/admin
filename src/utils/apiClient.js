@@ -106,6 +106,10 @@ const apiClient = {
 
 	patch(path, body) {
 		return makeRequest(path, { method: 'PATCH', body });
+	},
+
+	delete(path) {
+		return makeRequest(path, { method: 'DELETE' });
 	}
 };
 
