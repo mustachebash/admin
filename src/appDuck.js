@@ -165,7 +165,7 @@ export function logIn({username, password}) {
 			.then(response => dispatch(receiveUser(response)))
 			.then(() => dispatch(socketConnect()))
 			.catch(e => {
-				if(e.statusCode === 401) return e.responseBody.then(response => dispatch(loginError(response.error)));
+				if(e.statusCode === 401) return dispatch(loginError('Invalid username and/or password'));
 
 				dispatch(loginError('Something went wrong, please try again'));
 			});

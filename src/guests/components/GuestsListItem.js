@@ -14,6 +14,7 @@ export default class GuestsListItem extends Component {
 		};
 
 		this.toggleCheckIn = this.toggleCheckIn.bind(this);
+		this.archiveGuest = this.archiveGuest.bind(this);
 		this.showEditModal = this.showEditModal.bind(this);
 		this.closeEditModal = this.closeEditModal.bind(this);
 	}
@@ -41,17 +42,25 @@ export default class GuestsListItem extends Component {
 		this.setState({showEditModal: false});
 	}
 
+	archiveGuest() {
+		// eslint-disable-next-line no-alert
+		if(confirm('Are you sure you want to remove this guest? This cannot be undone')) this.props.archiveGuest(this.props.guest.id);
+	}
+
 	render() {
 		const { guest, user, event, updateGuestName } = this.props;
 
 		return (
 			<React.Fragment>
 				<li className="guest">
-					{false && checkScope(user.role, 'doorman') &&
+					{checkScope(user.role, 'doorman') &&
 						<div className="check-in">
-							<span className={guest.checkedIn ? 'checked' : ''} onClick={this.toggleCheckIn}>
-								{guest.checkedIn ? '' : 'Check In'}
-							</span>
+							{guest.status === 'archived'
+								? <span className="no-entry">&#x26D4; No entry</span>
+								: <span className={guest.checkedIn ? 'checked' : ''} onClick={this.toggleCheckIn}>
+									{guest.checkedIn ? '' : 'Check In'}
+								</span>
+							}
 						</div>
 					}
 					<div className="name">
@@ -71,6 +80,11 @@ export default class GuestsListItem extends Component {
 							<p><a href="#" onClick={this.showEditModal}>&#9998;</a></p>
 						</div>
 					}
+					{checkScope(user.role, 'root') &&
+						<div className="edit-guest">
+							<p>{guest.status !== 'archived' && <a href="#" onClick={this.archiveGuest}>&#x274C;</a>}</p>
+						</div>
+					}
 				</li>
 				{this.state.showEditModal &&
 					<Modal closeModal={this.closeEditModal}>
@@ -88,5 +102,6 @@ GuestsListItem.propTypes = {
 	guest: PropTypes.object.isRequired,
 	checkIn: PropTypes.func.isRequired,
 	checkOut: PropTypes.func.isRequired,
-	updateGuestName: PropTypes.func.isRequired
+	updateGuestName: PropTypes.func.isRequired,
+	archiveGuest: PropTypes.func.isRequired
 };

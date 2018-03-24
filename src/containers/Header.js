@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { NavLink, withRouter } from 'react-router-dom';
-import { logOut, toggleEvent } from '../appDuck';
+import { logOut, toggleEvent, connectToSocket } from '../appDuck';
 import { fetchEvents } from 'events/eventsDuck';
 import { checkScope } from '../utils';
 
@@ -35,7 +35,7 @@ export class Header extends Component {
 	}
 
 	render() {
-		const user = this.props.user;
+		const { user, socketConnected } = this.props;
 
 		/* eslint-disable max-len */
 		return (
@@ -53,7 +53,7 @@ export class Header extends Component {
 							</div>
 							<nav className={this.state.navOpen ? 'open' : ''}>
 								<ul>
-									<li><NavLink exact to="/">Dashboard</NavLink></li>
+									{user.role !== 'doorman' && <li><NavLink exact to="/">Dashboard</NavLink></li>}
 									<li><NavLink to="/guests">Guests</NavLink></li>
 
 									{checkScope(user.role, 'admin') &&
@@ -63,7 +63,8 @@ export class Header extends Component {
 										</React.Fragment>
 									}
 
-									<li><button className="white" onClick={this.props.logOut}>Log Out</button></li>
+									<li><button className="white" onClick={this.props.logOut} title={`Logged in as ${user.name}`}>Log Out</button></li>
+									{!socketConnected && <li><button className="red" onClick={this.props.connectToSocket}>&#x26A0; Reconnect</button></li>}
 								</ul>
 							</nav>
 							{false && checkScope(user.role, 'root') &&
@@ -76,6 +77,16 @@ export class Header extends Component {
 									))}
 								</div>
 							}
+							{user.role === 'doorman' &&
+								<React.Fragment>
+									<p>
+										<strong>Guest Help:</strong> Mike Sasaki 209.747.1188<br />
+										<strong>Guest List/Website Issues:</strong> Joe Furfaro 714.861.9593<br />
+										<strong>Vendor/Bands:</strong> Dustin O'Reilly 916.879.1848
+									</p>
+									<h4>Remember! If they're not on the list, no entry!</h4>
+								</React.Fragment>
+							}
 						</div>
 					}
 				</div>
@@ -86,11 +97,13 @@ export class Header extends Component {
 
 Header.propTypes = {
 	user: PropTypes.object,
-	logOut: PropTypes.func.isRequired
+	logOut: PropTypes.func.isRequired,
+	connectToSocket: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => ({
 	user: state.session.user,
+	socketConnected: state.session.socketConnected,
 	events: state.data.events,
 	selectedEvents: state.control.selectedEvents
 });
@@ -98,5 +111,6 @@ const mapStateToProps = (state, ownProps) => ({
 export default withRouter(connect(mapStateToProps, {
 	logOut,
 	fetchEvents,
-	toggleEvent
+	toggleEvent,
+	connectToSocket
 })(Header));

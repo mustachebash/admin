@@ -69,6 +69,7 @@ const GuestsList = (props) => {
 				checkIn={props.checkIn}
 				checkOut={props.checkOut}
 				updateGuestName={props.updateGuestName}
+				archiveGuest={props.archiveGuest}
 				user={props.user}
 			/>)}
 		</ul>

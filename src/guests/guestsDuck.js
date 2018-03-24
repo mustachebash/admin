@@ -11,7 +11,8 @@ export const REQUEST_GUEST = 'mustachebash/guests/REQUEST_GUEST',
 	REQUEST_GUESTS = 'mustachebash/guests/REQUEST_GUESTS',
 	RECEIVE_GUEST = 'mustachebash/guests/RECEIVE_GUEST',
 	RECEIVE_GUESTS = 'mustachebash/guests/RECEIVE_GUESTS',
-	UPDATE_GUEST = 'mustachebash/guests/UPDATE_GUEST';
+	UPDATE_GUEST = 'mustachebash/guests/UPDATE_GUEST',
+	ARCHIVE_GUEST = 'mustachebash/guests/ARCHIVE_GUEST';
 
 export default function reducer(state = [], action = {}) {
 	switch (action.type) {
@@ -135,6 +136,14 @@ export function updateGuestName(guestId, { firstName, lastName }) {
 				.then(g => dispatch(receiveGuest(g)))
 				.catch(e => console.error('Guest API Error', e));
 		}
+	};
+}
+
+export function archiveGuest(guestId) {
+	return (dispatch) => {
+		return apiClient.delete(`/guests/${guestId}`)
+			.then(guest => dispatch(receiveGuest(guest)))
+			.catch(e => console.error('Guest API Error', e));
 	};
 }
 

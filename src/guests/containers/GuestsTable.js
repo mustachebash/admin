@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { connect } from 'react-redux';
-import { fetchGuests, addGuest, checkIn, checkOut, updateGuestName } from '../guestsDuck';
+import { fetchGuests, addGuest, checkIn, checkOut, updateGuestName, archiveGuest } from '../guestsDuck';
 import { connectToSocket } from 'appDuck';
 import { checkScope } from 'utils';
 import CompedGuestForm from '../components/CompedGuestForm';
@@ -30,7 +30,11 @@ export class GuestsTable extends Component {
 	}
 
 	componentWillUpdate(nextProps) {
-		if(nextProps.selectedEvents !== this.props.selectedEvents && nextProps.selectedEvents.length) this.props.fetchGuests({eventId: nextProps.selectedEvents});
+		if((nextProps.selectedEvents !== this.props.selectedEvents && nextProps.selectedEvents.length) ||
+			(nextProps.socketConnected && !this.props.socketConnected)
+		) {
+			this.props.fetchGuests({eventId: nextProps.selectedEvents});
+		}
 	}
 
 	getGuestComparator() {
@@ -119,6 +123,7 @@ export class GuestsTable extends Component {
 					checkIn={this.props.checkIn}
 					checkOut={this.props.checkOut}
 					updateGuestName={this.props.updateGuestName}
+					archiveGuest={this.props.archiveGuest}
 				/>
 			</React.Fragment>
 		);
@@ -138,6 +143,7 @@ GuestsTable.propTypes = {
 
 const mapStateToProps = (state, ownProps) => ({
 	user: state.session.user,
+	socketConnected: state.session.socketConnected,
 	guests: state.data.guests,
 	events: state.data.events,
 	selectedEvents: state.control.selectedEvents
@@ -149,5 +155,6 @@ export default connect(mapStateToProps, {
 	checkIn,
 	checkOut,
 	updateGuestName,
+	archiveGuest,
 	connectToSocket
 })(GuestsTable);
