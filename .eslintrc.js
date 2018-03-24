@@ -48,10 +48,6 @@ module.exports = {
 		'no-unused-vars': [ 2, { args: 'none' } ],
 		quotes: [ 2, 'single' ],
 		'react/prop-types': 0,
-		// 'react/jsx-indent': [ 2, 'tab' ],
-		// 'react/jsx-indent-props': [ 2, 'tab' ],
-		// 'react/display-name': 0,
-		// 'react/jsx-pascal-case': 2,
-		// 'react/jsx-no-bind': 2
+		'react/no-unescaped-entities': 0
 	}
 };

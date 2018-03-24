@@ -77,6 +77,16 @@ export class Header extends Component {
 									))}
 								</div>
 							}
+							{user.role === 'doorman' &&
+								<React.Fragment>
+									<p>
+										<strong>Guest Help:</strong> Mike Sasaki 209.747.1188<br />
+										<strong>Guest List/Website Issues:</strong> Joe Furfaro 714.861.9593<br />
+										<strong>Vendor/Bands:</strong> Dustin O'Reilly 916.879.1848
+									</p>
+									<h4>Remember! If they're not on the list, no entry!</h4>
+								</React.Fragment>
+							}
 						</div>
 					}
 				</div>
