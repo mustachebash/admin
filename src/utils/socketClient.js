@@ -11,6 +11,7 @@ export const socketMiddleware = store => next => action => {
 		case SOCKET_CONNECT:
 			//Start a new connection to the server
 			if(paul) {
+				paul.onClose(() => {});
 				paul.close();
 			}
 			try {
