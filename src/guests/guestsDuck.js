@@ -7,12 +7,11 @@ import { unionWith } from 'lodash';
 import apiClient from 'utils/apiClient';
 
 // Actions
-export const REQUEST_GUEST = 'mustachebash/guests/REQUEST_GUEST',
+const REQUEST_GUEST = 'mustachebash/guests/REQUEST_GUEST',
 	REQUEST_GUESTS = 'mustachebash/guests/REQUEST_GUESTS',
 	RECEIVE_GUEST = 'mustachebash/guests/RECEIVE_GUEST',
 	RECEIVE_GUESTS = 'mustachebash/guests/RECEIVE_GUESTS',
-	UPDATE_GUEST = 'mustachebash/guests/UPDATE_GUEST',
-	ARCHIVE_GUEST = 'mustachebash/guests/ARCHIVE_GUEST';
+	UPDATE_GUEST = 'mustachebash/guests/UPDATE_GUEST';
 
 export default function reducer(state = [], action = {}) {
 	switch (action.type) {
@@ -76,66 +75,40 @@ export function receiveGuests(guests) {
 	};
 }
 
-export function updateGuest(guest) {
+export function updateGuest(guestId) {
 	return {
 		type: UPDATE_GUEST,
-		guest
+		guestId
 	};
 }
 
 export function checkIn(guestId) {
-	return (dispatch, getState) => {
-		const {data: { guests }, session: { socketConnected }} = getState(),
-			guest = Object.assign({}, guests.find(g => g.id === guestId));
+	return (dispatch) => {
+		dispatch(updateGuest(guestId));
 
-		guest.checkedIn = true;
-
-		dispatch(updateGuest(guest));
-
-		// If there's no socket connected, resort to HTTP
-		if(!socketConnected) {
-			apiClient.patch(`/guests/${guestId}`, {checkedIn: true})
-				.then(g => dispatch(receiveGuest(g)))
-				.catch(e => console.error('Guest API Error', e));
-		}
+		apiClient.patch(`/guests/${guestId}`, {checkedIn: true})
+			.then(g => dispatch(receiveGuest(g)))
+			.catch(e => console.error('Guest API Error', e));
 	};
 }
 
 export function checkOut(guestId) {
 	return (dispatch, getState) => {
-		const {data: { guests }, session: { socketConnected }} = getState(),
-			guest = Object.assign({}, guests.find(g => g.id === guestId));
+		dispatch(updateGuest(guestId));
 
-		guest.checkedIn = false;
-
-		dispatch(updateGuest(guest));
-
-		// If there's no socket connected, resort to HTTP
-		if(!socketConnected) {
-			apiClient.patch(`/guests/${guestId}`, {checkedIn: false})
-				.then(g => dispatch(receiveGuest(g)))
-				.catch(e => console.error('Guest API Error', e));
-		}
+		apiClient.patch(`/guests/${guestId}`, {checkedIn: false})
+			.then(g => dispatch(receiveGuest(g)))
+			.catch(e => console.error('Guest API Error', e));
 	};
 }
 
 export function updateGuestName(guestId, { firstName, lastName }) {
-	return (dispatch, getState) => {
-		const {data: { guests }, session: { socketConnected }} = getState(),
-			guest = {
-				...guests.find(g => g.id === guestId),
-				firstName,
-				lastName
-			};
+	return (dispatch) => {
+		dispatch(updateGuest(guestId));
 
-		dispatch(updateGuest(guest));
-
-		// If there's no socket connected, resort to HTTP
-		if(!socketConnected) {
-			apiClient.patch(`/guests/${guestId}`, {firstName, lastName})
-				.then(g => dispatch(receiveGuest(g)))
-				.catch(e => console.error('Guest API Error', e));
-		}
+		apiClient.patch(`/guests/${guestId}`, {firstName, lastName})
+			.then(g => dispatch(receiveGuest(g)))
+			.catch(e => console.error('Guest API Error', e));
 	};
 }
 

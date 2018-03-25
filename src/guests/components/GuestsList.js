@@ -13,7 +13,7 @@ const GuestsList = (props) => {
 	return (
 		<ul className="guests-list">
 			<li className="table-header">
-				{checkScope(user.role, 'doorman') &&
+				{checkScope(user.role, 'root') &&
 					<div className="checked-in">
 						<h5>
 							Checked In
