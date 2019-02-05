@@ -67,7 +67,7 @@ export default class EventsChart extends Component {
 	}
 
 	generateRevenueSeries(){
-		return this.props.chartData.map(event => ({
+		return this.props.chartData.filter(e => e.transactions.length).map(event => ({
 			data: event.transactions.map(day => ([(new Date(day[0])).setUTCFullYear(1972), day[1].amount])),
 			pointStart: Date.parse(event.transactions[0][0]),
 			pointInterval: 1000 * 60 * 60,
@@ -81,7 +81,7 @@ export default class EventsChart extends Component {
 	}
 
 	generateTicketsSeries(){
-		return this.props.chartData.map(event => ({
+		return this.props.chartData.filter(e => e.transactions.length).map(event => ({
 			data: event.transactions.map(day => ([(new Date(day[0])).setUTCFullYear(1972), day[1].quantity])),
 			pointStart: Date.parse(event.transactions[0][0]),
 			pointInterval: 1000 * 60 * 60,
@@ -92,7 +92,7 @@ export default class EventsChart extends Component {
 	}
 
 	generateTotalTicketsArea(){
-		return this.props.chartData.map(event => ({
+		return this.props.chartData.filter(e => e.transactions.length).map(event => ({
 			data: event.transactions.reduce((acc, day) => {
 				acc.total += day[1].quantity;
 				acc.set.push([(new Date(day[0])).setUTCFullYear(1972), acc.total]);
