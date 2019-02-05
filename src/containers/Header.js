@@ -22,8 +22,8 @@ export class Header extends Component {
 		if(this.props.user) this.props.fetchEvents();
 	}
 
-	componentWillUpdate(nextProps) {
-		if(nextProps.user !== this.props.user) this.props.fetchEvents();
+	componentDidUpdate(prevProps) {
+		if(prevProps.user !== this.props.user) this.props.fetchEvents();
 	}
 
 	toggleNavMenu() {
