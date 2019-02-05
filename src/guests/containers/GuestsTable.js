@@ -29,11 +29,11 @@ export class GuestsTable extends Component {
 		this.props.connectToSocket();
 	}
 
-	componentWillUpdate(nextProps) {
-		if((nextProps.selectedEvents !== this.props.selectedEvents && nextProps.selectedEvents.length) ||
-			(nextProps.socketConnected && !this.props.socketConnected)
+	componentDidUpdate(prevProps) {
+		if((prevProps.selectedEvents !== this.props.selectedEvents && this.props.selectedEvents.length) ||
+			(!prevProps.socketConnected && this.props.socketConnected)
 		) {
-			this.props.fetchGuests({eventId: nextProps.selectedEvents});
+			this.props.fetchGuests({eventId: this.props.selectedEvents});
 		}
 	}
 

@@ -16,9 +16,9 @@ export class Dashboard extends Component {
 		this.props.selectedEvents.forEach(this.props.fetchEventSummary);
 	}
 
-	componentWillUpdate(nextProps) {
-		if(nextProps.selectedEvents !== this.props.selectedEvents && nextProps.selectedEvents.length) nextProps.selectedEvents.forEach(this.props.fetchEventSummary);
-		if(nextProps.events !== this.props.events) nextProps.events.forEach(e => this.props.fetchEventChart(e.id));
+	componentDidUpdate(prevProps) {
+		if(prevProps.selectedEvents !== this.props.selectedEvents && prevProps.selectedEvents.length) this.props.selectedEvents.forEach(this.props.fetchEventSummary);
+		if(prevProps.events !== this.props.events) this.props.events.forEach(e => this.props.fetchEventChart(e.id));
 	}
 
 	render() {
