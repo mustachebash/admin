@@ -4,6 +4,7 @@ import eventsReducer, { communicationReducer as eventsCommunicationReducer, summ
 import productsReducer, { communicationReducer as productsCommunicationReducer } from './products/productsDuck';
 import transactionsReducer, { communicationReducer as transactionsCommunicationReducer } from './transactions/transactionsDuck';
 import guestsReducer, { communicationReducer as guestsCommunicationReducer } from './guests/guestsDuck';
+import promosReducer, { communicationReducer as promosCommunicationReducer } from './promos/promosDuck';
 
 /* eslint-disable no-unused-vars*/
 // Based around http://jamesknelson.com/5-types-react-application-state/
@@ -16,6 +17,11 @@ const sampleState = {
 			}
 		],
 		guests: [
+			{
+
+			}
+		],
+		promos: [
 			{
 
 			}
@@ -47,6 +53,9 @@ const sampleState = {
 		guests: {
 
 		},
+		promos: {
+
+		},
 		events: {
 
 		}
@@ -72,6 +81,7 @@ export default combineReducers({
 	data: combineReducers({
 		transactions: transactionsReducer,
 		guests: guestsReducer,
+		promos: promosReducer,
 		events: eventsReducer,
 		eventSummaries: eventsSummaryReducer,
 		eventCharts: eventsChartReducer,
@@ -80,6 +90,7 @@ export default combineReducers({
 	communication: combineReducers({
 		transactions: transactionsCommunicationReducer,
 		guests: guestsCommunicationReducer,
+		promos: promosCommunicationReducer,
 		events: eventsCommunicationReducer,
 		products: productsCommunicationReducer
 	}),

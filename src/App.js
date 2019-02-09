@@ -13,6 +13,7 @@ import DashboardView from './views/DashboardView';
 import SettingsView from './views/SettingsView';
 import TransactionsView from './transactions/views/TransactionsView';
 import GuestsView from './guests/views/GuestsView';
+import PromosView from './promos/views/PromosView';
 
 
 // Create store enhancers
@@ -55,6 +56,7 @@ const App = () => (
 				<PrivateRoute scope="admin" path="/transactions" component={TransactionsView} />
 				<PrivateRoute path="/guests" component={GuestsView} />
 				<PrivateRoute scope="admin" path="/settings" component={SettingsView} />
+				<PrivateRoute scope="admin" path="/promos" component={PromosView} />
 				<Route path="/login" component={LoginView} />
 			</AppLayout>
 		</Router>
