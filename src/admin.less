@@ -567,6 +567,94 @@ header {
 	}
 }
 
+.promos-list {
+	margin-top: 0;
+	margin-bottom: 0;
+	padding: 0;
+	list-style: none;
+
+	ul {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	li {
+		padding-right: 1em;
+		padding-left: 1em;
+		display: flex;
+		justify-content: space-between;
+
+		p {
+			margin: 0;
+		}
+
+		> div {
+			flex: 1 1 0;
+		}
+
+		.date {
+			@media (max-width: @mobile) {
+				display: none;
+			}
+		}
+
+		.status {
+			flex: 0 1 115px;
+
+			span {
+				&.no-entry {
+					background: none;
+					color: @red;
+					cursor: default;
+					text-transform: uppercase;
+				}
+
+				&.checked {
+					background: @white;
+
+					&:before {
+						content: '';
+						position: relative;
+						display: inline-block;
+						top: -3px;
+						width: 5px;
+						height: 12px;
+						border: 3px solid transparent;
+						transform: rotate(45deg);
+						border-bottom-color: @teal;
+						border-right-color: @teal;
+					}
+				}
+			}
+		}
+
+		.link {
+			flex: 0 1 115px;
+
+			p {
+				text-align: right;
+			}
+
+			@media (max-width: @mobile) {
+				display: none;
+			}
+		}
+
+		.edit-promo {
+			flex: 0 1 30px;
+
+			p {
+				text-align: right;
+			}
+
+			@media (max-width: @mobile) {
+				display: none;
+			}
+		}
+	}
+}
+
 .table-header {
 	background: @white;
 	padding: 10px;
@@ -614,7 +702,8 @@ header {
 }
 
 .transaction,
-.guest {
+.guest,
+.promo {
 	padding: 0.625em; /* 10/16 */
 
 	&:nth-child(even) {
@@ -622,13 +711,21 @@ header {
 	}
 }
 
-.comped-guest-form {
+.comped-guest-form,
+.create-promo-form {
 	margin-bottom: 4em;
 
 	input {
 		margin-bottom: 0;
 		margin-right: .5em;
 		flex: 1 .5;
+
+		&[name="price"] {
+			flex: 0 0 5em;
+			padding-left: .5em;
+			padding-right: .5em;
+			text-align: right;
+		}
 	}
 
 	.select-wrap {
