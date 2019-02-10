@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { connect } from 'react-redux';
+import { fetchProducts } from 'products/productsDuck';
 import { fetchPromos, addPromo, updatePromo, disablePromo } from '../promosDuck';
-import { connectToSocket } from 'appDuck';
 import PromosList from '../components/PromosList';
 import CreatePromoForm from '../components/CreatePromoForm';
 import Search from 'components/Search';
@@ -14,7 +14,7 @@ export class PromosTable extends Component {
 
 		this.state = {
 			filter: '',
-			sortBy: 'name',
+			sortBy: 'recipient',
 			sortOrder: 1 // asc
 		};
 
@@ -24,8 +24,8 @@ export class PromosTable extends Component {
 	}
 
 	componentDidMount() {
-		this.props.selectedEvents.length && this.props.fetchPromos({eventId: this.props.selectedEvents});
-		this.props.connectToSocket();
+		this.props.fetchProducts();
+		this.props.fetchPromos();
 	}
 
 	componentDidUpdate(prevProps) {
@@ -47,10 +47,10 @@ export class PromosTable extends Component {
 					break;
 
 				default:
-				case 'name':
-					sort = a.lastName > b.lastName
+				case 'recipient':
+					sort = a.recipient > b.recipient
 						? 1
-						: a.lastName === b.lastName
+						: a.recipient === b.recipient
 							? 0
 							: -1;
 					break;
@@ -81,16 +81,15 @@ export class PromosTable extends Component {
 
 	render() {
 		const events = this.props.events.filter(e => this.props.selectedEvents.includes(e.id)),
-			products = this.props.products.filter(p => events.includes(p.eventId)),
+			products = this.props.products.filter(p => this.props.promoProducts.includes(p.id)),
 			filter = new RegExp(this.state.filter, 'i');
 
-		let promos = this.props.promos.filter(g => {
-			if(!this.props.selectedEvents.includes(g.eventId)) return false;
+		let promos = this.props.promos.filter(p => {
 			if(!this.state.filter) return true;
 
 			return (
-				filter.test(g.firstName + ' ' + g.lastName) ||
-				filter.test(g.confirmationId)
+				filter.test(p.recipient) ||
+				filter.test(p.email)
 			);
 		});
 
@@ -132,22 +131,22 @@ PromosTable.propTypes = {
 	fetchPromos: PropTypes.func.isRequired,
 	addPromo: PropTypes.func.isRequired,
 	updatePromo: PropTypes.func.isRequired,
-	connectToSocket: PropTypes.func.isRequired
+	fetchProducts: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => ({
 	user: state.session.user,
-	socketConnected: state.session.socketConnected,
 	promos: state.data.promos,
 	events: state.data.events,
 	products: state.data.products,
+	promoProducts: state.control.promoProducts,
 	selectedEvents: state.control.selectedEvents
 });
 
 export default connect(mapStateToProps, {
 	fetchPromos,
+	fetchProducts,
 	addPromo,
 	updatePromo,
-	disablePromo,
-	connectToSocket
+	disablePromo
 })(PromosTable);

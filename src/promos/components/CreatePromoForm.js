@@ -29,17 +29,22 @@ export default class CompedPromoForm extends Component {
 
 		if(this.submitting || !this.state.recipient || !this.state.price || !this.state.productId) return;
 
+		const price = Number(this.state.price);
+		if(Number.isNaN(price)) return;
+
 		this.submitting = true;
 
 		this.props.addPromo({
 			recipient: this.state.recipient,
-			price: this.state.price,
+			email: this.state.email,
+			price: price,
+			type: 'single-use',
 			productId: this.state.productId
 		});
 
 		this.setState({
 			recipient: '',
-			price: 0
+			email: ''
 		}, () => {
 			this.firstInput.focus();
 			this.submitting = false;
@@ -49,7 +54,8 @@ export default class CompedPromoForm extends Component {
 	render() {
 		return (
 			<form className="create-promo-form flex-row" onSubmit={this.addPromo}>
-				<input type="text" name="recipient" placeholder="Recipient" value={this.state.recipient} onChange={this.handleChange} ref={el => this.firstInput = el} />
+				<input type="text" name="recipient" placeholder="Name" value={this.state.recipient} onChange={this.handleChange} ref={el => this.firstInput = el} />
+				<input type="text" name="email" placeholder="Email" value={this.state.email} onChange={this.handleChange} />
 				<input type="text" name="price" placeholder="0" value={this.state.price} onChange={this.handleChange} />
 				<div className="select-wrap">
 					<select name="eventId" value={this.state.eventId} onChange={this.handleChange}>

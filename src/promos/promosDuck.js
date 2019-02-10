@@ -100,16 +100,6 @@ export function disablePromo(promoId) {
 	};
 }
 
-export function fetchPromo(promoId) {
-	return (dispatch) => {
-		dispatch(requestPromo(promoId));
-
-		return apiClient.get(`/promos/${promoId}`)
-			.then(promo => dispatch(receivePromo(promo)))
-			.catch(e => console.error('Promo API Error', e));
-	};
-}
-
 export function fetchPromos(query) {
 	return (dispatch) => {
 		dispatch(requestPromos());

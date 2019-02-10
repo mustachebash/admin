@@ -19,18 +19,19 @@ export default class PromosListItem extends Component {
 	}
 
 	render() {
-		const { promo, product } = this.props;
+		const { promo, product, event } = this.props;
 
 		return (
 			<React.Fragment>
 				<li className="promo">
-					<div className="claimed">
+					<div className="status">
 						{promo.status === 'disabled'
 							? <span className="no-entry">&#x26D4; No entry</span>
 							: <span
 								className={promo.status === 'claimed' ? 'checked' : ''}
 								title={promo.status === 'claimed' ? moment.tz(promo.updated, 'America/Los_Angeles').format('MMM Do, h:mma') : 'Not Claimed'}
 							>
+								{promo.status}
 							</span>
 						}
 					</div>
@@ -40,11 +41,14 @@ export default class PromosListItem extends Component {
 					<div className="date">
 						<p>{moment.tz(promo.created, 'America/Los_Angeles').format('MMM Do, h:mma')}</p>
 					</div>
+					<div className="event">
+						<p>{event.name}</p>
+					</div>
 					<div className="product">
 						<p>{product.name}</p>
 					</div>
-					<div className="confirmation">
-						<p>{promo.confirmationId}</p>
+					<div className="link">
+						<p>{promo.id}</p>
 					</div>
 					<div className="edit-promo">
 						<p>{['claimed', 'disabled'].includes(promo.status) && <a href="#" onClick={this.disablePromo}>&#x274C;</a>}</p>
@@ -57,6 +61,7 @@ export default class PromosListItem extends Component {
 
 PromosListItem.propTypes = {
 	product: PropTypes.object.isRequired,
+	event: PropTypes.object.isRequired,
 	promo: PropTypes.object.isRequired,
 	disablePromo: PropTypes.func.isRequired
 };

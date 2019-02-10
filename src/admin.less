@@ -593,31 +593,16 @@ header {
 			flex: 1 1 0;
 		}
 
-		.amount {
-			@media (max-width: @mobile) {
-				display: none;
-			}
-		}
-
-		.additional-guests {
-			font-size: 0.75em; /* 12/16 */
-		}
-
 		.date {
 			@media (max-width: @mobile) {
 				display: none;
 			}
 		}
 
-		.check-in {
-			span {
-				display: inline-block;
-				background: @teal;
-				padding: .25em .5em;
-				cursor: pointer;
-				height: 1.2em;
-				user-select: none;
+		.status {
+			flex: 0 1 115px;
 
+			span {
 				&.no-entry {
 					background: none;
 					color: @red;
@@ -644,7 +629,7 @@ header {
 			}
 		}
 
-		.confirmation {
+		.link {
 			flex: 0 1 115px;
 
 			p {
@@ -656,7 +641,7 @@ header {
 			}
 		}
 
-		.edit-guest {
+		.edit-promo {
 			flex: 0 1 30px;
 
 			p {
@@ -734,6 +719,13 @@ header {
 		margin-bottom: 0;
 		margin-right: .5em;
 		flex: 1 .5;
+
+		&[name="price"] {
+			flex: 0 0 5em;
+			padding-left: .5em;
+			padding-right: .5em;
+			text-align: right;
+		}
 	}
 
 	.select-wrap {

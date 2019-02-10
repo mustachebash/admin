@@ -5,24 +5,26 @@ import PromosListItem from './PromosListItem';
 
 const PromosList = (props) => {
 	const { promos } = props,
+		eventsById = {},
 		productsById = {};
 
+	props.events.forEach(e => eventsById[e.id] = e);
 	props.products.forEach(p => productsById[p.id] = p);
 
 	return (
 		<ul className="promos-list">
 			<li className="table-header">
-				<div className="claimed">
+				<div className="status">
 					<h5
 						className={classnames({
 							sortable: true,
-							sorted: props.sortBy === 'claimed',
+							sorted: props.sortBy === 'status',
 							asc: props.sortOrder === 1,
 							desc: props.sortOrder === -1
 						})}
-						onClick={() => props.sortBy !== 'claimed' ? props.sortPromos('claimed') : props.switchPromosOrder()}
+						onClick={() => props.sortBy !== 'status' ? props.sortPromos('status') : props.switchPromosOrder()}
 					>
-						Claimed
+						Status
 					</h5>
 				</div>
 				<div className="recipient">
@@ -51,6 +53,11 @@ const PromosList = (props) => {
 						Date Added
 					</h5>
 				</div>
+				<div className="event">
+					<h5>
+						Event
+					</h5>
+				</div>
 				<div className="product">
 					<h5>
 						Product
@@ -65,12 +72,17 @@ const PromosList = (props) => {
 					{/* Empty header */}
 				</div>
 			</li>
-			{promos.map(promo => <PromosListItem
-				key={promo.id}
-				product={productsById[promo.productId]}
-				promo={promo}
-				disablePromo={props.disablePromo}
-			/>)}
+			{promos.map(promo => {
+				if(!productsById[promo.productId]) return;
+
+				return <PromosListItem
+					key={promo.id}
+					event={eventsById[productsById[promo.productId].eventId]}
+					product={productsById[promo.productId]}
+					promo={promo}
+					disablePromo={props.disablePromo}
+				/>;
+			})}
 		</ul>
 	);
 };
@@ -80,6 +92,7 @@ export default PromosList;
 PromosList.propTypes = {
 	promos: PropTypes.array.isRequired,
 	products: PropTypes.array.isRequired,
+	events: PropTypes.array.isRequired,
 	sortPromos: PropTypes.func.isRequired,
 	switchPromosOrder: PropTypes.func.isRequired,
 	sortBy: PropTypes.string.isRequired,
