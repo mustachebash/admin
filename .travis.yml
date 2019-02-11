@@ -1,10 +1,8 @@
 language: node_js
 node_js:
-  - "9"
+  - "11"
 
-cache:
-  directories:
-    - node_modules
+cache: npm
 
 script:
   - npm test && npm run build
@@ -12,8 +10,6 @@ script:
 deploy:
   - provider: s3
     skip_cleanup: true
-    edge:
-      branch: ha-s3-endpoint
     endpoint: https://nyc3.digitaloceanspaces.com
     acl: public_read
     access_key_id: $SPACES_ACCESS_KEY
