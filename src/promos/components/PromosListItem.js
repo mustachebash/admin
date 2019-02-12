@@ -25,15 +25,12 @@ export default class PromosListItem extends Component {
 			<React.Fragment>
 				<li className="promo">
 					<div className="status">
-						{promo.status === 'disabled'
-							? <span className="no-entry">&#x26D4; No entry</span>
-							: <span
-								className={promo.status === 'claimed' ? 'checked' : ''}
-								title={promo.status === 'claimed' ? moment.tz(promo.updated, 'America/Los_Angeles').format('MMM Do, h:mma') : 'Not Claimed'}
-							>
-								{promo.status}
-							</span>
-						}
+						<span
+							className={promo.status === 'claimed' ? 'checked' : ''}
+							title={promo.status === 'claimed' ? moment.tz(promo.updated, 'America/Los_Angeles').format('MMM Do, h:mma') : 'Not Claimed'}
+						>
+							{promo.status}
+						</span>
 					</div>
 					<div className="recipient">
 						<p>{promo.recipient}</p>
@@ -48,10 +45,10 @@ export default class PromosListItem extends Component {
 						<p>{product.name}</p>
 					</div>
 					<div className="link">
-						<p>{promo.id}</p>
+						<p><a href={`https://mustachebash.com/?promo=${promo.id}#tickets`} rel="noopener noreferrer" target="_blank">Promo Link</a></p>
 					</div>
 					<div className="edit-promo">
-						<p>{['claimed', 'disabled'].includes(promo.status) && <a href="#" onClick={this.disablePromo}>&#x274C;</a>}</p>
+						<p>{!['claimed', 'disabled'].includes(promo.status) && <a href="#" onClick={this.disablePromo}>&#x274C;</a>}</p>
 					</div>
 				</li>
 			</React.Fragment>
