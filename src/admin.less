@@ -603,42 +603,15 @@ header {
 			flex: 0 1 115px;
 
 			span {
-				&.no-entry {
-					background: none;
-					color: @red;
-					cursor: default;
-					text-transform: uppercase;
-				}
-
 				&.checked {
 					background: @white;
-
-					&:before {
-						content: '';
-						position: relative;
-						display: inline-block;
-						top: -3px;
-						width: 5px;
-						height: 12px;
-						border: 3px solid transparent;
-						transform: rotate(45deg);
-						border-bottom-color: @teal;
-						border-right-color: @teal;
-					}
+					color: @black;
 				}
 			}
 		}
 
 		.link {
 			flex: 0 1 115px;
-
-			p {
-				text-align: right;
-			}
-
-			@media (max-width: @mobile) {
-				display: none;
-			}
 		}
 
 		.edit-promo {
