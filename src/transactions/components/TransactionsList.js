@@ -4,7 +4,10 @@ import classnames from 'classnames';
 import TransactionsListItem from './TransactionsListItem';
 
 const TransactionsList = (props) => {
-	const transactions = props.transactions;
+	const { transactions, products } = props,
+		productsById = {};
+
+	products.forEach(p => productsById[p.id] = p);
 
 	return (
 		<ul className="transactions-list">
@@ -53,13 +56,18 @@ const TransactionsList = (props) => {
 						Date Paid
 					</h5>
 				</div>
-				<div className="transaction">
+				<div className="confirmation">
 					<h5>
 						Confirmation
 					</h5>
 				</div>
+				<div className="email">
+					<h5>
+						Email
+					</h5>
+				</div>
 			</li>
-			{transactions.map(transaction => <TransactionsListItem key={transaction.id} transaction={transaction} />)}
+			{transactions.map(transaction => <TransactionsListItem key={transaction.id} transaction={transaction} productsById={productsById} />)}
 		</ul>
 	);
 };
@@ -68,6 +76,7 @@ export default TransactionsList;
 
 TransactionsList.propTypes = {
 	transactions: PropTypes.array.isRequired,
+	products: PropTypes.array.isRequired,
 	sortTransactions: PropTypes.func.isRequired,
 	switchTransactionsOrder: PropTypes.func.isRequired,
 	sortBy: PropTypes.string.isRequired,

@@ -491,12 +491,19 @@ header {
 		}
 
 		.amount {
+			flex: 0 0 5.25em; /* 100/16 */
+
+			p {
+				text-align: right;
+				margin-right: 2em;
+			}
+
 			@media (max-width: @mobile) {
 				display: none;
 			}
 		}
 
-		.additional-guests {
+		.products {
 			font-size: 0.75em; /* 12/16 */
 		}
 
@@ -538,18 +545,6 @@ header {
 						border-right-color: @teal;
 					}
 				}
-			}
-		}
-
-		.confirmation {
-			flex: 0 1 115px;
-
-			p {
-				text-align: right;
-			}
-
-			@media (max-width: @mobile) {
-				display: none;
 			}
 		}
 

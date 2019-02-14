@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment-timezone';
 
@@ -12,7 +12,7 @@ export default class TransactionsListItem extends Component {
 	}
 
 	render() {
-		const { transaction } = this.props;
+		const { transaction, productsById } = this.props;
 
 		return (
 			<li className="transaction">
@@ -22,16 +22,24 @@ export default class TransactionsListItem extends Component {
 				<div className="amount">
 					<p>${transaction.amount.toFixed(0)}</p>
 				</div>
-				<div className="additional-guests">
-					<pre>
-						{JSON.stringify(transaction.order, null, 2)}
-					</pre>
+				<div className="products">
+					<ul>
+						{transaction.order.map(({productId, quantity}) => {
+							const product = productsById[productId];
+							if(!product) return null;
+
+							return <li key={`${transaction.id}-${productId}`}>{product.name}: {quantity}</li>;
+						})}
+					</ul>
 				</div>
 				<div className="date">
 					<p>{moment.tz(transaction.created, 'America/Los_Angeles').format('MMM Do, h:mma')}</p>
 				</div>
-				<div className="transaction">
+				<div className="confirmation">
 					<p>{transaction.braintreeTransactionId}</p>
+				</div>
+				<div className="email">
+					<p>{transaction.email}</p>
 				</div>
 			</li>
 		);
@@ -39,5 +47,6 @@ export default class TransactionsListItem extends Component {
 }
 
 TransactionsListItem.propTypes = {
-	transaction: PropTypes.object.isRequired
+	transaction: PropTypes.object.isRequired,
+	productsById: PropTypes.object.isRequired
 };
