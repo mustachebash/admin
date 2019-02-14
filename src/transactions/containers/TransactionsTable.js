@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { fetchTransactions } from '../transactionsDuck';
+import { fetchProducts } from 'products/productsDuck';
 import TransactionsList from '../components/TransactionsList';
 import Search from 'components/Search';
 
@@ -22,6 +23,7 @@ export class TransactionsTable extends Component {
 
 	componentDidMount() {
 		this.props.selectedEvents.length && this.props.fetchTransactions({eventId: this.props.selectedEvents});
+		this.props.fetchProducts();
 	}
 
 	getTransactionComparator() {
@@ -88,6 +90,7 @@ export class TransactionsTable extends Component {
 
 				<TransactionsList
 					transactions={transactions}
+					products={this.props.products}
 					sortTransactions={this.sortTransactions}
 					switchTransactionsOrder={this.switchTransactionsOrder}
 					sortBy={this.state.sortBy}
@@ -101,14 +104,17 @@ export class TransactionsTable extends Component {
 TransactionsTable.propTypes = {
 	transactions: PropTypes.array.isRequired,
 	selectedEvents: PropTypes.array.isRequired,
-	fetchTransactions: PropTypes.func.isRequired
+	fetchTransactions: PropTypes.func.isRequired,
+	fetchProducts: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => ({
 	transactions: state.data.transactions,
+	products: state.data.products,
 	selectedEvents: state.control.selectedEvents
 });
 
 export default connect(mapStateToProps, {
-	fetchTransactions
+	fetchTransactions,
+	fetchProducts
 })(TransactionsTable);
