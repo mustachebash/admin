@@ -42,7 +42,7 @@ export default class PromosListItem extends Component {
 						<p>{event.name}</p>
 					</div>
 					<div className="product">
-						<p>{product.name}</p>
+						<p title={`$${promo.price} - ${promo.createdBy}`}>{product.name}</p>
 					</div>
 					<div className="link">
 						<p><a href={`https://mustachebash.com/?promo=${promo.id}#tickets`} rel="noopener noreferrer" target="_blank">Promo Link</a></p>
