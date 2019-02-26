@@ -53,7 +53,8 @@ module.exports = (env = {}, argv) => {
 								plugins: [
 									'react-hot-loader/babel',
 									'@babel/proposal-object-rest-spread',
-									['@babel/proposal-decorators', {legacy: true}]
+									['@babel/proposal-decorators', {legacy: true}],
+									'@babel/proposal-class-properties'
 								]
 							}
 						}

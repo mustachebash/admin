@@ -8,20 +8,38 @@ import PromosList from '../components/PromosList';
 import CreatePromoForm from '../components/CreatePromoForm';
 import Search from 'components/Search';
 
-export class PromosTable extends Component {
-	constructor(props) {
-		super(props);
+const mapStateToProps = (state, ownProps) => ({
+	user: state.session.user,
+	promos: state.data.promos,
+	events: state.data.events,
+	products: state.data.products,
+	promoProducts: state.control.promoProducts,
+	selectedEvents: state.control.selectedEvents
+});
 
-		this.state = {
-			filter: '',
-			sortBy: 'recipient',
-			sortOrder: 1 // asc
-		};
+export default
+@connect(mapStateToProps, {fetchPromos, fetchProducts, addPromo, updatePromo, disablePromo})
+class PromosTable extends Component {
+	static propTypes = {
+		user: PropTypes.object.isRequired,
+		promos: PropTypes.array.isRequired,
+		events: PropTypes.array.isRequired,
+		products: PropTypes.array.isRequired,
+		fetchPromos: PropTypes.func.isRequired,
+		addPromo: PropTypes.func.isRequired,
+		updatePromo: PropTypes.func.isRequired,
+		fetchProducts: PropTypes.func.isRequired
+	};
 
-		this.sortPromos = this.sortPromos.bind(this);
-		this.switchPromosOrder = this.switchPromosOrder.bind(this);
-		this.handleFilterChange = this.handleFilterChange.bind(this);
-	}
+	state = {
+		filter: '',
+		sortBy: 'recipient',
+		sortOrder: 1 // asc
+	};
+
+	sortPromos = this.sortPromos.bind(this);
+	switchPromosOrder = this.switchPromosOrder.bind(this);
+	handleFilterChange = this.handleFilterChange.bind(this);
 
 	componentDidMount() {
 		this.props.fetchProducts();
@@ -122,31 +140,3 @@ export class PromosTable extends Component {
 		);
 	}
 }
-
-PromosTable.propTypes = {
-	user: PropTypes.object.isRequired,
-	promos: PropTypes.array.isRequired,
-	events: PropTypes.array.isRequired,
-	products: PropTypes.array.isRequired,
-	fetchPromos: PropTypes.func.isRequired,
-	addPromo: PropTypes.func.isRequired,
-	updatePromo: PropTypes.func.isRequired,
-	fetchProducts: PropTypes.func.isRequired
-};
-
-const mapStateToProps = (state, ownProps) => ({
-	user: state.session.user,
-	promos: state.data.promos,
-	events: state.data.events,
-	products: state.data.products,
-	promoProducts: state.control.promoProducts,
-	selectedEvents: state.control.selectedEvents
-});
-
-export default connect(mapStateToProps, {
-	fetchPromos,
-	fetchProducts,
-	addPromo,
-	updatePromo,
-	disablePromo
-})(PromosTable);

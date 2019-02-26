@@ -6,17 +6,29 @@ import { logOut, toggleEvent, connectToSocket } from '../appDuck';
 import { fetchEvents } from 'events/eventsDuck';
 import { checkScope } from '../utils';
 
-export class Header extends Component {
-	constructor(props) {
-		super(props);
+const mapStateToProps = (state, ownProps) => ({
+	user: state.session.user,
+	socketConnected: state.session.socketConnected,
+	events: state.data.events,
+	selectedEvents: state.control.selectedEvents
+});
 
-		this.state = {
-			navOpen: false
-		};
+export default
+@withRouter
+@connect(mapStateToProps, {logOut, fetchEvents, toggleEvent, connectToSocket})
+class Header extends Component {
+	static propTypes = {
+		user: PropTypes.object,
+		logOut: PropTypes.func.isRequired,
+		connectToSocket: PropTypes.func.isRequired
+	};
 
-		this.toggleNavMenu = this.toggleNavMenu.bind(this);
-		this.toggleEvent = this.toggleEvent.bind(this);
-	}
+	state = {
+		navOpen: false
+	};
+
+	toggleNavMenu = this.toggleNavMenu.bind(this);
+	toggleEvent = this.toggleEvent.bind(this);
 
 	componentDidMount() {
 		if(this.props.user) this.props.fetchEvents();
@@ -95,23 +107,3 @@ export class Header extends Component {
 		);
 	}
 }
-
-Header.propTypes = {
-	user: PropTypes.object,
-	logOut: PropTypes.func.isRequired,
-	connectToSocket: PropTypes.func.isRequired
-};
-
-const mapStateToProps = (state, ownProps) => ({
-	user: state.session.user,
-	socketConnected: state.session.socketConnected,
-	events: state.data.events,
-	selectedEvents: state.control.selectedEvents
-});
-
-export default withRouter(connect(mapStateToProps, {
-	logOut,
-	fetchEvents,
-	toggleEvent,
-	connectToSocket
-})(Header));
