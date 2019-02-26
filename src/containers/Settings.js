@@ -6,10 +6,20 @@ import { updateEvent } from 'events/eventsDuck';
 import Toggle from 'components/Toggle';
 import Loader from 'components/Loader';
 
-export class Settings extends Component {
-	constructor(props) {
-		super(props);
-	}
+const mapStateToProps = (state, ownProps) => ({
+	events: state.data.events,
+	products: state.data.products,
+	selectedEvents: state.control.selectedEvents
+});
+
+export default
+@connect(mapStateToProps, {fetchProducts, updateEvent})
+class Settings extends Component {
+	static propTypes = {
+		events: PropTypes.array.isRequired,
+		products: PropTypes.array.isRequired,
+		selectedEvents: PropTypes.array.isRequired
+	};
 
 	componentDidMount() {
 		this.props.fetchProducts();
@@ -70,20 +80,3 @@ export class Settings extends Component {
 		);
 	}
 }
-
-Settings.propTypes = {
-	events: PropTypes.array.isRequired,
-	products: PropTypes.array.isRequired,
-	selectedEvents: PropTypes.array.isRequired
-};
-
-const mapStateToProps = (state, ownProps) => ({
-	events: state.data.events,
-	products: state.data.products,
-	selectedEvents: state.control.selectedEvents
-});
-
-export default connect(mapStateToProps, {
-	fetchProducts,
-	updateEvent
-})(Settings);

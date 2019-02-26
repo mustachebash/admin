@@ -6,19 +6,41 @@ import { fetchEventSummary, fetchEventChart } from 'events/eventsDuck';
 import EventsChart from 'components/EventsChart';
 import Loader from 'components/Loader';
 
-export class Dashboard extends Component {
-	constructor(props) {
-		super(props);
-	}
+const mapStateToProps = (state, ownProps) => ({
+	user: state.session.user,
+	events: state.data.events,
+	eventSummaries: state.data.eventSummaries,
+	eventCharts: state.data.eventCharts,
+	selectedEvents: state.control.selectedEvents
+});
+
+export default
+@connect(mapStateToProps, {fetchEventSummary, fetchEventChart})
+class Dashboard extends Component {
+	static propTypes = {
+		user: PropTypes.object.isRequired,
+		events: PropTypes.array.isRequired,
+		eventSummaries: PropTypes.array.isRequired,
+		eventCharts: PropTypes.array.isRequired,
+		selectedEvents: PropTypes.array.isRequired
+	};
+
+	state = {
+		showChart: false
+	};
 
 	componentDidMount() {
-		this.props.events.forEach(e => this.props.fetchEventChart(e.id));
-		this.props.selectedEvents.forEach(this.props.fetchEventSummary);
+		const { events, selectedEvents, fetchEventChart, fetchEventSummary } = this.props;
+
+		selectedEvents.forEach(fetchEventSummary);
+		events.length && Promise.all(events.map(e => fetchEventChart(e.id).then())).then(() => this.setState({showChart: true}));
 	}
 
 	componentDidUpdate(prevProps) {
-		if(prevProps.selectedEvents !== this.props.selectedEvents && prevProps.selectedEvents.length) this.props.selectedEvents.forEach(this.props.fetchEventSummary);
-		if(prevProps.events !== this.props.events) this.props.events.forEach(e => this.props.fetchEventChart(e.id));
+		const { events, selectedEvents, fetchEventChart, fetchEventSummary } = this.props;
+
+		if(prevProps.selectedEvents !== selectedEvents && prevProps.selectedEvents.length) selectedEvents.forEach(fetchEventSummary);
+		if(prevProps.events !== events) Promise.all(events.map(e => fetchEventChart(e.id).then())).then(() => this.setState({showChart: true}));
 	}
 
 	render() {
@@ -26,7 +48,7 @@ export class Dashboard extends Component {
 
 		return (
 			<div>
-				{this.props.events.length === this.props.eventCharts.length
+				{this.state.showChart
 					? <EventsChart chartData={this.props.eventCharts} />
 					: <Loader />
 				}
@@ -69,24 +91,3 @@ export class Dashboard extends Component {
 		);
 	}
 }
-
-Dashboard.propTypes = {
-	user: PropTypes.object.isRequired,
-	events: PropTypes.array.isRequired,
-	eventSummaries: PropTypes.array.isRequired,
-	eventCharts: PropTypes.array.isRequired,
-	selectedEvents: PropTypes.array.isRequired
-};
-
-const mapStateToProps = (state, ownProps) => ({
-	user: state.session.user,
-	events: state.data.events,
-	eventSummaries: state.data.eventSummaries,
-	eventCharts: state.data.eventCharts,
-	selectedEvents: state.control.selectedEvents
-});
-
-export default connect(mapStateToProps, {
-	fetchEventSummary,
-	fetchEventChart
-})(Dashboard);

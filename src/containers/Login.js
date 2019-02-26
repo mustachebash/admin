@@ -4,18 +4,27 @@ import { Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logIn } from '../appDuck';
 
-export class Login extends Component {
-	constructor(props) {
-		super(props);
+const mapStateToProps = (state, ownProps) => ({
+	user: state.session.user,
+	loginError: state.session.loginError
+});
 
-		this.state = {
-			username: '',
-			password: ''
-		};
+export default
+@withRouter
+@connect(mapStateToProps, {logIn})
+class Login extends Component {
+	static propTypes = {
+		loginError: PropTypes.string.isRequired,
+		logIn: PropTypes.func.isRequired
+	};
 
-		this.handleInputChange = this.handleInputChange.bind(this);
-		this.logIn = this.logIn.bind(this);
-	}
+	state = {
+		username: '',
+		password: ''
+	};
+
+	handleInputChange = this.handleInputChange.bind(this);
+	logIn = this.logIn.bind(this);
 
 	handleInputChange(e) {
 		this.setState({
@@ -47,17 +56,3 @@ export class Login extends Component {
 		);
 	}
 }
-
-Login.propTypes = {
-	loginError: PropTypes.string.isRequired,
-	logIn: PropTypes.func.isRequired
-};
-
-const mapStateToProps = (state, ownProps) => ({
-	user: state.session.user,
-	loginError: state.session.loginError
-});
-
-export default withRouter(connect(mapStateToProps, {
-	logIn
-})(Login));
