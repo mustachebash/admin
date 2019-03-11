@@ -53,7 +53,7 @@ export default class GuestsListItem extends Component {
 		return (
 			<React.Fragment>
 				<li className="guest">
-					{checkScope(user.role, 'root') &&
+					{checkScope(user.role, 'doorman') &&
 						<div className="check-in">
 							{guest.status === 'archived'
 								? <span className="no-entry">&#x26D4; No entry</span>
@@ -79,7 +79,7 @@ export default class GuestsListItem extends Component {
 					<div className="confirmation">
 						<p>{guest.confirmationId}</p>
 					</div>
-					{checkScope(user.role, 'root') &&
+					{checkScope(user.role, 'admin') &&
 						<div className="edit-guest">
 							<p><a href="#" onClick={this.showEditModal}>&#9998;</a></p>
 						</div>
