@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { formatThousands, checkScope } from 'utils';
@@ -73,7 +73,7 @@ class Dashboard extends Component {
 								</div>
 								<div className="revenue">
 									<h5>Revenue</h5>
-									<p>${formatThousands(e.totalRevenue)}</p>
+									<p>${formatThousands(e.totalRevenue + e.totalPromoRevenue)}</p>
 								</div>
 								{e.status === 'active' &&
 									<div className="guests-today">
@@ -86,6 +86,18 @@ class Dashboard extends Component {
 										<h5>Revenue Today</h5>
 										<p>${formatThousands(e.revenueToday)}</p>
 									</div>
+								}
+								{checkScope(this.props.user.role, 'admin') &&
+									<Fragment>
+										<div className="comped">
+											<h5>Comped Guests</h5>
+											<p>{formatThousands(e.totalCompedGuests)}</p>
+										</div>
+										<div className="comped">
+											<h5>Avg. Ticket Revenue</h5>
+											<p>${((e.totalRevenue + e.totalPromoRevenue) / (e.totalGuests - e.totalCompedGuests)).toFixed(2)}</p>
+										</div>
+									</Fragment>
 								}
 								{checkScope(this.props.user.role, 'root') &&
 									<div className="checked-in">
