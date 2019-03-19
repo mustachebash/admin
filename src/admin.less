@@ -82,6 +82,7 @@ h5 {
 
 input[type="text"],
 input[type="password"],
+textarea,
 select {
 	-webkit-appearance: none;
 	display: block;
@@ -110,6 +111,11 @@ select {
 	&:disabled {
 		opacity: .7;
 	}
+}
+
+textarea {
+	padding: 2em;
+	height: 12em;
 }
 
 select {
@@ -503,6 +509,11 @@ header {
 			}
 		}
 
+		.guest-notes {
+			font-size: 11px;
+			font-style: italic;
+		}
+
 		.products {
 			font-size: 0.75em; /* 12/16 */
 		}
@@ -558,6 +569,29 @@ header {
 			@media (max-width: @mobile) {
 				display: none;
 			}
+		}
+	}
+}
+
+.edit-guest-toggle {
+	justify-content: center;
+
+	div {
+		padding: .25em .5em;
+		border: 2px solid @white;
+		text-transform: uppercase;
+		font-weight: 600;
+		letter-spacing: 1px;
+		font-size: 12px;
+		cursor: pointer;
+
+		&:first-child {
+			border-right: none;
+		}
+
+		&.active {
+			background: @white;
+			color: @teal;
 		}
 	}
 }

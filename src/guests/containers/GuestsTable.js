@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { connect } from 'react-redux';
-import { fetchGuests, addGuest, checkIn, checkOut, updateGuestName, archiveGuest } from '../guestsDuck';
+import { fetchGuests, addGuest, checkIn, checkOut, updateGuestName, updateGuestNotes, archiveGuest } from '../guestsDuck';
 import { connectToSocket } from 'appDuck';
 import { checkScope } from 'utils';
 import CompedGuestForm from '../components/CompedGuestForm';
@@ -123,6 +123,7 @@ export class GuestsTable extends Component {
 					checkIn={this.props.checkIn}
 					checkOut={this.props.checkOut}
 					updateGuestName={this.props.updateGuestName}
+					updateGuestNotes={this.props.updateGuestNotes}
 					archiveGuest={this.props.archiveGuest}
 				/>
 			</React.Fragment>
@@ -155,6 +156,7 @@ export default connect(mapStateToProps, {
 	checkIn,
 	checkOut,
 	updateGuestName,
+	updateGuestNotes,
 	archiveGuest,
 	connectToSocket
 })(GuestsTable);

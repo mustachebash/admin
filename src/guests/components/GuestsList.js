@@ -69,6 +69,7 @@ const GuestsList = (props) => {
 				checkIn={props.checkIn}
 				checkOut={props.checkOut}
 				updateGuestName={props.updateGuestName}
+				updateGuestNotes={props.updateGuestNotes}
 				archiveGuest={props.archiveGuest}
 				user={props.user}
 			/>)}
@@ -88,5 +89,6 @@ GuestsList.propTypes = {
 	sortOrder: PropTypes.number.isRequired,
 	checkIn: PropTypes.func.isRequired,
 	checkOut: PropTypes.func.isRequired,
-	updateGuestName: PropTypes.func.isRequired
+	updateGuestName: PropTypes.func.isRequired,
+	updateGuestNotes: PropTypes.func.isRequired
 };

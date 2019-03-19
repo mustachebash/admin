@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 export default class GuestUpdateModal extends Component {
@@ -7,11 +7,14 @@ export default class GuestUpdateModal extends Component {
 
 		this.state = {
 			firstName: '',
-			lastName: ''
+			lastName: '',
+			notes: props.notes || '',
+			mode: 'name'
 		};
 
 		this.handleChange = this.handleChange.bind(this);
 		this.updateGuestName = this.updateGuestName.bind(this);
+		this.updateGuestNotes = this.updateGuestNotes.bind(this);
 
 		this.submitting = false;
 	}
@@ -35,13 +38,43 @@ export default class GuestUpdateModal extends Component {
 		this.props.onSave();
 	}
 
+	updateGuestNotes(e) {
+		if(this.submitting) return;
+
+		this.submitting = true;
+
+		this.props.updateGuestNotes(this.props.id, this.state.notes);
+
+		this.props.onSave();
+	}
+
 	render() {
+		const { firstName, lastName, notes, mode } = this.state;
+
 		return (
 			<div>
-				<h4>Enter New Name</h4>
-				<input type="text" name="firstName" placeholder="First Name" value={this.state.firstName} onChange={this.handleChange} ref={el => this.firstInput = el} />
-				<input type="text" name="lastName" placeholder="Last Name" value={this.state.lastName} onChange={this.handleChange} />
-				<button className="white" onClick={this.updateGuestName}>Save</button>
+				<div className="flex-row edit-guest-toggle">
+					<div className={mode === 'notes' ? 'active' : ''} onClick={() => this.setState({mode: 'notes'})}>Notes</div>
+					<div className={mode === 'name' ? 'active' : ''} onClick={() => this.setState({mode: 'name'})}>Edit Name</div>
+				</div>
+
+				<h4>
+					{mode === 'name'
+						? 'Enter New Name'
+						: 'Edit Guest Notes'
+					}
+				</h4>
+
+				{mode === 'name'
+					? <Fragment>
+						<input type="text" name="firstName" placeholder="First Name" value={firstName} onChange={this.handleChange} ref={el => this.firstInput = el} />
+						<input type="text" name="lastName" placeholder="Last Name" value={lastName} onChange={this.handleChange} />
+					</Fragment>
+
+					: <textarea name="notes" placeholder="Notes" value={notes} onChange={this.handleChange} />
+				}
+
+				<button className="white" onClick={mode === 'name' ? this.updateGuestName : this.updateGuestNotes}>Save</button>
 				<button className="white" onClick={this.props.onCancel}>Cancel</button>
 			</div>
 		);
@@ -50,7 +83,9 @@ export default class GuestUpdateModal extends Component {
 
 GuestUpdateModal.propTypes = {
 	id: PropTypes.string.isRequired,
+	notes: PropTypes.string,
 	updateGuestName: PropTypes.func.isRequired,
+	updateGuestNotes: PropTypes.func.isRequired,
 	onSave: PropTypes.func.isRequired,
 	onCancel: PropTypes.func.isRequired
 };
