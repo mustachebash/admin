@@ -112,6 +112,16 @@ export function updateGuestName(guestId, { firstName, lastName }) {
 	};
 }
 
+export function updateGuestNotes(guestId, notes) {
+	return (dispatch) => {
+		dispatch(updateGuest(guestId));
+
+		apiClient.patch(`/guests/${guestId}`, {notes})
+			.then(g => dispatch(receiveGuest(g)))
+			.catch(e => console.error('Guest API Error', e));
+	};
+}
+
 export function archiveGuest(guestId) {
 	return (dispatch) => {
 		return apiClient.delete(`/guests/${guestId}`)

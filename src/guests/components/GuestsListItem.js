@@ -48,7 +48,7 @@ export default class GuestsListItem extends Component {
 	}
 
 	render() {
-		const { guest, user, event, updateGuestName } = this.props;
+		const { guest, user, event, updateGuestName, updateGuestNotes } = this.props;
 
 		return (
 			<React.Fragment>
@@ -69,6 +69,7 @@ export default class GuestsListItem extends Component {
 					}
 					<div className="name">
 						<p>{guest.firstName} {guest.lastName}</p>
+						{guest.notes && <p className="guest-notes">Notes: {guest.notes}</p>}
 					</div>
 					<div className="date">
 						<p>{moment.tz(guest.created, 'America/Los_Angeles').format('MMM Do, h:mma')}</p>
@@ -92,7 +93,13 @@ export default class GuestsListItem extends Component {
 				</li>
 				{this.state.showEditModal &&
 					<Modal closeModal={this.closeEditModal}>
-						<GuestUpdateModal onCancel={this.closeEditModal} onSave={this.closeEditModal} updateGuestName={updateGuestName} id={guest.id}/>
+						<GuestUpdateModal
+							onCancel={this.closeEditModal}
+							onSave={this.closeEditModal}
+							updateGuestName={updateGuestName}
+							updateGuestNotes={updateGuestNotes}
+							notes={guest.notes}
+							id={guest.id}/>
 					</Modal>
 				}
 			</React.Fragment>
@@ -107,5 +114,6 @@ GuestsListItem.propTypes = {
 	checkIn: PropTypes.func.isRequired,
 	checkOut: PropTypes.func.isRequired,
 	updateGuestName: PropTypes.func.isRequired,
+	updateGuestNotes: PropTypes.func.isRequired,
 	archiveGuest: PropTypes.func.isRequired
 };
