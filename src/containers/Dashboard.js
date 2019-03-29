@@ -68,22 +68,22 @@ class Dashboard extends Component {
 							<h2>{e.name}</h2>
 							<div className="stats flex-row">
 								<div className="attendance">
-									<h5>Attendance</h5>
+									<h5 data-tooltip="Total guests on the list for this event">Attendance</h5>
 									<p>{formatThousands(e.totalGuests)}</p>
 								</div>
 								<div className="revenue">
-									<h5>Revenue</h5>
+									<h5 data-tooltip="Ticket revenue based on all ticket sales volume (price X quantity)">Revenue</h5>
 									<p>${formatThousands(e.totalRevenue + e.totalPromoRevenue)}</p>
 								</div>
 								{e.status === 'active' &&
 									<div className="guests-today">
-										<h5>Guests Today</h5>
+										<h5 data-tooltip="Paying guests added today">Guests Today</h5>
 										<p>{e.guestsToday}</p>
 									</div>
 								}
 								{e.status === 'active' &&
 									<div className="revenue-today">
-										<h5>Revenue Today</h5>
+										<h5 data-tooltip="Ticket revenue today based on all ticket sales volume (price X quantity)">Revenue Today</h5>
 										<p>${formatThousands(e.revenueToday)}</p>
 									</div>
 								}
@@ -93,8 +93,12 @@ class Dashboard extends Component {
 											<h5>Comped Guests</h5>
 											<p>{formatThousands(e.totalCompedGuests)}</p>
 										</div>
-										<div className="comped">
-											<h5>Avg. Ticket Revenue</h5>
+										<div className="promo-revenue">
+											<h5 data-tooltip="Ticket revenue based on promo ticket sales volume only (price X quantity)">Promo Revenue</h5>
+											<p>${formatThousands(e.totalPromoRevenue)}</p>
+										</div>
+										<div className="avg-revenue">
+											<h5 data-tooltip="Average price paid per ticket (excludes comps, includes promos)">Avg. Ticket Revenue</h5>
 											<p>${((e.totalRevenue + e.totalPromoRevenue) / (e.totalGuests - e.totalCompedGuests)).toFixed(2)}</p>
 										</div>
 									</Fragment>
