@@ -16,10 +16,6 @@ const availableTypes = [
 		name: 'Acc. Ticket Sales'
 	},
 	{
-		id: 'guests',
-		name: 'Guests'
-	},
-	{
 		id: 'checkIns',
 		name: 'Check Ins'
 	}
@@ -122,15 +118,6 @@ export default class EventsChart extends Component {
 		}));
 	}
 
-	generateGuestsSeries(){
-		return this.props.chartData.map(event => ({
-			data: event.guests.map(day => ([(new Date(day[0])).setUTCFullYear(1972), day[1]])),
-			yAxis: 1,
-			visible: (new Date(event.date)) > Date.now() - (1.5 * 365 * 24 * 60 * 60 * 1000),
-			name: `${event.name}: Guests Added`
-		}));
-	}
-
 	render() {
 		const series = [];
 		let chartType = 'line';
@@ -141,10 +128,6 @@ export default class EventsChart extends Component {
 
 			case 'tickets':
 				series.push(...this.generateTicketsSeries());
-				break;
-
-			case 'guests':
-				series.push(...this.generateGuestsSeries());
 				break;
 
 			case 'checkIns':
