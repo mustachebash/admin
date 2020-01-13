@@ -47,10 +47,10 @@ export function communicationReducer(state = {}, action = {}) {
 	}
 }
 
-export function requestProduct(productKey) {
+export function requestProduct(id) {
 	return {
 		type: REQUEST_PRODUCT,
-		productKey
+		id
 	};
 }
 
@@ -74,10 +74,10 @@ export function receiveProducts(products) {
 	};
 }
 
-export function updateProduct(product) {
+export function requestProductUpdate(id) {
 	return {
 		type: UPDATE_PRODUCT,
-		product
+		id
 	};
 }
 
@@ -97,6 +97,16 @@ export function fetchProducts() {
 
 		return apiClient.get('/products')
 			.then(products => dispatch(receiveProducts(products)))
+			.catch(e => console.error('Products API Error', e));
+	};
+}
+
+export function updateProduct(id, updates) {
+	return (dispatch) => {
+		dispatch(requestProductUpdate(id));
+
+		return apiClient.patch(`/products/${id}`, updates)
+			.then(product => dispatch(receiveProduct(product)))
 			.catch(e => console.error('Products API Error', e));
 	};
 }

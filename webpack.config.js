@@ -1,16 +1,17 @@
 const path = require('path'),
 	webpack = require('webpack'),
-	CleanWebpackPlugin = require('clean-webpack-plugin'),
-	UglifyJSPlugin = require('uglifyjs-webpack-plugin'),
+	{ CleanWebpackPlugin } = require('clean-webpack-plugin'),
+	TerserPlugin = require('terser-webpack-plugin'),
 	MiniCssExtractPlugin = require('mini-css-extract-plugin'),
 	OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin'),
 	HtmlWebpackPlugin = require('html-webpack-plugin'),
-	ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
+	ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin'),
+	{ StatsWriterPlugin } = require('webpack-stats-plugin');
 
 module.exports = (env = {}, argv) => {
 	const devMode = argv.mode !== 'production',
 		debugMode = env.debug,
-		entry = ['whatwg-fetch', './src/index.js'];
+		entry = ['./src/index.js'];
 
 	if(debugMode) entry.unshift('react-devtools');
 
@@ -18,7 +19,10 @@ module.exports = (env = {}, argv) => {
 		entry,
 		devtool: devMode ? 'inline-source-map' : false,
 		resolve: {
-			modules: [path.resolve(__dirname, 'src'), 'node_modules']
+			modules: [path.resolve(__dirname, 'src'), 'node_modules'],
+			alias: {
+				'react-dom': '@hot-loader/react-dom'
+			}
 		},
 		output: {
 			path: path.resolve(__dirname, 'dist'),
@@ -49,7 +53,7 @@ module.exports = (env = {}, argv) => {
 						{
 							loader: 'babel-loader',
 							options: {
-								presets: ['@babel/react', ['@babel/env', {modules: false}]],
+								presets: ['@babel/react', ['@babel/env', {modules: false, useBuiltIns: 'usage', corejs: 3}]],
 								plugins: [
 									'react-hot-loader/babel',
 									'@babel/proposal-object-rest-spread',
@@ -71,11 +75,11 @@ module.exports = (env = {}, argv) => {
 				new OptimizeCssAssetsPlugin({
 					cssProcessorOptions: {discardComments: {removeAll: true}}
 				}),
-				new UglifyJSPlugin()
+				new TerserPlugin()
 			]
 		},
 		plugins: [
-			new CleanWebpackPlugin(['dist']),
+			new CleanWebpackPlugin(),
 			new HtmlWebpackPlugin({
 				inject: 'head',
 				template: 'src/index.html'
@@ -85,6 +89,13 @@ module.exports = (env = {}, argv) => {
 			}),
 			new MiniCssExtractPlugin({
 				filename: '[name].[contenthash].css'
+			}),
+			new StatsWriterPlugin({
+				filename: '../stats.json',
+				stats: {
+					all: false,
+					assets: true
+				}
 			}),
 			new webpack.DefinePlugin({
 				API_HOST: JSON.stringify(devMode ? 'http://localhost:5000' : 'https://api.mustachebash.com')

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { fetchProducts } from 'products/productsDuck';
+import { fetchProducts, updateProduct } from 'products/productsDuck';
 import { updateEvent } from 'events/eventsDuck';
 import Toggle from 'components/Toggle';
 import Loader from 'components/Loader';
@@ -13,7 +13,7 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 export default
-@connect(mapStateToProps, {fetchProducts, updateEvent})
+@connect(mapStateToProps, {fetchProducts, updateProduct, updateEvent})
 class Settings extends Component {
 	static propTypes = {
 		events: PropTypes.array.isRequired,
@@ -35,7 +35,7 @@ class Settings extends Component {
 		return (
 			<React.Fragment>
 				<div className="flex-row">
-					<section className="settings-group">
+					<section className="settings-group tickets">
 						<h1>Tickets</h1>
 						{activeProducts.map(p => (
 							<div className="settings-item" key={p.id}>
@@ -43,8 +43,14 @@ class Settings extends Component {
 								<ul>
 									<li><strong>Event:</strong> {events.find(e => e.id === p.eventId).name}</li>
 									<li><strong>Price:</strong> ${p.price.toFixed(2)}</li>
-									{/* <li><strong>Status:</strong> {p.status}</li> */}
+									<li><strong>Status:</strong> {p.status}</li>
 								</ul>
+								{p.status !== 'archived' &&
+									<Toggle
+										toggleState={p.status === 'active'}
+										handleToggle={() => this.props.updateProduct(p.id, {status: ['active', 'inactive'].filter(s => s !== p.status)[0]})}
+									/>
+								}
 							</div>
 						))}
 					</section>
@@ -61,6 +67,7 @@ class Settings extends Component {
 											<select name={`currentTicket-${e.id}`} defaultValue={e.currentTicket} onChange={ev => this.props.updateEvent(e.id, {currentTicket: ev.target.value})}>
 												{products.map(p => {
 													if(p.eventId !== e.id) return false;
+													if(p.status !== 'active') return false;
 
 													return <option key={`option-${p.id}`} value={p.id}>{p.name} - ${p.price.toFixed(2)}</option>;
 												})}

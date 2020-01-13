@@ -23,12 +23,10 @@ const defaultSessionState = {
 	},
 	defaultControlState = {
 		selectedEvents: [
-			'c0fb38ec-4ef0-454b-9682-a980f5d014ac',
-			'2cc78886-75c2-4006-8e79-5a5f523533b1'
+			'34a99b2a-f826-406a-8227-921efd03ebff'
 		],
 		promoProducts: [
-			'a6384901-382e-4896-a0c9-eb9ea12b7f59',
-			'bc2dca85-2c4f-42e7-a904-c809362b35b2'
+
 		]
 	};
 
