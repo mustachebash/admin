@@ -13,7 +13,6 @@ const mapStateToProps = (state, ownProps) => ({
 	promos: state.data.promos,
 	events: state.data.events,
 	products: state.data.products,
-	promoProducts: state.control.promoProducts,
 	selectedEvents: state.control.selectedEvents
 });
 
@@ -43,14 +42,14 @@ class PromosTable extends Component {
 
 	componentDidMount() {
 		this.props.fetchProducts();
-		this.props.fetchPromos();
+		this.props.fetchPromos({eventId: this.props.selectedEvents[0]});
 	}
 
 	componentDidUpdate(prevProps) {
 		if((prevProps.selectedEvents !== this.props.selectedEvents && this.props.selectedEvents.length) ||
 			(!prevProps.socketConnected && this.props.socketConnected)
 		) {
-			this.props.fetchPromos({eventId: this.props.selectedEvents});
+			this.props.fetchPromos({eventId: this.props.selectedEvents[0]});
 		}
 	}
 
@@ -99,7 +98,7 @@ class PromosTable extends Component {
 
 	render() {
 		const events = this.props.events.filter(e => this.props.selectedEvents.includes(e.id)),
-			products = this.props.products.filter(p => this.props.promoProducts.includes(p.id)),
+			products = this.props.products.filter(p => p.promo),
 			filter = new RegExp(this.state.filter, 'i');
 
 		let promos = this.props.promos.filter(p => {
