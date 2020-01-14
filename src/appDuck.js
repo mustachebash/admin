@@ -24,9 +24,6 @@ const defaultSessionState = {
 	defaultControlState = {
 		selectedEvents: [
 			'34a99b2a-f826-406a-8227-921efd03ebff'
-		],
-		promoProducts: [
-
 		]
 	};
 

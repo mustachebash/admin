@@ -43,14 +43,17 @@ class Settings extends Component {
 								<ul>
 									<li><strong>Event:</strong> {events.find(e => e.id === p.eventId).name}</li>
 									<li><strong>Price:</strong> ${p.price.toFixed(2)}</li>
-									<li><strong>Status:</strong> {p.status}</li>
 								</ul>
-								{p.status !== 'archived' &&
-									<Toggle
-										toggleState={p.status === 'active'}
-										handleToggle={() => this.props.updateProduct(p.id, {status: ['active', 'inactive'].filter(s => s !== p.status)[0]})}
-									/>
-								}
+								<div className="event-ticket">
+									<label>Status</label>
+									<div className="select-wrap">
+										<select name={`ticketStatus-${p.id}`} defaultValue={p.status}  onChange={ev => this.props.updateProduct(p.id, {status: ev.target.value})}>
+											<option key={`option-${p.id}-active`} value="active">Active</option>
+											<option key={`option-${p.id}-inactive`} value="inactive">Inactive</option>
+											<option key={`option-${p.id}-archived`} value="archived">Archived</option>
+										</select>
+									</div>
+								</div>
 							</div>
 						))}
 					</section>
@@ -65,11 +68,12 @@ class Settings extends Component {
 										<label>Current Ticket</label>
 										<div className="select-wrap">
 											<select name={`currentTicket-${e.id}`} defaultValue={e.currentTicket} onChange={ev => this.props.updateEvent(e.id, {currentTicket: ev.target.value})}>
+												<option key="option-none" value="">None</option>
 												{products.map(p => {
 													if(p.eventId !== e.id) return false;
-													if(p.status !== 'active') return false;
+													if(p.promo) return false;
 
-													return <option key={`option-${p.id}`} value={p.id}>{p.name} - ${p.price.toFixed(2)}</option>;
+													return <option key={`option-${p.id}`} disabled={p.status !== 'active'} value={p.id}>{p.name} - ${p.price.toFixed(2)}</option>;
 												})}
 											</select>
 										</div>
