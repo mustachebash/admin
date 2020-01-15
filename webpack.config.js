@@ -27,6 +27,7 @@ module.exports = (env = {}, argv) => {
 		output: {
 			path: path.resolve(__dirname, 'dist'),
 			filename: 'app.[hash].js',
+			chunkFilename: '[name].chunk.[chunkhash].js',
 			publicPath: '/'
 		},
 		devServer: {
@@ -71,6 +72,9 @@ module.exports = (env = {}, argv) => {
 			]
 		},
 		optimization: {
+			splitChunks: {
+				chunks: 'all'
+			},
 			minimizer: [
 				new OptimizeCssAssetsPlugin({
 					cssProcessorOptions: {discardComments: {removeAll: true}}
