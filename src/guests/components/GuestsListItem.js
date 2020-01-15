@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment-timezone';
+import { format } from 'date-fns';
 import { checkScope } from 'utils';
 import Modal from 'components/Modal';
 import GuestUpdateModal from './GuestUpdateModal';
@@ -60,7 +60,7 @@ export default class GuestsListItem extends Component {
 								: <span
 									className={guest.checkedIn ? 'checked' : ''}
 									onClick={this.toggleCheckIn}
-									title={guest.checkedIn ? moment.tz(guest.checkedIn, 'America/Los_Angeles').format('MMM Do, h:mma') : 'Check In'}
+									title={guest.checkedIn ? format(new Date(guest.checkedIn), 'MMM Do, h:mma', {timeZone: 'America/Los_Angeles'}) : 'Check In'}
 								>
 									{guest.checkedIn ? '' : 'Check In'}
 								</span>
@@ -72,7 +72,7 @@ export default class GuestsListItem extends Component {
 						{guest.notes && <p className="guest-notes">Notes: {guest.notes}</p>}
 					</div>
 					<div className="date">
-						<p>{moment.tz(guest.created, 'America/Los_Angeles').format('MMM Do, h:mma')}</p>
+						<p>{format(new Date(guest.created), 'MMM Do, h:mma', {timeZone: 'America/Los_Angeles'})}</p>
 					</div>
 					<div className="event">
 						<p>{event.name}</p>

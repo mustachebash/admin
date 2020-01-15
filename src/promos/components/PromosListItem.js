@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment-timezone';
+import { format } from 'date-fns';
 
 export default class PromosListItem extends Component {
 	constructor(props) {
@@ -27,7 +27,7 @@ export default class PromosListItem extends Component {
 					<div className="status">
 						<span
 							className={promo.status === 'claimed' ? 'checked' : ''}
-							title={promo.status === 'claimed' ? moment.tz(promo.updated, 'America/Los_Angeles').format('MMM Do, h:mma') : 'Not Claimed'}
+							title={promo.status === 'claimed' ? format(new Date(promo.updated), 'MMM Do, h:mma', {timeZone: 'America/Los_Angeles'}) : 'Not Claimed'}
 						>
 							{promo.status}
 						</span>
@@ -36,7 +36,7 @@ export default class PromosListItem extends Component {
 						<p>{promo.recipient}</p>
 					</div>
 					<div className="date">
-						<p>{moment.tz(promo.created, 'America/Los_Angeles').format('MMM Do, h:mma')}</p>
+						<p>{format(new Date(promo.created), 'MMM Do, h:mma', {timeZone: 'America/Los_Angeles'}) }</p>
 					</div>
 					<div className="event">
 						<p>{event.name}</p>
