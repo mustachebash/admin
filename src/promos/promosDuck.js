@@ -3,7 +3,7 @@
  * DUCKS!!! https://github.com/erikras/ducks-modular-redux
  */
 
-import { unionWith } from 'lodash';
+import unionWith from 'lodash/unionWith';
 import apiClient from 'utils/apiClient';
 
 // Actions
