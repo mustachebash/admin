@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment-timezone';
+import { format } from 'date-fns';
 
 export default class TransactionsListItem extends Component {
 	constructor(props) {
@@ -33,7 +33,7 @@ export default class TransactionsListItem extends Component {
 					</ul>
 				</div>
 				<div className="date">
-					<p>{moment.tz(transaction.created, 'America/Los_Angeles').format('MMM Do, h:mma')}</p>
+					<p>{format(new Date(transaction.created), 'MMM Do, h:mma', {timeZone: 'America/Los_Angeles'}) }</p>
 				</div>
 				<div className="confirmation">
 					<p>{transaction.braintreeTransactionId}</p>
