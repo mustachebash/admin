@@ -28,13 +28,19 @@ class ErrorBoundary extends Component {
 	render() {
 		if (this.state.error) {
 			return (
-				<p>
-					Oops, an unexpected error occured. Please{' '}
-					<button type="button" onClick={() => location.reload()}>
-						click here
-					</button>{' '}
-					to refresh the page.
-				</p>
+				<>
+					<p>
+						Oops, an unexpected error occured. Text Joe (714) 861-9593:
+					</p>
+					<p className="error">{this.state.error}</p>
+					<p>
+						Please{' '}
+						<button type="button" onClick={() => location.reload()}>
+							click here
+						</button>{' '}
+						to refresh the page.
+					</p>
+				</>
 			);
 		}
 

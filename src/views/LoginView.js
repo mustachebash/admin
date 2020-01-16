@@ -1,7 +1,7 @@
 import React from 'react';
-import Login from '../containers/Login';
+import Login from 'components/Login';
 
-const LoginView = (props) => (
+const LoginView = () => (
 	<div id="login-view" className="container-1230">
 		<Login />
 	</div>

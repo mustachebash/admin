@@ -22,8 +22,6 @@ if(accessToken) {
 	} catch(e) {/* do nothing - bad jwt */}
 }
 
-console.log(initialState);
-
 ReactDOM.render(
 	<App />,
 	document.getElementById('app-root')

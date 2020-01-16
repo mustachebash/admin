@@ -5,7 +5,7 @@ import jwtDecode from 'jwt-decode';
 import { isAuthenticated, checkScope } from 'utils';
 import ErrorBoundary from './ErrorBoundary';
 import Header from './components/Header';
-// import LoginView from './views/LoginView';
+import LoginView from './views/LoginView';
 // import DashboardView from './views/DashboardView';
 // import SettingsView from './views/SettingsView';
 // import TransactionsView from './transactions/views/TransactionsView';
@@ -39,7 +39,7 @@ const App = () => (
 			<PrivateRoute path="/guests" component={GuestsView} />
 			{/* <PrivateRoute scope="admin" path="/settings" component={SettingsView} /> */}
 			{/* <PrivateRoute scope="admin" path="/promos" component={PromosView} /> */}
-			{/* <Route path="/login" component={LoginView} /> */}
+			<Route path="/login" component={LoginView} />
 
 			<footer>
 				<p className="copyright">
