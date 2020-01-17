@@ -38,7 +38,7 @@ const event = {
 	};
 
 const GuestsListItem = ({ guest }) => (
-	<React.Fragment>
+	<>
 		<li className="guest">
 			{checkScope(user.role, 'doorman') &&
 				<div className="check-in">
@@ -89,7 +89,7 @@ const GuestsListItem = ({ guest }) => (
 					id={guest.id}/>
 			</Modal>
 		} */}
-	</React.Fragment>
+	</>
 );
 
 GuestsListItem.propTypes = {

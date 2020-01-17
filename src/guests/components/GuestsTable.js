@@ -89,15 +89,15 @@ export default class GuestsTable extends PureComponent {
 		filteredGuests = filteredGuests.sort(this.getGuestComparator());
 
 		// No one needs to see more than 100 guests at a time
-		filteredGuests = guests.slice(0, 100);
+		filteredGuests = filteredGuests.slice(0, 100);
 
 		return (
-			<React.Fragment>
+			<>
 				{checkScope(user.role, 'admin') &&
-					<React.Fragment>
+					<>
 						<h4>Comp a Guest</h4>
 						{/* <CompedGuestForm /> */}
-					</React.Fragment>
+					</>
 				}
 
 				<Search handleQueryChange={this.handleFilterChange} />
@@ -111,7 +111,7 @@ export default class GuestsTable extends PureComponent {
 					sortBy={this.state.sortBy}
 					sortOrder={this.state.sortOrder}
 				/>
-			</React.Fragment>
+			</>
 		);
 	}
 }

@@ -1,0 +1,181 @@
+@import '~variables.less';
+
+.guests-list {
+	margin-top: 0;
+	margin-bottom: 0;
+	padding: 0;
+	list-style: none;
+
+	ul {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	li {
+		padding-right: 1em;
+		padding-left: 1em;
+		display: flex;
+		justify-content: space-between;
+
+		p {
+			margin: 0;
+		}
+
+		> div {
+			flex: 1 1 0;
+		}
+
+		.amount {
+			flex: 0 0 5.25em; /* 100/16 */
+
+			p {
+				text-align: right;
+				margin-right: 2em;
+			}
+
+			@media (max-width: @mobile) {
+				display: none;
+			}
+		}
+
+		.guest-notes {
+			font-size: 11px;
+			font-style: italic;
+		}
+
+		.products {
+			font-size: 0.75em; /* 12/16 */
+		}
+
+		.date {
+			@media (max-width: @mobile) {
+				display: none;
+			}
+		}
+
+		.check-in {
+			span {
+				display: inline-block;
+				background: @teal;
+				padding: .25em .5em;
+				cursor: pointer;
+				height: 1.2em;
+				user-select: none;
+
+				&.no-entry {
+					background: none;
+					color: @red;
+					cursor: default;
+					text-transform: uppercase;
+				}
+
+				&.checked {
+					background: @white;
+
+					&:before {
+						content: '';
+						position: relative;
+						display: inline-block;
+						top: -3px;
+						width: 5px;
+						height: 12px;
+						border: 3px solid transparent;
+						transform: rotate(45deg);
+						border-bottom-color: @teal;
+						border-right-color: @teal;
+					}
+				}
+			}
+		}
+
+		.edit-guest {
+			flex: 0 1 30px;
+
+			p {
+				text-align: right;
+			}
+
+			@media (max-width: @mobile) {
+				display: none;
+			}
+		}
+	}
+
+	.edit-guest-toggle {
+		justify-content: center;
+
+		div {
+			padding: .25em .5em;
+			border: 2px solid @white;
+			text-transform: uppercase;
+			font-weight: 600;
+			letter-spacing: 1px;
+			font-size: 12px;
+			cursor: pointer;
+
+			&:first-child {
+				border-right: none;
+			}
+
+			&.active {
+				background: @white;
+				color: @teal;
+			}
+		}
+	}
+
+	.table-header {
+		background: @white;
+		padding: 10px;
+		cursor: default;
+
+		h5 {
+			position: relative;
+			padding: 0;
+			margin: 0;
+			user-select: none;
+			color: @gray;
+
+			&.sortable {
+				cursor: pointer;
+			}
+
+			&.asc,
+			&.desc {
+				&:after {
+					content: '';
+					position: relative;
+					display: inline-block;
+					width: 0;
+					height: 0;
+					border: 4px solid transparent;
+					margin-left: 5px;
+					margin-right: -13px; // Makes this essentially take up no space
+				}
+			}
+
+			&.sorted.asc {
+				&:after {
+					top: -6px;
+					border-bottom-color: @black;
+				}
+			}
+
+			&.sorted.desc {
+				&:after {
+					top: -2px;
+					border-top-color: @black;
+				}
+			}
+		}
+	}
+
+	.guest {
+		padding: 0.625em; /* 10/16 */
+
+		&:nth-child(even) {
+			background: @light-gray;
+		}
+	}
+}
