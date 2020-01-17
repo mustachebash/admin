@@ -43,7 +43,7 @@ const App = () => (
 
 			<footer>
 				<p className="copyright">
-					&copy;2018 Mustache Bash. All Rights Reserved.
+					&copy;2020 Mustache Bash. All Rights Reserved.
 				</p>
 			</footer>
 		</ErrorBoundary>
