@@ -15,7 +15,8 @@ module.exports = {
 		}
 	},
 	plugins: [
-		'react'
+		'react',
+		'react-hooks'
 	],
 	globals: {
 		API_HOST: false,
@@ -66,6 +67,8 @@ module.exports = {
 		'react/jsx-curly-brace-presence': [2, 'never'],
 		'react/no-unescaped-entities': 0,
 		'react/no-unused-prop-types': 2,
-		'react/no-unused-state': 2
+		'react/no-unused-state': 2,
+		'react-hooks/rules-of-hooks': 2,
+		'react-hooks/exhaustive-deps': 1
 	}
 };
