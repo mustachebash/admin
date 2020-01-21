@@ -1,9 +1,9 @@
 import './Header.less';
 
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { NavLink, withRouter } from 'react-router-dom';
-import { checkScope } from '../utils';
+import UserContext from 'UserContext';
+import { checkScope } from 'utils';
 
 function logOut() {
 	window.localStorage.removeItem('accessToken');
@@ -14,9 +14,7 @@ function logOut() {
 export default
 @withRouter
 class Header extends Component {
-	static propTypes = {
-		user: PropTypes.object
-	};
+	static contextType = UserContext;
 
 	state = {
 		navOpen: false
@@ -29,7 +27,7 @@ class Header extends Component {
 	}
 
 	render() {
-		const { user } = this.props;
+		const { user } = this.context;
 
 		/* eslint-disable max-len */
 		return (

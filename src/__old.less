@@ -28,13 +28,6 @@
 	}
 }
 
-#login {
-	padding-top: 1.25em; /* 20/16 */
-	max-width: 25em; /* 400/16 */
-	margin: 0 auto;
-	text-align: center;
-}
-
 // --------------------------------------------------
 // DASHBOARD
 
@@ -121,8 +114,7 @@
 	max-width: 25em;
 }
 
-.transactions-list,
-.guests-list {
+.transactions-list {
 	margin-top: 0;
 	margin-bottom: 0;
 	padding: 0;
@@ -161,11 +153,6 @@
 			}
 		}
 
-		.guest-notes {
-			font-size: 11px;
-			font-style: italic;
-		}
-
 		.products {
 			font-size: 0.75em; /* 12/16 */
 		}
@@ -174,76 +161,6 @@
 			@media (max-width: @mobile) {
 				display: none;
 			}
-		}
-
-		.check-in {
-			span {
-				display: inline-block;
-				background: @teal;
-				padding: .25em .5em;
-				cursor: pointer;
-				height: 1.2em;
-				user-select: none;
-
-				&.no-entry {
-					background: none;
-					color: @red;
-					cursor: default;
-					text-transform: uppercase;
-				}
-
-				&.checked {
-					background: @white;
-
-					&:before {
-						content: '';
-						position: relative;
-						display: inline-block;
-						top: -3px;
-						width: 5px;
-						height: 12px;
-						border: 3px solid transparent;
-						transform: rotate(45deg);
-						border-bottom-color: @teal;
-						border-right-color: @teal;
-					}
-				}
-			}
-		}
-
-		.edit-guest {
-			flex: 0 1 30px;
-
-			p {
-				text-align: right;
-			}
-
-			@media (max-width: @mobile) {
-				display: none;
-			}
-		}
-	}
-}
-
-.edit-guest-toggle {
-	justify-content: center;
-
-	div {
-		padding: .25em .5em;
-		border: 2px solid @white;
-		text-transform: uppercase;
-		font-weight: 600;
-		letter-spacing: 1px;
-		font-size: 12px;
-		cursor: pointer;
-
-		&:first-child {
-			border-right: none;
-		}
-
-		&.active {
-			background: @white;
-			color: @teal;
 		}
 	}
 }
@@ -356,7 +273,6 @@
 }
 
 .transaction,
-.guest,
 .promo {
 	padding: 0.625em; /* 10/16 */
 
@@ -365,7 +281,6 @@
 	}
 }
 
-.comped-guest-form,
 .create-promo-form {
 	margin-bottom: 4em;
 
@@ -465,36 +380,5 @@
 		top: 50%;
 		transform: translateY(-50%);
 		max-width: 500px;
-	}
-}
-
-footer {
-	padding: 3.4375em 0; /* 55/16 */
-	text-align: center;
-
-	nav {
-		margin-bottom: 0.5em; /* 8/16 */
-		max-height: 62.5em; /* 1000/16 */
-
-		ul {
-			background: transparent;
-			display: block;
-			margin-bottom: 3.125em; /* 50/16 */
-			padding: 0;
-		}
-
-		a {
-			color: @light-gray;
-		}
-	}
-
-	#copyright {
-		margin-top: 0.625rem; /* 10/16 */
-		color: @light-gray;
-		text-align: center;
-
-		@media (max-width: @mobile) {
-			font-size: 0.875em; /* 14/16 */
-		}
 	}
 }

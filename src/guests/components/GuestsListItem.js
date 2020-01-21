@@ -30,14 +30,11 @@ function archiveGuest() {
 }
 
 const event = {
-		id: '34a99b2a-f826-406a-8227-921efd03ebff',
-		name: 'Mustache Bash 2020'
-	},
-	user = {
-		role: 'admin'
-	};
+	id: '34a99b2a-f826-406a-8227-921efd03ebff',
+	name: 'Mustache Bash 2020'
+};
 
-const GuestsListItem = ({ guest }) => (
+const GuestsListItem = ({ guest, user }) => (
 	<>
 		<li className="guest">
 			{checkScope(user.role, 'doorman') &&
@@ -93,7 +90,8 @@ const GuestsListItem = ({ guest }) => (
 );
 
 GuestsListItem.propTypes = {
-	guest: PropTypes.object.isRequired
+	guest: PropTypes.object.isRequired,
+	user: PropTypes.object.isRequired
 };
 
 export default GuestsListItem;

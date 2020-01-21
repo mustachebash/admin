@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { hot } from 'react-hot-loader/root';
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
-import jwtDecode from 'jwt-decode';
-import { isAuthenticated, checkScope } from 'utils';
+import { checkScope } from 'utils';
+import UserContext, { UserProvider } from './UserContext';
+import { EventProvider } from './EventContext';
 import ErrorBoundary from './ErrorBoundary';
 import Header from './components/Header';
 import LoginView from './views/LoginView';
@@ -13,41 +14,49 @@ import GuestsView from './guests/views/GuestsView';
 // import PromosView from './promos/views/PromosView';
 
 /* eslint-disable react/prop-types */
-const PrivateRoute = ({ component: Component, scope = 'read', exclude = [], ...rest }) => (
-	<Route {...rest} render={props => {
-		if(isAuthenticated()) {
-			const userScope = jwtDecode(window.localStorage.getItem('accessToken')).role;
+const PrivateRoute = ({ component: Component, scope = 'read', exclude = [], ...rest }) => {
+	const { user } = useContext(UserContext);
 
-			return checkScope(userScope, scope) && !exclude.includes(userScope) && <Component {...props} />;
-		} else {
-			return <Redirect to={{
-				pathname: '/login',
-				state: {from: props.location}
-			}} />;
-		}
-	}} />
-);
+	return (
+		<Route {...rest} render={props => {
+			if(user) {
+				const userScope = user.role;
+
+				return checkScope(userScope, scope) && !exclude.includes(userScope) && <Component {...props} />;
+			} else {
+				return <Redirect to={{
+					pathname: '/login',
+					state: {from: props.location}
+				}} />;
+			}
+		}} />
+	);
+};
 /* eslint-enable */
 
 const App = () => (
-	<Router>
-		<ErrorBoundary>
-			<Header />
+	<UserProvider>
+		<EventProvider>
+			<Router>
+				<ErrorBoundary>
+					<Header />
 
-			{/* <PrivateRoute exclude={['doorman']} exact path="/" component={DashboardView} /> */}
-			{/* <PrivateRoute scope="admin" path="/transactions" component={TransactionsView} /> */}
-			<PrivateRoute path="/guests" component={GuestsView} />
-			{/* <PrivateRoute scope="admin" path="/settings" component={SettingsView} /> */}
-			{/* <PrivateRoute scope="admin" path="/promos" component={PromosView} /> */}
-			<Route path="/login" component={LoginView} />
+					{/* <PrivateRoute exclude={['doorman']} exact path="/" component={DashboardView} /> */}
+					{/* <PrivateRoute scope="admin" path="/transactions" component={TransactionsView} /> */}
+					<PrivateRoute path="/guests" component={GuestsView} />
+					{/* <PrivateRoute scope="admin" path="/settings" component={SettingsView} /> */}
+					{/* <PrivateRoute scope="admin" path="/promos" component={PromosView} /> */}
+					<Route path="/login" component={LoginView} />
 
-			<footer>
-				<p className="copyright">
-					&copy;2020 Mustache Bash. All Rights Reserved.
-				</p>
-			</footer>
-		</ErrorBoundary>
-	</Router>
+					<footer>
+						<p className="copyright">
+							&copy;2020 Mustache Bash. All Rights Reserved.
+						</p>
+					</footer>
+				</ErrorBoundary>
+			</Router>
+		</EventProvider>
+	</UserProvider>
 );
 
 export default hot(App);

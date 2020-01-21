@@ -8,13 +8,6 @@ export function formatThousands(number) {
 	}
 }
 
-export function isAuthenticated() {
-	return !!(
-		window.localStorage.getItem('accessToken')
-		&& window.localStorage.getItem('refreshToken')
-	);
-}
-
 export function checkScope(userRole, scopeRequired) {
 	const roles = [
 		'root',

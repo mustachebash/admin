@@ -1,20 +1,25 @@
+import './CompedGuestForm.less';
+
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import apiClient from 'utils/apiClient';
 
 export default class CompedGuestForm extends Component {
-	constructor(props) {
-		super(props);
+	state = {
+		firstName: '',
+		lastName: '',
+		events: [],
+		eventId: ''
+	};
 
-		this.state = {
-			firstName: '',
-			lastName: '',
-			eventId: ''
-		};
+	handleChange = this.handleChange.bind(this);
+	addGuest = this.addGuest.bind(this);
 
-		this.handleChange = this.handleChange.bind(this);
-		this.addGuest = this.addGuest.bind(this);
+	submitting = false;
 
-		this.submitting = false;
+	componentDidMount() {
+		apiClient.get('/events')
+			.then(events => this.setState({events}))
+			.catch(e => console.error('Event API Error', e));
 	}
 
 	handleChange(e) {
@@ -26,15 +31,17 @@ export default class CompedGuestForm extends Component {
 	addGuest(e) {
 		e.preventDefault();
 
-		if(this.submitting || !this.state.firstName || !this.state.lastName || !this.state.eventId) return;
+		const { firstName, lastName, eventId } = this.state;
+
+		if(this.submitting || !firstName || !lastName || !eventId) return;
 
 		this.submitting = true;
 
-		this.props.addGuest({
-			firstName: this.state.firstName,
-			lastName: this.state.lastName,
-			eventId: this.state.eventId
-		});
+		apiClient.post('/guests', {
+			firstName,
+			lastName,
+			eventId
+		}).catch(err => console.error('Event API Error', err));
 
 		this.setState({
 			firstName: '',
@@ -46,14 +53,17 @@ export default class CompedGuestForm extends Component {
 	}
 
 	render() {
+		const { firstName, lastName, eventId, events } = this.state;
+
 		return (
 			<form className="comped-guest-form flex-row" onSubmit={this.addGuest}>
-				<input type="text" name="firstName" placeholder="First Name" value={this.state.firstName} onChange={this.handleChange} ref={el => this.firstInput = el} />
-				<input type="text" name="lastName" placeholder="Last Name" value={this.state.lastName} onChange={this.handleChange} />
+				<h4>Comp a Guest</h4>
+				<input type="text" name="firstName" placeholder="First Name" value={firstName} onChange={this.handleChange} ref={el => this.firstInput = el} />
+				<input type="text" name="lastName" placeholder="Last Name" value={lastName} onChange={this.handleChange} />
 				<div className="select-wrap">
-					<select name="eventId" value={this.state.eventId} onChange={this.handleChange}>
+					<select name="eventId" value={eventId} onChange={this.handleChange}>
 						<option disabled value="">Select an Event...</option>
-						{this.props.events.filter(e => e.status === 'active').map(e => (
+						{events.filter(e => e.status === 'active').map(e => (
 							<option key={e.id} value={e.id}>{e.name}</option>
 						))}
 					</select>
@@ -64,8 +74,3 @@ export default class CompedGuestForm extends Component {
 		);
 	}
 }
-
-CompedGuestForm.propTypes = {
-	addGuest: PropTypes.func.isRequired,
-	events: PropTypes.array.isRequired
-};
