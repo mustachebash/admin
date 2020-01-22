@@ -1,0 +1,47 @@
+@import '~variables.less';
+
+.transactions-list-item {
+	display: flex;
+	justify-content: space-between;
+	padding: 0.625em; /* 10/16 */
+
+	&:nth-child(even) {
+		background: @light-gray;
+	}
+
+	p {
+		margin: 0;
+	}
+
+	> div {
+		flex: 1 1 0;
+	}
+
+	ul {
+		list-style: none;
+		padding: 0;
+	}
+
+	.amount {
+		flex: 0 0 5.25em; /* 100/16 */
+
+		p {
+			text-align: right;
+			margin-right: 2em;
+		}
+
+		@media (max-width: @mobile) {
+			display: none;
+		}
+	}
+
+	.products {
+		font-size: 0.75em; /* 12/16 */
+	}
+
+	.date {
+		@media (max-width: @mobile) {
+			display: none;
+		}
+	}
+}

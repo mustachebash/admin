@@ -1,6 +1,6 @@
 @import '~variables.less';
 
-.guests-list {
+.transactions-list {
 	margin-top: 0;
 	margin-bottom: 0;
 	padding: 0;
@@ -19,12 +19,6 @@
 
 		> div {
 			flex: 1 1 0;
-		}
-
-		.date {
-			@media (max-width: @mobile) {
-				display: none;
-			}
 		}
 
 		h5 {
@@ -64,6 +58,19 @@
 					top: -2px;
 					border-top-color: @black;
 				}
+			}
+		}
+
+		.amount {
+			flex: 0 0 5.25em; /* 100/16 */
+
+			p {
+				text-align: right;
+				margin-right: 2em;
+			}
+
+			@media (max-width: @mobile) {
+				display: none;
 			}
 		}
 	}

@@ -1,9 +1,9 @@
 import './CompedGuestForm.less';
 
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import apiClient from 'utils/apiClient';
 
-export default class CompedGuestForm extends Component {
+export default class CompedGuestForm extends PureComponent {
 	state = {
 		firstName: '',
 		lastName: '',
@@ -56,21 +56,23 @@ export default class CompedGuestForm extends Component {
 		const { firstName, lastName, eventId, events } = this.state;
 
 		return (
-			<form className="comped-guest-form flex-row" onSubmit={this.addGuest}>
+			<div className="comped-guest-form">
 				<h4>Comp a Guest</h4>
-				<input type="text" name="firstName" placeholder="First Name" value={firstName} onChange={this.handleChange} ref={el => this.firstInput = el} />
-				<input type="text" name="lastName" placeholder="Last Name" value={lastName} onChange={this.handleChange} />
-				<div className="select-wrap">
-					<select name="eventId" value={eventId} onChange={this.handleChange}>
-						<option disabled value="">Select an Event...</option>
-						{events.filter(e => e.status === 'active').map(e => (
-							<option key={e.id} value={e.id}>{e.name}</option>
-						))}
-					</select>
-				</div>
+				<form className="flex-row" onSubmit={this.addGuest}>
+					<input type="text" name="firstName" placeholder="First Name" value={firstName} onChange={this.handleChange} ref={el => this.firstInput = el} />
+					<input type="text" name="lastName" placeholder="Last Name" value={lastName} onChange={this.handleChange} />
+					<div className="select-wrap">
+						<select name="eventId" value={eventId} onChange={this.handleChange}>
+							<option disabled value="">Select an Event...</option>
+							{events.filter(e => e.status === 'active').map(e => (
+								<option key={e.id} value={e.id}>{e.name}</option>
+							))}
+						</select>
+					</div>
 
-				<button className="white" type="submit">Add Guest</button>
-			</form>
+					<button className="white" type="submit">Add Guest</button>
+				</form>
+			</div>
 		);
 	}
 }

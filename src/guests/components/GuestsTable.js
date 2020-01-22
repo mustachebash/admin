@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
+import './GuestsTable.less';
+
+import React, { useState, useEffect, useContext, memo } from 'react';
 import EventContext from 'EventContext';
 import apiClient from 'utils/apiClient';
 import GuestsList from './GuestsList';
@@ -10,18 +12,18 @@ function getGuestComparator({sortBy, sortOrder}) {
 		let sort = 0;
 
 		switch(sortBy) {
-			case 'date':
-				// This will (should) never be the same
-				sort = a.created > b.created ? 1 : -1;
-				break;
-
-			default:
 			case 'name':
 				sort = a.lastName > b.lastName
 					? 1
 					: a.lastName === b.lastName
 						? 0
 						: -1;
+				break;
+
+			default:
+			case 'date':
+				// This will (should) never be the same
+				sort = a.created > b.created ? 1 : -1;
 				break;
 		}
 
@@ -32,7 +34,7 @@ function getGuestComparator({sortBy, sortOrder}) {
 const GuestsTable = () => {
 	const [guests, setGuests] = useState([]),
 		[filter, setFilter] = useState(''),
-		[sort, setSort] = useState({sortBy: 'name', sortOrder: 1}); // asc
+		[sort, setSort] = useState({sortBy: 'date', sortOrder: -1}); // asc
 
 	const { event } = useContext(EventContext);
 
@@ -69,30 +71,30 @@ const GuestsTable = () => {
 		);
 	});
 
-	filteredGuests = filteredGuests.sort(getGuestComparator(sort));
+	filteredGuests.sort(getGuestComparator(sort));
 
 	// No one needs to see more than 100 guests at a time
 	filteredGuests = filteredGuests.slice(0, 100);
 
 	return (
-		<>
-			<div className="flex-row">
-				<Search handleQueryChange={setFilter} />
-				<EventSelector />
+		<div className="guests-table">
+			<div className="filters flex-row">
+				<div><Search handleQueryChange={setFilter} /></div>
+				<div><EventSelector /></div>
 			</div>
 
 			<p>Showing {filteredGuests.length} of {guests.length} total</p>
 
-			<GuestsList
+			{event && <GuestsList
 				guests={filteredGuests}
 				sortGuests={sortGuests}
 				switchGuestsOrder={switchGuestsOrder}
 				sortBy={sort.sortBy}
 				sortOrder={sort.sortOrder}
 				event={event}
-			/>
-		</>
+			/>}
+		</div>
 	);
 };
 
-export default GuestsTable;
+export default memo(GuestsTable);

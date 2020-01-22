@@ -1,13 +1,12 @@
+import './TransactionsList.less';
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import TransactionsListItem from './TransactionsListItem';
 
-const TransactionsList = (props) => {
-	const { transactions, products } = props,
-		productsById = {};
-
-	products.forEach(p => productsById[p.id] = p);
+const TransactionsList = ({ transactions, products, sortBy, sortOrder, sortTransactions, switchTransactionsOrder }) => {
+	const productsById = products.reduce((obj, cur) => (obj[cur.id] = cur, obj), {});
 
 	return (
 		<ul className="transactions-list">
@@ -16,11 +15,11 @@ const TransactionsList = (props) => {
 					<h5
 						className={classnames({
 							sortable: true,
-							sorted: props.sortBy === 'name',
-							asc: props.sortOrder === 1,
-							desc: props.sortOrder === -1
+							sorted: sortBy === 'name',
+							asc: sortOrder === 1,
+							desc: sortOrder === -1
 						})}
-						onClick={() => props.sortBy !== 'name' ? props.sortTransactions('name') : props.switchTransactionsOrder()}
+						onClick={() => sortBy !== 'name' ? sortTransactions('name') : switchTransactionsOrder()}
 					>
 						Name
 					</h5>
@@ -29,11 +28,11 @@ const TransactionsList = (props) => {
 					<h5
 						className={classnames({
 							sortable: true,
-							sorted: props.sortBy === 'amount',
-							asc: props.sortOrder === 1,
-							desc: props.sortOrder === -1
+							sorted: sortBy === 'amount',
+							asc: sortOrder === 1,
+							desc: sortOrder === -1
 						})}
-						onClick={() => props.sortBy !== 'amount' ? props.sortTransactions('amount') : props.switchTransactionsOrder()}
+						onClick={() => sortBy !== 'amount' ? sortTransactions('amount') : switchTransactionsOrder()}
 					>
 						Amount
 					</h5>
@@ -47,11 +46,11 @@ const TransactionsList = (props) => {
 					<h5
 						className={classnames({
 							sortable: true,
-							sorted: props.sortBy === 'date',
-							asc: props.sortOrder === 1,
-							desc: props.sortOrder === -1
+							sorted: sortBy === 'date',
+							asc: sortOrder === 1,
+							desc: sortOrder === -1
 						})}
-						onClick={() => props.sortBy !== 'date' ? props.sortTransactions('date') : props.switchTransactionsOrder()}
+						onClick={() => sortBy !== 'date' ? sortTransactions('date') : switchTransactionsOrder()}
 					>
 						Date Paid
 					</h5>
