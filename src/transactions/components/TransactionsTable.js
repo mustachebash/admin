@@ -102,6 +102,6 @@ const TransactionsTable = () => {
 			/>
 		</div>
 	);
-}
+};
 
 export default TransactionsTable;

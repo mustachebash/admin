@@ -1,0 +1,52 @@
+@import '~variables.less';
+
+.promos-list-item {
+	padding: 0.625em; /* 10/16 */
+	display: flex;
+	justify-content: space-between;
+
+	&:nth-child(even) {
+		background: @light-gray;
+	}
+
+	p {
+		margin: 0;
+	}
+
+	> div {
+		flex: 1 1 0;
+	}
+
+	.date {
+		@media (max-width: @mobile) {
+			display: none;
+		}
+	}
+
+	.status {
+		flex: 0 1 115px;
+
+		span {
+			&.checked {
+				background: @white;
+				color: @black;
+			}
+		}
+	}
+
+	.link {
+		flex: 0 1 115px;
+	}
+
+	.edit-promo {
+		flex: 0 1 30px;
+
+		p {
+			text-align: right;
+		}
+
+		@media (max-width: @mobile) {
+			display: none;
+		}
+	}
+}

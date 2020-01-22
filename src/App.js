@@ -13,7 +13,7 @@ import TransactionsView from './transactions/views/TransactionsView';
 import TransactionView from './transactions/views/TransactionView';
 import GuestsView from './guests/views/GuestsView';
 import GuestView from './guests/views/GuestView';
-// import PromosView from './promos/views/PromosView';
+import PromosView from './promos/views/PromosView';
 
 /* eslint-disable react/prop-types */
 const PrivateRoute = ({ component: Component, children, scope = 'read', exclude = [], ...rest }) => {
@@ -54,7 +54,7 @@ const App = () => (
 								<PrivateRoute path="/guests/:id" component={GuestView} />
 								<PrivateRoute path="/guests" component={GuestsView} />
 								{/* <PrivateRoute scope="admin" path="/settings" component={SettingsView} /> */}
-								{/* <PrivateRoute scope="admin" path="/promos" component={PromosView} /> */}
+								<PrivateRoute scope="admin" path="/promos" component={PromosView} />
 							</Switch>
 						</EventProvider>
 					</PrivateRoute>
