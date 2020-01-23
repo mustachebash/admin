@@ -7,7 +7,7 @@ import { EventProvider } from './EventContext';
 import ErrorBoundary from './ErrorBoundary';
 import Header from './components/Header';
 import LoginView from './views/LoginView';
-// import DashboardView from './views/DashboardView';
+import DashboardView from './views/DashboardView';
 import SettingsView from './views/SettingsView';
 import TransactionsView from './transactions/views/TransactionsView';
 import TransactionView from './transactions/views/TransactionView';
@@ -48,7 +48,7 @@ const App = () => (
 						<EventProvider>
 							<Header />
 							<Switch>
-								{/* <PrivateRoute exclude={['doorman']} exact path="/" component={DashboardView} /> */}
+								<PrivateRoute exclude={['doorman']} exact path="/" component={DashboardView} />
 								<PrivateRoute scope="admin" path="/transactions/:id" component={TransactionView} />
 								<PrivateRoute scope="admin" path="/transactions" component={TransactionsView} />
 								<PrivateRoute path="/guests/:id" component={GuestView} />
