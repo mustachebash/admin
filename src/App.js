@@ -8,7 +8,7 @@ import ErrorBoundary from './ErrorBoundary';
 import Header from './components/Header';
 import LoginView from './views/LoginView';
 // import DashboardView from './views/DashboardView';
-// import SettingsView from './views/SettingsView';
+import SettingsView from './views/SettingsView';
 import TransactionsView from './transactions/views/TransactionsView';
 import TransactionView from './transactions/views/TransactionView';
 import GuestsView from './guests/views/GuestsView';
@@ -53,7 +53,7 @@ const App = () => (
 								<PrivateRoute scope="admin" path="/transactions" component={TransactionsView} />
 								<PrivateRoute path="/guests/:id" component={GuestView} />
 								<PrivateRoute path="/guests" component={GuestsView} />
-								{/* <PrivateRoute scope="admin" path="/settings" component={SettingsView} /> */}
+								<PrivateRoute scope="admin" path="/settings" component={SettingsView} />
 								<PrivateRoute scope="admin" path="/promos" component={PromosView} />
 							</Switch>
 						</EventProvider>
