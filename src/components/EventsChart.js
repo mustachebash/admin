@@ -2,7 +2,7 @@ import './EventsChart.less';
 
 import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Chart } from 'react-charts';
+import { Line } from 'react-chartjs-2';
 
 const availableTypes = [
 	{
@@ -52,6 +52,15 @@ const EventsChart = ({ chartData }) => {
 		curve: 0
 	});
 
+	const generateOpeningDayTicketsSeries = () => ({
+		labels: chartData.openingDaySales.map(({ time }) => (new Date(time)).toLocaleTimeString()),
+		datasets: [{
+			data: chartData.openingDaySales.map(({ tickets }) => tickets),
+			label: `${chartData.name}: Tickets Sold ${chartData.openingDaySales[0].time}`,
+			lineTension: 0
+		}]
+	});
+
 	const generateTotalTicketsArea = () => ({
 		data: chartData.transactions.reduce((acc, day) => {
 			acc.total += day[1].quantity;
@@ -99,11 +108,7 @@ const EventsChart = ({ chartData }) => {
 	// 		chartType = 'area';
 	// 		break;
 	// }
-	const data = useMemo(() => [generateTicketsSeries()], [chartData]),
-		axes = useMemo(() => [
-			{primary: true, type: 'time', position: 'bottom'},
-			{type: 'linear', position: 'left'}
-		], []);
+	const data = useMemo(() => generateOpeningDayTicketsSeries(), [chartData]);
 
 	return (
 		<div className="events-chart">
@@ -115,7 +120,10 @@ const EventsChart = ({ chartData }) => {
 				</select>
 			</div>
 			<div className="chart-wrapper">
-				<Chart data={data} axes={axes} />
+				<Line
+					data={data}
+					options={{maintainAspectRatio: false}}
+				/>
 			</div>
 		</div>
 	);

@@ -37,6 +37,10 @@ module.exports = (env = {}, argv) => {
 				disableDotRule: true
 			}
 		},
+		externals: {
+			// Exclude this because it's automatically bundled with charts
+			moment: 'moment'
+		},
 		module: {
 			rules: [
 				{
