@@ -2,7 +2,7 @@ import './EventsChart.less';
 
 import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { format } from 'date-fns';
+import { format, set } from 'date-fns';
 import { Line } from 'react-chartjs-2';
 
 const availableTypes = [
@@ -33,7 +33,11 @@ const generateDailyTicketsSeries = chartData => ({
 	datasets: [{
 		data: chartData.dailySales.map(({ tickets }) => tickets),
 		label: `${chartData.name}: Daily Tickets Sold`,
-		lineTension: 0.3
+		lineTension: 0.3,
+		fill: false,
+		borderColor: 'rgb(73, 134, 210)',
+		pointBorderColor: 'rgba(73, 134, 210, 0.5)',
+		pointBackgroundColor: 'rgba(73, 134, 210, 0.5)'
 	}]
 });
 
@@ -42,7 +46,11 @@ const generateOpeningDayTicketsSeries = chartData => ({
 	datasets: [{
 		data: chartData.openingDaySales.map(({ tickets }) => tickets),
 		label: `${chartData.name}: Tickets Sold ${format(new Date(chartData.openingDaySales[0].time), 'MMM do, yyyy')}`,
-		lineTension: 0.3
+		lineTension: 0.3,
+		fill: false,
+		borderColor: 'rgb(73, 134, 210)',
+		pointBorderColor: 'rgba(73, 134, 210, 0.5)',
+		pointBackgroundColor: 'rgba(73, 134, 210, 0.5)'
 	}]
 });
 
@@ -51,7 +59,11 @@ const generateAvgTicketsPerTransactionSeries = chartData => ({
 	datasets: [{
 		data: chartData.dailySales.map(({ tickets, transactions }) => Math.round((tickets/transactions)*100)/100), // two significant digits
 		label: `${chartData.name}: Avg. Tickets Per Transaction`,
-		lineTension: 0.3
+		lineTension: 0.3,
+		fill: false,
+		borderColor: 'rgb(184, 233, 134)',
+		pointBorderColor: 'rgba(184, 233, 134, 0.5)',
+		pointBackgroundColor: 'rgba(184, 233, 134, 0.5)'
 	}]
 });
 
@@ -65,59 +77,31 @@ const generateTotalTicketsArea = chartData => ({
 			return acc;
 		}, {set: [], total: 0}).set,
 		label: `${chartData.name}: Acc. Tickets Sold`,
-		lineTension: 0.3
+		lineTension: 0.3,
+		backgroundColor: 'rgba(73, 134, 210, 0.3)',
+		borderColor: 'rgb(73, 134, 210)',
+		pointBorderColor: 'rgba(73, 134, 210, 0.5)',
+		pointBackgroundColor: 'rgba(73, 134, 210, 0.5)'
 	}]
 });
 
 const generateCheckInsSeries = chartData => ({
-	data: chartData.checkIns.map(half => ([Date.UTC(1972, 2, 24, half.hour + 7, half.minutes), half.checkedIn])),
-	pointStart: Date.UTC(1972, 2, 24, chartData.checkIns[0].hour + 7, 0),
-	pointInterval: 1000 * 60 * 30,
-	yAxis: 1,
-	visible: (new Date(chartData.date)) > Date.now() - (1.5 * 365 * 24 * 60 * 60 * 1000),
-	label: `${chartData.name}: Check Ins`,
-	tooltip: {
-		xDateFormat: '%H:%M',
-		split: true
-	}
+	labels: chartData.checkIns.map(({ hour, minutes }) => format(set(new Date(0), {hours: hour, minutes}), 'HH:mm')),
+	datasets: [{
+		data: chartData.checkIns.map(({ checkedIn }) => checkedIn),
+		label: `${chartData.name}: Check Ins`,
+		lineTension: 0.3,
+		fill: false,
+		borderColor: 'rgb(73, 134, 210)',
+		pointBorderColor: 'rgba(73, 134, 210, 0.5)',
+		pointBackgroundColor: 'rgba(73, 134, 210, 0.5)'
+	}]
 });
 
 const EventsChart = ({ chartData }) => {
-	// Random fun colors!
-	const colors = ['#6e25b7', '#57bf93', '#4886d2', '#b8e986', '#129376', '#1a3aa0', '#c146e5', '#dee74c'];
-
-	for (let i = colors.length; i; i--) {
-		const j = Math.floor(Math.random() * i);
-		[colors[i - 1], colors[j]] = [colors[j], colors[i - 1]];
-	}
-
 	const [ graphType, setGraphType ] = useState('tickets');
 
-	let seriesFn = () => {};
-	switch(graphType) {
-		case 'opening':
-			seriesFn = generateOpeningDayTicketsSeries;
-			break;
-
-		case 'tickets':
-			seriesFn = generateDailyTicketsSeries;
-			break;
-
-		case 'ticketsAvg':
-			seriesFn = generateAvgTicketsPerTransactionSeries;
-			break;
-
-		case 'checkIns':
-			seriesFn = generateCheckInsSeries;
-			break;
-
-		case 'ticketsAcc':
-			seriesFn = generateTotalTicketsArea;
-			break;
-	}
-
 	const data = useMemo(() => {
-		console.log('MEMO RUN', Date.now());
 		switch(graphType) {
 			case 'opening':
 				return generateOpeningDayTicketsSeries(chartData);

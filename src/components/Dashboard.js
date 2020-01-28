@@ -28,7 +28,7 @@ const Dashboard = () => {
 		}
 	}, [event]);
 
-	if(!eventSummary) return <Loader />;
+	if(!eventSummary || !event) return <Loader />;
 
 	const {
 		name,
@@ -63,13 +63,13 @@ const Dashboard = () => {
 						<h5 data-tooltip="Ticket revenue based on all ticket sales volume (price X quantity)">Revenue</h5>
 						<p>${formatThousands(totalRevenue + totalPromoRevenue)}</p>
 					</div>
-					{status === 'active' &&
+					{event.status === 'active' &&
 						<div className="guests-today">
 							<h5 data-tooltip="Paying guests added today">Guests Today</h5>
 							<p>{guestsToday}</p>
 						</div>
 					}
-					{status === 'active' &&
+					{event.status === 'active' &&
 						<div className="revenue-today">
 							<h5 data-tooltip="Ticket revenue today based on all ticket sales volume (price X quantity)">Revenue Today</h5>
 							<p>${formatThousands(revenueToday)}</p>
