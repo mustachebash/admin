@@ -3,6 +3,7 @@ import './PromosTable.less';
 import React, { useState, useEffect, useContext } from 'react';
 import apiClient from 'utils/apiClient';
 import EventContext from 'EventContext';
+import CreatePromoForm from '../components/CreatePromoForm';
 import EventSelector from 'components/EventSelector';
 import PromosList from './PromosList';
 import Search from 'components/Search';
@@ -84,6 +85,9 @@ const PromosTable = () => {
 
 	return (
 		<div className="promos-table">
+
+			<CreatePromoForm onAdd={promo => setPromos([promo, ...promos])} />
+
 			<div className="filters flex-row">
 				<div><Search handleQueryChange={setFilter} /></div>
 				<div><EventSelector /></div>

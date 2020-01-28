@@ -1,9 +1,18 @@
 import './CompedGuestForm.less';
 
 import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import apiClient from 'utils/apiClient';
 
 export default class CompedGuestForm extends PureComponent {
+	static propTypes = {
+		onAdd: PropTypes.func
+	};
+
+	static defaultProps = {
+		onAdd: () => {}
+	};
+
 	state = {
 		firstName: '',
 		lastName: '',
@@ -41,15 +50,17 @@ export default class CompedGuestForm extends PureComponent {
 			firstName,
 			lastName,
 			eventId
-		}).catch(err => console.error('Event API Error', err));
+		}).then(guest => {
+			this.props.onAdd(guest);
 
-		this.setState({
-			firstName: '',
-			lastName: ''
-		}, () => {
-			this.firstInput.focus();
-			this.submitting = false;
-		});
+			this.setState({
+				firstName: '',
+				lastName: ''
+			}, () => {
+				this.firstInput.focus();
+				this.submitting = false;
+			});
+		}).catch(err => console.error('Event API Error', err));
 	}
 
 	render() {

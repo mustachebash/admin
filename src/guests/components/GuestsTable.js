@@ -1,9 +1,12 @@
 import './GuestsTable.less';
 
 import React, { useState, useEffect, useContext, memo } from 'react';
+import UserContext from 'UserContext';
 import EventContext from 'EventContext';
+import { checkScope } from 'utils';
 import apiClient from 'utils/apiClient';
 import GuestsList from './GuestsList';
+import CompedGuestForm from '../components/CompedGuestForm';
 import Search from 'components/Search';
 import EventSelector from 'components/EventSelector';
 
@@ -36,7 +39,8 @@ const GuestsTable = () => {
 		[filter, setFilter] = useState(''),
 		[sort, setSort] = useState({sortBy: 'date', sortOrder: -1}); // asc
 
-	const { event } = useContext(EventContext);
+	const { event } = useContext(EventContext),
+		{ user } = useContext(UserContext);
 
 	useEffect(() => {
 		if(event) {
@@ -78,6 +82,9 @@ const GuestsTable = () => {
 
 	return (
 		<div className="guests-table">
+
+			{checkScope(user.role, 'admin') && <CompedGuestForm onAdd={guest => setGuests([guest, ...guests])} />}
+
 			<div className="filters flex-row">
 				<div><Search handleQueryChange={setFilter} /></div>
 				<div><EventSelector /></div>

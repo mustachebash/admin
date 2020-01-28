@@ -1,18 +1,10 @@
-import React, { useContext } from 'react';
-import UserContext from 'UserContext';
-import { checkScope } from 'utils';
-import CompedGuestForm from '../components/CompedGuestForm';
+import React from 'react';
 import GuestsTable from '../components/GuestsTable';
 
-const GuestsView = () => {
-	const { user } = useContext(UserContext);
-
-	return (
-		<div id="guests-view" className="container-1230">
-			{checkScope(user.role, 'admin') && <CompedGuestForm />}
-			<GuestsTable />
-		</div>
-	);
-};
+const GuestsView = () => (
+	<div id="guests-view" className="container-1230">
+		<GuestsTable />
+	</div>
+);
 
 export default GuestsView;
