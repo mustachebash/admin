@@ -1,3 +1,5 @@
+import './CompedPromoForm.less';
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import apiClient from 'utils/apiClient';
@@ -13,7 +15,8 @@ export default class CompedPromoForm extends Component {
 
 	state = {
 		recipient: '',
-		price: 0,
+		email: '',
+		price: '',
 		events: [],
 		products: [],
 		eventId: '',

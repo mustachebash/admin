@@ -8,7 +8,7 @@ import EventSelector from 'components/EventSelector';
 import PromosList from './PromosList';
 import Search from 'components/Search';
 
-function getPromoComparator(sortBy, sortOrder) {
+function getPromoComparator({sortBy, sortOrder}) {
 	return (a, b) => {
 		let sort = 0;
 
@@ -78,7 +78,7 @@ const PromosTable = () => {
 		);
 	});
 
-	filteredPromos.sort(getPromoComparator());
+	filteredPromos.sort(getPromoComparator(sort));
 
 	// No one needs to see more than 100 promos at a time
 	filteredPromos = filteredPromos.slice(0, 100);

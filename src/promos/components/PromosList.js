@@ -12,15 +12,7 @@ const PromosList = ({ promos, products, event, sortBy, sortOrder, sortPromos, sw
 		<ul className="promos-list">
 			<li className="table-header">
 				<div className="status">
-					<h5
-						className={classnames({
-							sortable: true,
-							sorted: sortBy === 'status',
-							asc: sortOrder === 1,
-							desc: sortOrder === -1
-						})}
-						onClick={() => sortBy !== 'status' ? sortPromos('status') : switchPromosOrder()}
-					>
+					<h5>
 						Status
 					</h5>
 				</div>
@@ -28,11 +20,11 @@ const PromosList = ({ promos, products, event, sortBy, sortOrder, sortPromos, sw
 					<h5
 						className={classnames({
 							sortable: true,
-							sorted: sortBy === 'name',
+							sorted: sortBy === 'recipient',
 							asc: sortOrder === 1,
 							desc: sortOrder === -1
 						})}
-						onClick={() => sortBy !== 'name' ? sortPromos('name') : switchPromosOrder()}
+						onClick={() => sortBy !== 'recipient' ? sortPromos('recipient') : switchPromosOrder()}
 					>
 						Recipient
 					</h5>
