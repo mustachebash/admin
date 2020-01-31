@@ -30,7 +30,8 @@ const PromosListItem = ({ promo, product, event }) => (
 			<p><a href={`https://mustachebash.com/?promo=${promo.id}#tickets`} rel="noopener noreferrer" target="_blank">Promo Link</a></p>
 		</div>
 		<div className="edit-promo">
-			<p>{!['claimed', 'disabled'].includes(promo.status) && <a href="#" onClick={() => console.log('disabled')}>&#x274C;</a>}</p>
+			{/* TODO: add ability to disable promo */}
+			<p>{!['claimed', 'disabled'].includes(promo.status) && <a href="#" onClick={() => {}}>&#x274C;</a>}</p>
 		</div>
 	</li>
 );
