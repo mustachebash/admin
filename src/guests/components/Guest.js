@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { checkScope } from 'utils';
 import UserContext from 'UserContext';
 import apiClient from 'utils/apiClient';
+import TicketsList from 'components/TicketsList';
 
 const Guest = ({ id }) => {
 	const [guest, setGuest] = useState(),
@@ -80,7 +81,7 @@ const Guest = ({ id }) => {
 				</div>
 				<div className="flex-item">
 					<h4>Tickets</h4>
-					{tickets.map(ticket => <>{JSON.stringify(ticket)}</>)}
+					<TicketsList tickets={tickets} />
 				</div>
 			</div>
 		</div>

@@ -8,19 +8,17 @@
 		margin-bottom: 4em;
 	}
 
-	.container-1230 {
-		@media (max-width: @mobile) {
-			padding: 0;
-		}
-	}
-
 	.flex-row {
 		justify-content: space-between;
 	}
 
 	.logo {
-		width: 118px;
-		height: 50px;
+		width: 75px;
+
+		@media (min-width: 800px) {
+			width: 118px;
+			height: 50px;
+		}
 	}
 
 	.menu-icon {
@@ -28,7 +26,6 @@
 		width: 30px;
 		top: 37px;
 		right: 20px;
-		cursor: pointer;
 
 		div {
 			height: 4px;
@@ -84,7 +81,6 @@
 			text-align: center;
 			margin: 0;
 			padding: 1.5625em 0 0.3125em; /* 25/16 */ /* 5/16 */
-			background: @light-gray;
 
 			@media (min-width: @mobile) {
 				padding: 0;
