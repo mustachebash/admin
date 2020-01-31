@@ -3,14 +3,13 @@
  * Global project logic, style, and setup
  */
 import 'normalize.css';
-import './admin.less';
+import './base.less';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-
-import Root from './Root';
+import App from './App';
 
 ReactDOM.render(
-	<Root />,
+	<App />,
 	document.getElementById('app-root')
 );

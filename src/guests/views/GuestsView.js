@@ -1,9 +1,9 @@
 import React from 'react';
-import GuestsTable from '../containers/GuestsTable';
+import GuestsTable from '../components/GuestsTable';
 
-const GuestsView = (props) => (
+const GuestsView = () => (
 	<div id="guests-view" className="container-1230">
-		<GuestsTable/>
+		<GuestsTable />
 	</div>
 );
 

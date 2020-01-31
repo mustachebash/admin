@@ -1,9 +1,9 @@
 import React from 'react';
-import PromosTable from '../containers/PromosTable';
+import PromosTable from '../components/PromosTable';
 
-const PromosView = (props) => (
+const PromosView = () => (
 	<div id="promos-view" className="container-1230">
-		<PromosTable/>
+		<PromosTable />
 	</div>
 );
 

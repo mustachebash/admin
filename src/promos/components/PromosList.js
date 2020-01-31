@@ -1,29 +1,18 @@
+import './PromosList.less';
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import PromosListItem from './PromosListItem';
 
-const PromosList = (props) => {
-	const { promos } = props,
-		eventsById = {},
-		productsById = {};
-
-	props.events.forEach(e => eventsById[e.id] = e);
-	props.products.forEach(p => productsById[p.id] = p);
+const PromosList = ({ promos, products, event, sortBy, sortOrder, sortPromos, switchPromosOrder }) => {
+	const productsById = products.reduce((obj, cur) => (obj[cur.id] = cur, obj), {});
 
 	return (
 		<ul className="promos-list">
 			<li className="table-header">
 				<div className="status">
-					<h5
-						className={classnames({
-							sortable: true,
-							sorted: props.sortBy === 'status',
-							asc: props.sortOrder === 1,
-							desc: props.sortOrder === -1
-						})}
-						onClick={() => props.sortBy !== 'status' ? props.sortPromos('status') : props.switchPromosOrder()}
-					>
+					<h5>
 						Status
 					</h5>
 				</div>
@@ -31,11 +20,11 @@ const PromosList = (props) => {
 					<h5
 						className={classnames({
 							sortable: true,
-							sorted: props.sortBy === 'name',
-							asc: props.sortOrder === 1,
-							desc: props.sortOrder === -1
+							sorted: sortBy === 'recipient',
+							asc: sortOrder === 1,
+							desc: sortOrder === -1
 						})}
-						onClick={() => props.sortBy !== 'name' ? props.sortPromos('name') : props.switchPromosOrder()}
+						onClick={() => sortBy !== 'recipient' ? sortPromos('recipient') : switchPromosOrder()}
 					>
 						Recipient
 					</h5>
@@ -44,11 +33,11 @@ const PromosList = (props) => {
 					<h5
 						className={classnames({
 							sortable: true,
-							sorted: props.sortBy === 'date',
-							asc: props.sortOrder === 1,
-							desc: props.sortOrder === -1
+							sorted: sortBy === 'date',
+							asc: sortOrder === 1,
+							desc: sortOrder === -1
 						})}
-						onClick={() => props.sortBy !== 'date' ? props.sortPromos('date') : props.switchPromosOrder()}
+						onClick={() => sortBy !== 'date' ? sortPromos('date') : switchPromosOrder()}
 					>
 						Date Added
 					</h5>
@@ -72,17 +61,12 @@ const PromosList = (props) => {
 					{/* Empty header */}
 				</div>
 			</li>
-			{promos.map(promo => {
-				if(!productsById[promo.productId]) return;
-
-				return <PromosListItem
-					key={promo.id}
-					event={eventsById[productsById[promo.productId].eventId]}
-					product={productsById[promo.productId]}
-					promo={promo}
-					disablePromo={props.disablePromo}
-				/>;
-			})}
+			{promos.map(promo => <PromosListItem
+				key={promo.id}
+				event={event}
+				product={productsById[promo.productId]}
+				promo={promo}
+			/>)}
 		</ul>
 	);
 };
@@ -92,10 +76,9 @@ export default PromosList;
 PromosList.propTypes = {
 	promos: PropTypes.array.isRequired,
 	products: PropTypes.array.isRequired,
-	events: PropTypes.array.isRequired,
+	event: PropTypes.object.isRequired,
 	sortPromos: PropTypes.func.isRequired,
 	switchPromosOrder: PropTypes.func.isRequired,
 	sortBy: PropTypes.string.isRequired,
-	sortOrder: PropTypes.number.isRequired,
-	disablePromo: PropTypes.func.isRequired
+	sortOrder: PropTypes.number.isRequired
 };

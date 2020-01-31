@@ -1,21 +1,41 @@
+import './CompedPromoForm.less';
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import apiClient from 'utils/apiClient';
 
 export default class CompedPromoForm extends Component {
-	constructor(props) {
-		super(props);
+	static propTypes = {
+		onAdd: PropTypes.func
+	};
 
-		this.state = {
-			recipient: '',
-			price: 0,
-			eventId: '',
-			productId: ''
-		};
+	static defaultProps = {
+		onAdd: () => {}
+	};
 
-		this.handleChange = this.handleChange.bind(this);
-		this.addPromo = this.addPromo.bind(this);
+	state = {
+		recipient: '',
+		email: '',
+		price: '',
+		events: [],
+		products: [],
+		eventId: '',
+		productId: ''
+	};
 
-		this.submitting = false;
+	handleChange = this.handleChange.bind(this);
+	addPromo = this.addPromo.bind(this);
+
+	submitting = false;
+
+	componentDidMount() {
+		apiClient.get('/events', {status: 'active'})
+			.then(events => this.setState({events}))
+			.catch(e => console.error('Event API Error', e));
+
+		apiClient.get('/products')
+			.then(products => this.setState({products}))
+			.catch(e => console.error('Products API Error', e));
 	}
 
 	handleChange(e) {
@@ -27,61 +47,67 @@ export default class CompedPromoForm extends Component {
 	addPromo(e) {
 		e.preventDefault();
 
-		if(this.submitting || !this.state.recipient || !this.state.price || !this.state.productId) return;
+		const { recipient, email, price, productId } = this.state;
 
-		const price = Number(this.state.price);
-		if(Number.isNaN(price)) return;
+		if(this.submitting || !recipient || !price || !productId) return;
+
+		const priceInt = Number(price);
+		if(Number.isNaN(priceInt)) return;
 
 		this.submitting = true;
 
-		this.props.addPromo({
-			recipient: this.state.recipient,
-			email: this.state.email,
-			price: price,
+		apiClient.post('/promos', {
 			type: 'single-use',
-			productId: this.state.productId
-		});
+			price: priceInt,
+			recipient,
+			email,
+			productId
+		})
+			.then(promo => {
+				this.props.onAdd(promo);
 
-		this.setState({
-			recipient: '',
-			email: ''
-		}, () => {
-			this.firstInput.focus();
-			this.submitting = false;
-		});
+				this.setState({
+					recipient: '',
+					email: ''
+				}, () => {
+					this.firstInput.focus();
+					this.submitting = false;
+				});
+			})
+			.catch(err => console.error('Promos API Error', err));
 	}
 
 	render() {
-		return (
-			<form className="create-promo-form flex-row" onSubmit={this.addPromo}>
-				<input type="text" name="recipient" placeholder="Name" value={this.state.recipient} onChange={this.handleChange} ref={el => this.firstInput = el} />
-				<input type="text" name="email" placeholder="Email" value={this.state.email} onChange={this.handleChange} />
-				<input type="text" name="price" placeholder="0" value={this.state.price} onChange={this.handleChange} />
-				<div className="select-wrap">
-					<select name="eventId" value={this.state.eventId} onChange={this.handleChange}>
-						<option disabled value="">Select an Event...</option>
-						{this.props.events.filter(e => e.status === 'active').map(e => (
-							<option key={e.id} value={e.id}>{e.name}</option>
-						))}
-					</select>
-				</div>
-				<div className="select-wrap">
-					<select name="productId" value={this.state.productId} onChange={this.handleChange}>
-						<option disabled value="">Select a Product...</option>
-						{this.props.products.filter(p => p.status === 'active' && p.eventId === this.state.eventId).map(p => (
-							<option key={p.id} value={p.id}>{p.name}</option>
-						))}
-					</select>
-				</div>
+		const { events, products, eventId, productId, recipient, email, price } = this.state;
 
-				<button className="white" type="submit">Add Promo</button>
-			</form>
+		return (
+			<div className="create-promo-form">
+				<h4>Create a Promo</h4>
+
+				<form className="flex-row" onSubmit={this.addPromo}>
+					<input type="text" name="recipient" placeholder="Name" value={recipient} onChange={this.handleChange} ref={el => this.firstInput = el} />
+					<input type="text" name="email" placeholder="Email" value={email} onChange={this.handleChange} />
+					<input type="text" name="price" placeholder="0" value={price} onChange={this.handleChange} />
+					<div className="select-wrap">
+						<select name="eventId" value={eventId} onChange={this.handleChange}>
+							<option disabled value="">Select an Event...</option>
+							{events.map(e => (
+								<option key={e.id} value={e.id}>{e.name}</option>
+							))}
+						</select>
+					</div>
+					<div className="select-wrap">
+						<select name="productId" value={productId} onChange={this.handleChange}>
+							<option disabled value="">Select a Product...</option>
+							{products.filter(p => p.promo && p.status === 'active' && p.eventId === eventId).map(p => (
+								<option key={p.id} value={p.id}>{p.name}</option>
+							))}
+						</select>
+					</div>
+
+					<button className="white" type="submit">Add Promo</button>
+				</form>
+			</div>
 		);
 	}
 }
-
-CompedPromoForm.propTypes = {
-	addPromo: PropTypes.func.isRequired,
-	events: PropTypes.array.isRequired,
-	products: PropTypes.array.isRequired
-};

@@ -1,0 +1,64 @@
+@import '~variables.less';
+
+.guests-list-item {
+	display: flex;
+	justify-content: space-between;
+	padding: 0.625em; /* 10/16 */
+
+	&:nth-child(even) {
+		background: @light-gray;
+	}
+
+	p {
+		margin: 0;
+	}
+
+	> div {
+		flex: 1 1 0;
+	}
+
+	.guest-notes {
+		font-size: 11px;
+		font-style: italic;
+	}
+
+	.date {
+		@media (max-width: @mobile) {
+			display: none;
+		}
+	}
+
+	.checked-in {
+		span {
+			display: inline-block;
+			box-sizing: border-box;
+			border: 2px solid @white;
+			height: 1.2em;
+			width: 1.2em;
+			user-select: none;
+
+			&.no-entry {
+				background: none;
+				color: @red;
+				text-transform: uppercase;
+			}
+
+			&.checked {
+				background: @white;
+
+				&:before {
+					content: '';
+					position: relative;
+					display: inline-block;
+					left: 50%;
+					width: 3px;
+					height: 10px;
+					border: 3px solid transparent;
+					transform: rotate(45deg) translateX(-50%);
+					border-bottom-color: @teal;
+					border-right-color: @teal;
+				}
+			}
+		}
+	}
+}

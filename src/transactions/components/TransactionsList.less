@@ -1,0 +1,77 @@
+@import '~variables.less';
+
+.transactions-list {
+	margin-top: 0;
+	margin-bottom: 0;
+	padding: 0;
+	list-style: none;
+
+	.table-header {
+		display: flex;
+		justify-content: space-between;
+		background: @white;
+		padding: 10px;
+		cursor: default;
+
+		p {
+			margin: 0;
+		}
+
+		> div {
+			flex: 1 1 0;
+		}
+
+		h5 {
+			position: relative;
+			padding: 0;
+			margin: 0;
+			user-select: none;
+			color: @gray;
+
+			&.sortable {
+				cursor: pointer;
+			}
+
+			&.asc,
+			&.desc {
+				&:after {
+					content: '';
+					position: relative;
+					display: inline-block;
+					width: 0;
+					height: 0;
+					border: 4px solid transparent;
+					margin-left: 5px;
+					margin-right: -13px; // Makes this essentially take up no space
+				}
+			}
+
+			&.sorted.asc {
+				&:after {
+					top: -6px;
+					border-bottom-color: @black;
+				}
+			}
+
+			&.sorted.desc {
+				&:after {
+					top: -2px;
+					border-top-color: @black;
+				}
+			}
+		}
+
+		.amount {
+			flex: 0 0 5.25em; /* 100/16 */
+
+			p {
+				text-align: right;
+				margin-right: 2em;
+			}
+
+			@media (max-width: @mobile) {
+				display: none;
+			}
+		}
+	}
+}
