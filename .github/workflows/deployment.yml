@@ -38,6 +38,6 @@ jobs:
         AWS_S3_BUCKET: ${{ secrets.DIGITAL_OCEAN_SPACES_BUCKET }}
         AWS_ACCESS_KEY_ID: ${{ secrets.DIGITAL_OCEAN_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.DIGITAL_OCEAN_SECRET_ACCESS_KEY }}
-        AWS_REGION: 'New York City, New York 3'
+        AWS_REGION: 'nyc3'
         SOURCE_DIR: 'dist'
         DEST_DIR: 'temp' # test push for now
