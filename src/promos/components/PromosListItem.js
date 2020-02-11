@@ -4,7 +4,7 @@ import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 
-const PromosListItem = ({ promo, product, event }) => (
+const PromosListItem = ({ promo, product, event, disablePromo }) => (
 	<li className="promos-list-item">
 		<div className="status">
 			<span
@@ -31,7 +31,7 @@ const PromosListItem = ({ promo, product, event }) => (
 		</div>
 		<div className="edit-promo">
 			{/* TODO: add ability to disable promo */}
-			<p>{!['claimed', 'disabled'].includes(promo.status) && <a href="#" onClick={() => {}}>&#x274C;</a>}</p>
+			<p>{!['claimed', 'disabled'].includes(promo.status) && <a href="#" onClick={e => (e.preventDefault(), disablePromo(promo.id))}>&#x274C;</a>}</p>
 		</div>
 	</li>
 );
@@ -39,7 +39,8 @@ const PromosListItem = ({ promo, product, event }) => (
 PromosListItem.propTypes = {
 	product: PropTypes.object.isRequired,
 	event: PropTypes.object.isRequired,
-	promo: PropTypes.object.isRequired
+	promo: PropTypes.object.isRequired,
+	disablePromo: PropTypes.func.isRequired
 };
 
 export default memo(PromosListItem);

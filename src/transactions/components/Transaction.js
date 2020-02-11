@@ -7,7 +7,7 @@ import apiClient from 'utils/apiClient';
 import TicketsList from 'components/TicketsList';
 
 const Transaction = ({ id }) => {
-	const [transaction, setTransaction] = useState([]),
+	const [transaction, setTransaction] = useState(),
 		[events, setEvents] = useState([]),
 		[products, setProducts] = useState([]),
 		[tickets, setTickets] = useState([]);

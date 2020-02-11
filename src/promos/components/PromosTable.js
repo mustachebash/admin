@@ -66,6 +66,20 @@ const PromosTable = () => {
 		});
 	}
 
+	function disablePromo(id) {
+		apiClient.delete(`/promos/${id}`)
+			.then(promo => {
+				const promoIndex = promos.findIndex(p => p.id === promo.id),
+					// Create the new array before splicing in place
+					newPromos = [...promos];
+
+				newPromos.splice(promoIndex, 1, promo);
+
+				setPromos(newPromos);
+			})
+			.catch(e => console.error('Promo API Error', e));
+	}
+
 	const filteredProducts = products.filter(p => p.promo && p.eventId === event?.id),
 		filterRegExp = new RegExp(filter, 'i');
 
@@ -102,6 +116,7 @@ const PromosTable = () => {
 				switchPromosOrder={switchPromosOrder}
 				sortBy={sort.sortBy}
 				sortOrder={sort.sortOrder}
+				disablePromo={disablePromo}
 			/>}
 		</div>
 	);
