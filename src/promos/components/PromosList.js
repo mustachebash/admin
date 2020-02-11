@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import PromosListItem from './PromosListItem';
 
-const PromosList = ({ promos, products, event, sortBy, sortOrder, sortPromos, switchPromosOrder }) => {
+const PromosList = ({ promos, products, event, sortBy, sortOrder, sortPromos, switchPromosOrder, disablePromo }) => {
 	const productsById = products.reduce((obj, cur) => (obj[cur.id] = cur, obj), {});
 
 	return (
@@ -66,6 +66,7 @@ const PromosList = ({ promos, products, event, sortBy, sortOrder, sortPromos, sw
 				event={event}
 				product={productsById[promo.productId]}
 				promo={promo}
+				disablePromo={disablePromo}
 			/>)}
 		</ul>
 	);
@@ -80,5 +81,6 @@ PromosList.propTypes = {
 	sortPromos: PropTypes.func.isRequired,
 	switchPromosOrder: PropTypes.func.isRequired,
 	sortBy: PropTypes.string.isRequired,
-	sortOrder: PropTypes.number.isRequired
+	sortOrder: PropTypes.number.isRequired,
+	disablePromo: PropTypes.func.isRequired
 };

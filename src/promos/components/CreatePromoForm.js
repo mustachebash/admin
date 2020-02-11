@@ -1,4 +1,4 @@
-import './CompedPromoForm.less';
+import './CreatePromoForm.less';
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
