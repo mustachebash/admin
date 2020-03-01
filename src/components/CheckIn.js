@@ -1,78 +1,116 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react';
-import jwtDecode from 'jwt-decode';
+import './CheckIn.less';
+
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Link } from 'react-router-dom';
+import classnames from 'classnames';
+import { format } from 'date-fns';
 import apiClient from 'utils/apiClient';
 
-let submitStart = false;
-
 const CheckIn = () => {
-	const [ data, setData ] = useState(''),
-		[ lastTicket, setLastTicket ] = useState(),
-		[ checkInResponse, setCheckInResponse ] = useState({}),
-		tokenInputEl = useRef(null);
+	const [ inputting, setInputting ] = useState(false),
+		[ checkInResponse, setCheckInResponse ] = useState(null),
+		[ checkInError, setCheckInError ] = useState(null),
+		// Create a permament reference to a mutable object
+		data = useRef('');
 
-	const onSubmit = useCallback(e => {
-		e.preventDefault();
-
-		console.timeEnd('submit');
-		// console.timeEnd('input ref entry');
-
-		let token;
-		if(tokenInputEl) {
-			token = tokenInputEl.value;
-		} else {
-			token = data;
-		}
-
-		apiClient.post('/check-ins', {ticketToken: token})
-			.then(response => {
-				setLastTicket(jwtDecode(token));
-				setCheckInResponse(response);
-				setData('');
-			})
-			.catch(console.error);
-	}, [data, tokenInputEl]);
-
-	const onChange = useCallback(({target: { value }}) => {
-		if(!submitStart) {
-			console.log('submit start');
-			console.time('submit');
-			submitStart = true;
-		}
-		setData(value);
-	}, []);
+	const reset = useCallback(() => {
+		data.current = '';
+		setInputting(false);
+		setCheckInError(null);
+	}, [data]);
 
 	useEffect(() => {
-		function handleEntry(e) {
-			if(!this.started) {
-				console.time('entry');
-				// console.time('input ref entry');
-				this.started = true;
+		let responseDisplayTimeout;
+		const handleKeydown = e => {
+			// Enter is the final character inserted by the scanner
+			// Don't attempt to submit empty values
+			if(e.key === 'Enter' && data.current) {
+				const lastToken = data.current;
+				apiClient.post('/check-ins', {ticketToken: lastToken})
+					.then(response => {
+						setCheckInResponse(response);
+
+						responseDisplayTimeout = setTimeout(() => setCheckInResponse(null), 3000);
+					})
+					.catch(err => {
+						console.error('Check In API Error', err);
+
+						const errData = {},
+							{ ticket, guest, event } = err.responseBody || {};
+
+						switch(err.statusCode) {
+							case 404:
+								errData.message = 'Ticket not found';
+								break;
+
+							case 409:
+								errData.message = `Guest already checked in at ${format(new Date(guest.checkedIn), 'HH:mm')}`;
+								errData.context = <p><Link to={`/guests/${guest.id}`}>See details for {`${guest.firstName} ${guest.lastName}`}</Link></p>;
+								break;
+
+							case 410:
+								errData.message = 'Event no longer available';
+								errData.context = <p>Ticket is for {event.name} - {format(new Date(event.date), 'M/dd/yy')}</p>;
+								break;
+
+							case 412:
+								errData.message = 'Event has not started';
+								errData.context = <p>Check In for {event.name} available at {format(new Date(event.date), 'M/dd/yy - HH:mm')}</p>;
+								break;
+
+							case 423:
+								errData.message = 'Ticket no longer valid';
+								errData.context = <p>
+									Ticket status is {ticket.status},&nbsp;
+									<Link to={`/guests/${guest.id}`}>Guest status is {guest.status}</Link> {guest.checkedIn && `and has already checked in at ${format(new Date(guest.checkedIn), 'HH:mm')}`}
+								</p>;
+								break;
+
+							default:
+								errData.message = 'Something went wrong - scan again';
+								break;
+						}
+
+						setCheckInError(errData);
+					})
+					.finally(() => {
+						setInputting(false);
+						data.current = '';
+					});
 			}
 
-			if(e.code === 'Enter') {
-				console.timeEnd('entry');
-
-				if(tokenInputEl) {
-					console.log(tokenInputEl.current);
-					window.tokenInputEl = tokenInputEl.current;
+			// Anything else is not a single character
+			if(e.key.length === 1) {
+				// don't set this until we're for sure appending data
+				if(!data.current) {
+					setInputting(true);
+					setCheckInResponse(null);
+					setCheckInError(null);
+					clearTimeout(responseDisplayTimeout);
 				}
+
+				data.current += e.key;
 			}
-		}
+		};
 
-		document.addEventListener('keyup', handleEntry);
+		document.addEventListener('keydown', handleKeydown);
 
-		return () => document.removeEventListener('keyup', handleEntry);
-	}, [tokenInputEl]);
+		return () => document.removeEventListener('keydown', handleKeydown);
+	}, []);
 
 	return (
-		<div>
-			{/* <form onSubmit={onSubmit}>
-				<input type="text" value={data} autoFocus style={{display: 'none'}} onChange={onChange} />
-			</form> */}
-			<input type="text" ref={tokenInputEl} autoFocus style={{opacity: 0}} />
-			<button onClick={() => setData('')}>Clear</button>
-			<pre>{JSON.stringify(lastTicket, null, 2)}</pre>
-			<pre>{JSON.stringify(checkInResponse, null, 2)}</pre>
+		<div className="check-in">
+			<div className={classnames('status', {inputting, success: checkInResponse, error: checkInError})} onClick={reset}>
+				<p className="status-text">
+					{inputting
+						? 'Scanning...'
+						: checkInResponse
+							? `${checkInResponse.guest.firstName} ${checkInResponse.guest.lastName}`
+							: checkInError?.message || 'Ready!'
+					}
+				</p>
+			</div>
+			{checkInError?.context}
 		</div>
 	);
 };

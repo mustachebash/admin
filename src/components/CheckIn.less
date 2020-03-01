@@ -1,0 +1,43 @@
+@import '~variables.less';
+
+.check-in {
+	.status {
+		box-sizing: border-box;
+		border: 2px solid @white;
+		padding-top: 8em;
+		height: 400px;
+		background: @white;
+
+		.status-text {
+			text-align: center;
+			font-size: 1.5em; /* 24/16 */
+			font-weight: 700;
+			text-transform: uppercase;
+			color: @gray;
+		}
+
+		&.inputting {
+			background: @light-gray;
+
+			.status-text {
+				color: @white;
+			}
+		}
+
+		&.success {
+			background: @green;
+
+			.status-text {
+				color: @white;
+			}
+		}
+
+		&.error {
+			background: @red;
+
+			.status-text {
+				color: @white;
+			}
+		}
+	}
+}
