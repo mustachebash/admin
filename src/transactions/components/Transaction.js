@@ -8,6 +8,7 @@ import TicketsList from 'components/TicketsList';
 
 const Transaction = ({ id }) => {
 	const [transaction, setTransaction] = useState(),
+		[transactionToken, setTransactionToken] = useState(''),
 		[events, setEvents] = useState([]),
 		[products, setProducts] = useState([]),
 		[tickets, setTickets] = useState([]);
@@ -19,6 +20,10 @@ const Transaction = ({ id }) => {
 
 		apiClient.get(`/transactions/${id}/tickets`)
 			.then(setTickets)
+			.catch(e => console.error('Transaction API Error', e));
+
+		apiClient.get(`/transactions/${id}/token`)
+			.then(setTransactionToken)
 			.catch(e => console.error('Transaction API Error', e));
 	}, [id]);
 
@@ -70,6 +75,8 @@ const Transaction = ({ id }) => {
 				</div>
 				<div className="flex-item">
 					<h4>Tickets</h4>
+					{/* eslint-disable react/jsx-no-target-blank */}
+					{transactionToken && <p><a href={`https://mustachebash.com/mytickets?t=${transactionToken}`} target="_blank">Ticket Link</a></p>}
 					{!!tickets.length && <TicketsList tickets={tickets} />}
 				</div>
 			</div>

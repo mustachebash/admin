@@ -46,6 +46,7 @@ class Header extends Component {
 							<nav className={this.state.navOpen ? 'open' : ''}>
 								<ul>
 									{user.role !== 'doorman' && <li><NavLink exact to="/">Dashboard</NavLink></li>}
+									<li><NavLink to="/check-in">Check-in</NavLink></li>
 									<li><NavLink to="/guests">Guests</NavLink></li>
 
 									{checkScope(user.role, 'admin') &&

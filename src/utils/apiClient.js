@@ -73,9 +73,13 @@ function makeRequest(path, { method = 'GET', body, query, requestCount = 0 }) {
 		})
 		.then(response => {
 			// Check for HTTP error statuses, throw errors to skip processing response body
-			if(!response.ok) throw new APIError({message: response.statusText, responseBody: response.json(), statusCode: response.status});
-
-			return response.json();
+			if(!response.ok) {
+				return response.json().then(errBody => {
+					throw new APIError({message: response.statusText, responseBody: errBody, statusCode: response.status});
+				});
+			} else {
+				return response.json();
+			}
 		})
 		.catch(err => {
 			// If it was a 401, get a new access token here, then make the original request again
@@ -84,7 +88,7 @@ function makeRequest(path, { method = 'GET', body, query, requestCount = 0 }) {
 				return makeRequest('/refresh-access-token', {method: 'POST', body: {refreshToken: getRefreshToken()}})
 					.then(accessToken => window.localStorage.setItem('accessToken', accessToken))
 					.then(() => makeRequest(path, {method, body, query, requestCount}));
-			} else if((err.statusCode === 401 ||err.statusCode === 403) && getRefreshToken()) {
+			} else if((err.statusCode === 401 || err.statusCode === 403) && getRefreshToken()) {
 				// After 10 attempts, clear the user data and redirect the page
 				window.localStorage.removeItem('accessToken');
 				window.localStorage.removeItem('refreshToken');
