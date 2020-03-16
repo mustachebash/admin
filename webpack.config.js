@@ -106,7 +106,7 @@ module.exports = (env = {}, argv) => {
 				}
 			}),
 			new webpack.DefinePlugin({
-				API_HOST: JSON.stringify(devMode ? 'http://localhost:5000' : 'https://api.mustachebash.com')
+				API_HOST: JSON.stringify(devMode ? 'https://localhost:5000' : 'https://api.mustachebash.com')
 			})
 		]
 	};
