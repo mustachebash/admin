@@ -198,6 +198,26 @@ button {
 			color: @white;
 		}
 	}
+
+	&:disabled {
+		cursor: no-drop;
+		opacity: .6;
+
+		&:hover {
+			background: none;
+			color: @light-gray;
+
+			&.white {
+				background: none;
+				color: @white;
+			}
+
+			&.red {
+				background: none;
+				color: @red;
+			}
+		}
+	}
 }
 
 [data-tooltip] {

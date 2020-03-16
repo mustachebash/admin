@@ -6,7 +6,7 @@ import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
 
 const TransactionsListItem = ({ transaction, productsById }) => (
-	<li className="transactions-list-item">
+	<li className={`transactions-list-item ${transaction.status === 'refunded' ? 'refunded' : ''}`}>
 		<div className="name">
 			<p><Link to={`/transactions/${transaction.id}`}>{transaction.firstName} {transaction.lastName}</Link></p>
 		</div>
@@ -24,7 +24,7 @@ const TransactionsListItem = ({ transaction, productsById }) => (
 			</ul>
 		</div>
 		<div className="date">
-			<p>{format(new Date(transaction.created), 'MMM Do, h:mma', {timeZone: 'America/Los_Angeles'}) }</p>
+			<p>{format(new Date(transaction.created), 'MMM do, h:mma', {timeZone: 'America/Los_Angeles'}) }</p>
 		</div>
 		<div className="confirmation">
 			<p>{transaction.braintreeTransactionId}</p>
