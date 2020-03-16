@@ -5,6 +5,10 @@
 	justify-content: space-between;
 	padding: 0.625em; /* 10/16 */
 
+	&.refunded {
+		background: fade(@red, 40%) !important;
+	}
+
 	&:nth-child(even) {
 		background: @light-gray;
 	}

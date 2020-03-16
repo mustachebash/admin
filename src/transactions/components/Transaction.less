@@ -1,6 +1,19 @@
 @import '~variables.less';
 
 .transaction {
+	.transaction-status {
+		text-transform: uppercase;
+		font-size: .75rem;
+		border: 1px solid @white;
+		padding: .25em .5em;
+		vertical-align: middle;
+
+		&.refunded {
+			color: @red;
+			border-color: @red;
+		}
+	}
+
 	h2 {
 		border-bottom: none;
 		margin-bottom: 1em;

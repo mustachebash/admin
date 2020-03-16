@@ -9,7 +9,7 @@ const PromosListItem = ({ promo, product, event, disablePromo }) => (
 		<div className="status">
 			<span
 				className={promo.status === 'claimed' ? 'checked' : ''}
-				title={promo.status === 'claimed' ? format(new Date(promo.updated), 'MMM Do, h:mma', {timeZone: 'America/Los_Angeles'}) : 'Not Claimed'}
+				title={promo.status === 'claimed' ? format(new Date(promo.updated), 'MMM do, h:mma', {timeZone: 'America/Los_Angeles'}) : 'Not Claimed'}
 			>
 				{promo.status}
 			</span>
@@ -18,7 +18,7 @@ const PromosListItem = ({ promo, product, event, disablePromo }) => (
 			<p>{promo.recipient}</p>
 		</div>
 		<div className="date">
-			<p>{format(new Date(promo.created), 'MMM Do, h:mma', {timeZone: 'America/Los_Angeles'}) }</p>
+			<p>{format(new Date(promo.created), 'MMM do, h:mma', {timeZone: 'America/Los_Angeles'}) }</p>
 		</div>
 		<div className="event">
 			<p>{event.name}</p>

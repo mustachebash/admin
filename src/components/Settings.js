@@ -10,7 +10,7 @@ const Settings = () => {
 		[ event, setEvent ] = useState(null);
 
 	useEffect(() => {
-		apiClient.get('/sites/mustachebash.com/settings')
+		apiClient.get('/sites/mustachebash.com/privileged-settings')
 			.then(({ events: siteEvents, products: siteProducts }) => {
 				// This is not ideal, but works for this year
 				setEvent(siteEvents[0]);

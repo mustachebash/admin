@@ -12,7 +12,7 @@ const GuestsListItem = ({ guest, event }) => (
 				? <span className="no-entry">&#x26D4; No entry</span>
 				: <span
 					className={guest.checkedIn ? 'checked' : 'unchecked'}
-					title={guest.checkedIn ? format(new Date(guest.checkedIn), 'MMM Do, h:mma', {timeZone: 'America/Los_Angeles'}) : 'Check In'}
+					title={guest.checkedIn ? format(new Date(guest.checkedIn), 'MMM do, h:mma', {timeZone: 'America/Los_Angeles'}) : 'Check In'}
 				>
 				</span>
 			}
@@ -23,7 +23,7 @@ const GuestsListItem = ({ guest, event }) => (
 			{guest.notes && <p className="guest-notes">Notes: {guest.notes}</p>}
 		</div>
 		<div className="date">
-			<p>{format(new Date(guest.created), 'MMM Do, h:mma', {timeZone: 'America/Los_Angeles'})}</p>
+			<p>{format(new Date(guest.created), 'MMM do, h:mma', {timeZone: 'America/Los_Angeles'})}</p>
 		</div>
 		<div className="event">
 			<p>{event.name}</p>
