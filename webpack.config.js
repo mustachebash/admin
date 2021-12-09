@@ -3,9 +3,8 @@ const path = require('path'),
 	{ CleanWebpackPlugin } = require('clean-webpack-plugin'),
 	TerserPlugin = require('terser-webpack-plugin'),
 	MiniCssExtractPlugin = require('mini-css-extract-plugin'),
-	OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin'),
+	CssMinimizerPlugin = require('css-minimizer-webpack-plugin'),
 	HtmlWebpackPlugin = require('html-webpack-plugin'),
-	ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin'),
 	{ StatsWriterPlugin } = require('webpack-stats-plugin');
 
 module.exports = (env = {}, argv) => {
@@ -16,7 +15,9 @@ module.exports = (env = {}, argv) => {
 	if(debugMode) entry.unshift('react-devtools');
 
 	return {
-		entry,
+		entry: {
+			app: entry
+		},
 		devtool: devMode ? 'inline-source-map' : false,
 		resolve: {
 			modules: [path.resolve(__dirname, 'src'), 'node_modules'],
@@ -26,20 +27,15 @@ module.exports = (env = {}, argv) => {
 		},
 		output: {
 			path: path.resolve(__dirname, 'dist'),
-			filename: 'app.[hash].js',
+			filename: '[name].[contenthash].js',
 			chunkFilename: '[name].chunk.[chunkhash].js',
+			assetModuleFilename: 'img/[name].[hash][ext][query]',
 			publicPath: '/'
 		},
 		devServer: {
-			publicPath: '/',
-			contentBase: './dist',
 			historyApiFallback: {
 				disableDotRule: true
 			}
-		},
-		externals: {
-			// Exclude this because it's automatically bundled with charts
-			moment: 'moment'
 		},
 		module: {
 			rules: [
@@ -61,7 +57,6 @@ module.exports = (env = {}, argv) => {
 								presets: ['@babel/react', ['@babel/env', {modules: false, useBuiltIns: 'usage', corejs: 3}]],
 								plugins: [
 									'react-hot-loader/babel',
-									'@babel/proposal-object-rest-spread',
 									['@babel/proposal-decorators', {legacy: true}],
 									'@babel/proposal-class-properties'
 								]
@@ -71,17 +66,34 @@ module.exports = (env = {}, argv) => {
 				},
 				{
 					test: /(\.jpg$)|(\.png$)/,
-					use: 'url-loader'
+					include: [/img/],
+					type: 'asset/resource'
+				},
+				{
+					test: /\.html$/,
+					use: [{
+						loader: 'html-loader',
+						options: {
+							minimize: false
+						}
+					}]
 				}
 			]
 		},
 		optimization: {
 			splitChunks: {
-				chunks: 'all'
+				chunks: 'all',
+				cacheGroups: {
+					defaultVendors: {
+						test: /[\\/]node_modules[\\/]/,
+						name: 'vendors',
+						chunks: 'all'
+					}
+				}
 			},
 			minimizer: [
-				new OptimizeCssAssetsPlugin({
-					cssProcessorOptions: {discardComments: {removeAll: true}}
+				new CssMinimizerPlugin({
+					minimizerOptions: { preset: ['default', { discardComments: { removeAll: true } }] }
 				}),
 				new TerserPlugin()
 			]
@@ -90,10 +102,17 @@ module.exports = (env = {}, argv) => {
 			new CleanWebpackPlugin(),
 			new HtmlWebpackPlugin({
 				inject: 'head',
-				template: 'src/index.html'
-			}),
-			new ScriptExtHtmlWebpackPlugin({
-				defaultAttribute: 'defer'
+				filename: 'index.html',
+				template: 'src/index.html',
+				minify: {
+					collapseWhitespace: true,
+					keepClosingSlash: true,
+					removeComments: true,
+					removeRedundantAttributes: false,
+					removeScriptTypeAttributes: true,
+					removeStyleLinkTypeAttributes: true,
+					useShortDoctype: true
+				}
 			}),
 			new MiniCssExtractPlugin({
 				filename: '[name].[contenthash].css'
