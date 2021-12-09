@@ -1,12 +1,15 @@
 module.exports = {
-	parser: 'babel-eslint',
+	parser: '@babel/eslint-parser',
 	parserOptions: {
-		ecmaVersion: 8,
+		ecmaVersion: 2021,
 		sourceType: 'module',
 		ecmaFeatures: {
-			impliedStrict: true,
-			jsx: true,
-			experimentalObjectRestSpread: true
+			jsx: true
+		},
+		requireConfigFile: false,
+		babelOptions: {
+			presets: ['@babel/preset-react'],
+			plugins: [['@babel/proposal-decorators', {legacy: true}], '@babel/proposal-class-properties']
 		}
 	},
 	settings: {
@@ -33,7 +36,7 @@ module.exports = {
 	},
 	rules: {
 		'arrow-body-style': 2,
-		'arrow-parens': [2, "as-needed"],
+		'arrow-parens': [2, 'as-needed'],
 		camelcase: 2,
 		'class-methods-use-this': [2, {exceptMethods: ['componentDidCatch']}],
 		'dot-notation': 2,
@@ -46,6 +49,7 @@ module.exports = {
 		'lines-between-class-members': [2, 'always', { exceptAfterSingleLine: true }],
 		'no-alert': 2,
 		'no-console': [2, { allow: ['error'] }],
+		'no-dupe-class-members': 0,
 		'no-multiple-empty-lines': 2,
 		'no-shadow': 2,
 		'no-unneeded-ternary': [2, { defaultAssignment: false }],
