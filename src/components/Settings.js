@@ -7,14 +7,16 @@ import Loader from 'components/Loader';
 
 const Settings = () => {
 	const [ selectedEventId, setSelectedEventId ] = useState(''),
+		[ siteSettings, setSiteSettings ] = useState(null),
 		[ products, setProducts ] = useState([]),
 		[ events, setEvents ] = useState([]);
 
 	useEffect(() => {
 		apiClient.get('/sites/mustachebash.com/privileged-settings')
-			.then(({ events: siteEvents, products: siteProducts }) => {
+			.then(({ events: siteEvents, products: siteProducts, settings: privilegedSettings }) => {
 				// This is not ideal, but works for this year
 				setSelectedEventId(siteEvents[1].id);
+				setSiteSettings(privilegedSettings);
 				setEvents(siteEvents);
 				setProducts(siteProducts.sort((a, b) => a.price > b.price ? -1 : 1));
 			})
@@ -34,6 +36,12 @@ const Settings = () => {
 		apiClient.patch(`/events/${id}`, updates)
 			.then(updatedEvent => setEvents([...events.filter(ev => ev.id !== id), updatedEvent]))
 			.catch(e => console.error('Events API Error', e));
+	}
+
+	function updateSiteSettings(updates) {
+		apiClient.patch('/sites/mustachebash.com/settings', updates)
+			.then(updatedSite => setSiteSettings(updatedSite.settings))
+			.catch(e => console.error('Settings API Error', e));
 	}
 
 	const selectedEvent = events.find(ev => ev.id === selectedEventId);
@@ -77,6 +85,15 @@ const Settings = () => {
 				</section>
 
 				<section className="settings-group">
+					<h1>Site</h1>
+					<div className="settings-item">
+						<h5>mustachebash.com</h5>
+						<div className="event-sales-toggle">
+							<label>Apple Pay Enabled</label>
+							<Toggle toggleState={siteSettings.enableApplePay} handleToggle={() => updateSiteSettings({enableApplePay: !siteSettings.enableApplePay})} />
+						</div>
+					</div>
+
 					<h1>Event</h1>
 					<div className="settings-item">
 						<h5>{selectedEvent.name}</h5>
