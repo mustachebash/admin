@@ -58,7 +58,7 @@ const Transaction = ({ id }) => {
 			.finally(() => setRefunding(false));
 	}, [id]);
 
-	if(!transaction || !processorDetails || !products.length || !events.length) return;
+	if(!transaction || !processorDetails || !products.length || !events.length) return null;
 
 	const {
 			firstName,
