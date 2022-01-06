@@ -51,6 +51,7 @@ module.exports = {
 		'no-console': [2, { allow: ['error'] }],
 		'no-dupe-class-members': 0,
 		'no-multiple-empty-lines': 2,
+		'no-restricted-globals': ['error', 'event', 'fdescribe'],
 		'no-shadow': 2,
 		'no-unneeded-ternary': [2, { defaultAssignment: false }],
 		'no-unused-expressions': 2,

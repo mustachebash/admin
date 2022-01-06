@@ -73,7 +73,7 @@ const Settings = () => {
 							<div className="event-ticket">
 								<label>Status</label>
 								<div className="select-wrap">
-									<select name={`ticketStatus-${p.id}`} defaultValue={p.status}  onChange={ev => updateProductStatus(p.id, ev.target.value)}>
+									<select name={`ticketStatus-${p.id}`} defaultValue={p.status} onChange={ev => updateProductStatus(p.id, ev.target.value)}>
 										<option key={`option-${p.id}-active`} value="active">Active</option>
 										<option key={`option-${p.id}-inactive`} value="inactive">Inactive</option>
 										<option key={`option-${p.id}-archived`} value="archived">Archived</option>
@@ -100,7 +100,7 @@ const Settings = () => {
 						<div className="flex-row">
 							<div className="event-ticket">
 								<label>Current Ticket</label>
-								<div className="select-wrap">
+								<div className="select-wrap" key={`ticket-select-${selectedEvent.id}`}>
 									<select name={`currentTicket-${selectedEvent.id}`} defaultValue={selectedEvent.currentTicket} onChange={ev => updateEvent(selectedEventId, {currentTicket: ev.target.value})}>
 										<option key="option-none" value="">None</option>
 										{products.filter(p => p.eventId === selectedEventId).map(p => {
@@ -113,7 +113,7 @@ const Settings = () => {
 							</div>
 							<div className="event-sales-toggle">
 								<label>Sales</label>
-								<Toggle toggleState={selectedEvent.salesOn} handleToggle={() => updateEvent(selectedEventId, {salesOn: !event.salesOn})} />
+								<Toggle toggleState={selectedEvent.salesOn} handleToggle={() => updateEvent(selectedEventId, {salesOn: !selectedEvent.salesOn})} />
 							</div>
 						</div>
 					</div>
