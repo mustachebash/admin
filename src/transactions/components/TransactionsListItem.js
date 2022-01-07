@@ -6,7 +6,7 @@ import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
 
 const TransactionsListItem = ({ transaction, productsById }) => (
-	<li className={`transactions-list-item ${transaction.status === 'refunded' ? 'refunded' : ''}`}>
+	<li className={`transactions-list-item ${['refunded', 'voided'].includes(transaction.status) ? 'refunded' : ''}`}>
 		<div className="name">
 			<p><Link to={`/transactions/${transaction.id}`}>{transaction.firstName} {transaction.lastName}</Link></p>
 		</div>
