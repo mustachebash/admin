@@ -48,7 +48,7 @@ const generateOpeningDayTicketsSeries = chartData => ({
 	labels: chartData.openingDaySales.map(({ time }) => format(new Date(time), 'HH:mm')),
 	datasets: [{
 		data: chartData.openingDaySales.map(({ tickets }) => tickets),
-		label: `${chartData.name}: Tickets Sold ${format(new Date(chartData.openingDaySales[0].time), 'MMM do, yyyy')}`,
+		label: `${chartData.name}: Tickets Sold ${format(chartData.openingDaySales[0]?.time ? new Date(chartData.openingDaySales[0].time) : new Date(), 'MMM do, yyyy')}`,
 		lineTension: 0.3,
 		fill: false,
 		borderColor: 'rgb(73, 134, 210)',

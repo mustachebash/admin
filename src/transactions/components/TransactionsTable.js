@@ -72,7 +72,8 @@ const TransactionsTable = () => {
 
 		return (
 			filterRegExp.test(t.firstName + ' ' + t.lastName) ||
-			filterRegExp.test(t.braintreeTransactionId)
+			filterRegExp.test(t.braintreeTransactionId) ||
+			filterRegExp.test(t.email)
 		);
 	});
 
