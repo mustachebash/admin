@@ -1,8 +1,16 @@
 @import 'variables';
 
 .dashboard {
+	h2 span {
+		font-size: 1rem;
+	}
+
 	.filters {
-		max-width: 25em;
+		max-width: 45em;
+
+		.event-sales-toggle {
+			margin-left: 3em;
+		}
 	}
 
 	.stats {
@@ -17,6 +25,10 @@
 			margin-top: 0;
 			margin-bottom: 0;
 			font-size: 1.5em; /* 24/16 */
+		}
+
+		.avg-cost p {
+			color: @red;
 		}
 	}
 }
