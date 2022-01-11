@@ -42,8 +42,8 @@ const Dashboard = () => {
 	const {
 		name,
 		eventBudget,
-		alcoholRevenue,
-		foodRevenue,
+		// alcoholRevenue,
+		// foodRevenue,
 		totalGuests,
 		totalRevenue,
 		totalPromoRevenue,
