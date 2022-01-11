@@ -4,9 +4,9 @@ import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { format, set } from 'date-fns';
 import { Line } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LineElement, PointElement, LinearScale, Title } from 'chart.js';
+import { Chart as ChartJS, CategoryScale, LineElement, PointElement, LinearScale, Title, Tooltip } from 'chart.js';
 
-ChartJS.register(CategoryScale, LineElement, PointElement, LinearScale, Title);
+ChartJS.register(CategoryScale, LineElement, PointElement, LinearScale, Title, Tooltip);
 
 const availableTypes = [
 	{
