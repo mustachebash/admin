@@ -26,6 +26,7 @@
 		"@hot-loader/react-dom": "^17.0.1",
 		"babel-loader": "^8.2.3",
 		"chart.js": "^3.6.2",
+		"chartjs-plugin-annotation": "^1.2.2",
 		"classnames": "^2.3.1",
 		"clean-webpack-plugin": "^4.0.0",
 		"core-js": "^3.19.3",

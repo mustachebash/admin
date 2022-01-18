@@ -74,6 +74,12 @@ const TransactionsTable = () => {
 			filterRegExp.test(t.firstName + ' ' + t.lastName) ||
 			filterRegExp.test(t.braintreeTransactionId) ||
 			filterRegExp.test(t.email)
+		) || (
+			t.transfer && (
+				filterRegExp.test(t.transfer.firstName + ' ' + t.transfer.lastName) ||
+				filterRegExp.test(t.transfer.originalTransactionId.substring(0, 8)) ||
+				filterRegExp.test(t.transfer.email)
+			)
 		);
 	});
 

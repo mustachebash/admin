@@ -2,6 +2,7 @@ import './Transaction.less';
 
 import React, { useState, useEffect, useCallback, memo } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
 import classnames from 'classnames';
 import apiClient from 'utils/apiClient';
@@ -14,7 +15,11 @@ const Transaction = ({ id }) => {
 		[events, setEvents] = useState([]),
 		[products, setProducts] = useState([]),
 		[tickets, setTickets] = useState([]),
-		[refunding, setRefunding] = useState(false);
+		[refunding, setRefunding] = useState(false),
+		[transfereeFirstName, setTransfereeFirstName] = useState(''),
+		[transfereeLastName, setTransfereeLastName] = useState(''),
+		[transfereeEmail, setTransfereeEmail] = useState(''),
+		[transferring, setTransferring] = useState(false);
 
 	useEffect(() => {
 		apiClient.get(`/transactions/${id}`)
@@ -58,7 +63,25 @@ const Transaction = ({ id }) => {
 			.finally(() => setRefunding(false));
 	}, [id]);
 
-	if(!transaction || !processorDetails || !products.length || !events.length) return null;
+	const transfer = useCallback(() => {
+		if(!(transfereeFirstName && transfereeLastName && transfereeEmail && /.+@.+\..+/.test(transfereeEmail))) return;
+
+		setTransferring(true);
+
+		apiClient.post(`/transactions/${id}/transfers`, {
+			firstName: transfereeFirstName,
+			lastName: transfereeLastName,
+			email: transfereeEmail
+		})
+			.then(() => Promise.all([
+				apiClient.get(`/transactions/${id}`)
+					.then(setTransaction)
+			]))
+			.catch(e => console.error('Transaction API Error', e))
+			.finally(() => setTransferring(false));
+	}, [id, transfereeFirstName, transfereeLastName, transfereeEmail]);
+
+	if(!transaction || (!processorDetails && transaction.type !== 'transfer') || !products.length || !events.length) return null;
 
 	const {
 			firstName,
@@ -66,6 +89,9 @@ const Transaction = ({ id }) => {
 			email,
 			amount,
 			braintreeTransactionId,
+			originalTransactionId,
+			type: transactionType,
+			transfereeId,
 			created,
 			order,
 			status: transactionStatus
@@ -78,7 +104,7 @@ const Transaction = ({ id }) => {
 			applePay,
 			paymentInstrumentType,
 			merchantId
-		} = processorDetails;
+		} = processorDetails || {};
 
 	const transactionDate = new Date(createdAt),
 		refundCutoff = Date.now() - (90 * 24 * 60 * 60 * 1000), // 90 days
@@ -86,36 +112,49 @@ const Transaction = ({ id }) => {
 
 	return (
 		<div className="transaction">
-			<h1>
-				{/* eslint-disable-next-line react/jsx-no-target-blank,max-len */}
-				Transaction - <a href={`https://www.braintreegateway.com/merchants/${merchantId}/transactions/${braintreeTransactionId}`} target="_blank" title="Open in Braintree">{braintreeTransactionId} </a>
-				{transactionStatus && <span className={classnames('transaction-status', transactionStatus)}>{transactionStatus}</span>}
-			</h1>
+			{transactionType !== 'transfer'
+				? <h1>
+					{/* eslint-disable-next-line react/jsx-no-target-blank,max-len */}
+					Transaction - <a href={`https://www.braintreegateway.com/merchants/${merchantId}/transactions/${braintreeTransactionId}`} target="_blank" title="Open in Braintree">{braintreeTransactionId} </a>
+					{transactionStatus && <span className={classnames('transaction-status', transactionStatus)}>{transactionStatus}</span>}
+				</h1>
+
+				: <h1>
+					{/* eslint-disable-next-line react/jsx-no-target-blank,max-len */}
+					Transferred from Transaction - <Link to={`/transactions/${originalTransactionId}`} target="_blank" title="Open Original Transaction">{originalTransactionId.substring(0, 8)} </Link>
+					{transactionStatus && <span className={classnames('transaction-status', transactionStatus)}>{transactionStatus}</span>}
+				</h1>
+			}
 			<div className="flex-row">
 				<div className="flex-item">
 					<h2><span>{firstName} {lastName}</span></h2>
 					<h3><span>Amount:</span> ${amount}</h3>
 					{paymentInstrumentType === 'credit_card' && <h3><span>Card Used:</span> {creditCard.cardType} (...{creditCard.last4}) - exp. {creditCard.expirationDate}</h3>}
 					{paymentInstrumentType === 'apple_pay_card' && <h3><span>Apple Pay Used:</span> {applePay.paymentInstrumentName}</h3>}
-					<h3><span>Purchased:</span> {format(new Date(created), 'M/dd/yy - HH:mm')}</h3>
+					{transactionType !== 'transfer' && <h3><span>Purchased:</span> {format(new Date(created), 'M/dd/yy - HH:mm')}</h3>}
+					{transactionType === 'transfer' && <h3><span>Transferred:</span> {format(new Date(created), 'M/dd/yy - HH:mm')}</h3>}
 					<h3><span>Email:</span> {email}</h3>
-					<h3 className={classnames('processor-status', processorStatus)}><span>Processor Status:</span> {processorStatus}</h3>
+					{transactionType !== 'transfer' && <h3 className={classnames('processor-status', processorStatus)}><span>Processor Status:</span> {processorStatus}</h3>}
 					{/* eslint-disable-next-line react/jsx-no-target-blank,max-len */}
 					{refundId && <h3><span>Refund Confirmation:</span> <a href={`https://www.braintreegateway.com/merchants/${merchantId}/transactions/${refundId}`} target="_blank" title="Open in Braintree">{refundId}</a></h3>}
 
-					<h5><span>Order Details</span></h5>
-					<ul className="order-details">
-						{order.map(({ productId, quantity }) => {
-							const { name, price, eventId } = products.find(p => p.id === productId) || {};
+					{transactionType !== 'transfer' &&
+						<>
+							<h5><span>Order Details</span></h5>
+							<ul className="order-details">
+								{order.map(({ productId, quantity }) => {
+									const { name, price, eventId } = products.find(p => p.id === productId) || {};
 
-							return (
-								<li key={productId}>
-									<p><span>{name} (${price}):</span> {quantity}</p>
-									{eventId && <p className="event">{events.find(e => e.id === eventId).name}</p>}
-								</li>
-							);
-						})}
-					</ul>
+									return (
+										<li key={productId}>
+											<p><span>{name} (${price}):</span> {quantity}</p>
+											{eventId && <p className="event">{events.find(e => e.id === eventId).name}</p>}
+										</li>
+									);
+								})}
+							</ul>
+						</>
+					}
 				</div>
 				<div className="flex-item">
 					<h4>Tickets</h4>
@@ -125,21 +164,40 @@ const Transaction = ({ id }) => {
 
 					<h4>Actions</h4>
 					<div>
-						<button className="red" onClick={refund} disabled={['refunded', 'voided'].includes(transactionStatus) || refunding || !refundAllowed}>
-							{/* Ternaries for daaaaaayyyyysss */}
-							{!['refunded', 'voided'].includes(transactionStatus)
-								? refunding
-									? 'Refunding...'
-									: refundAllowed
-										? ['settled', 'settling'].includes(processorStatus)
-											? 'Refund'
-											: 'Void'
-										: 'Refund Disallowed'
-								: transactionStatus === 'voided'
-									? 'Already Voided'
-									: 'Already Refunded'
-							}
-						</button>
+						{transactionType !== 'transfer' &&
+							<button className="red" onClick={refund} disabled={['refunded', 'voided'].includes(transactionStatus) || refunding || !refundAllowed}>
+								{/* Ternaries for daaaaaayyyyysss */}
+								{!['refunded', 'voided'].includes(transactionStatus)
+									? refunding
+										? 'Refunding...'
+										: refundAllowed
+											? ['settled', 'settling'].includes(processorStatus)
+												? 'Refund'
+												: 'Void'
+											: 'Refund Disallowed'
+									: transactionStatus === 'voided'
+										? 'Already Voided'
+										: 'Already Refunded'
+								}
+							</button>
+						}
+						{!['refunded', 'voided', 'transferred'].includes(transactionStatus) &&
+							<>
+								<h5>Transfer</h5>
+								<input type="text" name="transferee-first-name" placeholder="First Name" value={transfereeFirstName} onChange={e => setTransfereeFirstName(e.currentTarget.value)} />
+								<input type="text" name="transferee-last-name" placeholder="Last Name" value={transfereeLastName} onChange={e => setTransfereeLastName(e.currentTarget.value)} />
+								<input type="text" name="transferee-email" placeholder="Email" value={transfereeEmail} onChange={e => setTransfereeEmail(e.currentTarget.value)} />
+								<button className="red" onClick={transfer} disabled={transferring || !(transfereeFirstName && transfereeLastName && transfereeEmail && /.+@.+\..+/.test(transfereeEmail))}>
+									{transferring
+										? 'Transferring...'
+										: 'Transfer'
+									}
+								</button>
+							</>
+						}
+						{transactionStatus === 'transferred' &&
+							<h5><Link to={`/transactions/${transfereeId}`} target="_blank" title="Open Original Transaction">View Transfer - {transfereeId.substring(0, 8)} </Link></h5>
+						}
 					</div>
 				</div>
 			</div>

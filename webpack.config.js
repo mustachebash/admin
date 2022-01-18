@@ -33,6 +33,7 @@ module.exports = (env = {}, argv) => {
 			publicPath: '/'
 		},
 		devServer: {
+			port: 8082,
 			historyApiFallback: {
 				disableDotRule: true
 			}
