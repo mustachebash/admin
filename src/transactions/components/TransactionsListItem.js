@@ -5,13 +5,13 @@ import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
 
-const TransactionsListItem = ({ transaction, productsById }) => (
-	<li className={`transactions-list-item ${['refunded', 'voided'].includes(transaction.status) ? 'refunded' : ''}`}>
+const TransactionsListItem = ({ transaction, productsById, transferee }) => (
+	<li className={`transactions-list-item ${['refunded', 'voided', 'transferred'].includes(transaction.status) ? 'refunded' : ''} ${transferee ? 'transferee' : ''}`}>
 		<div className="name">
 			<p><Link to={`/transactions/${transaction.id}`}>{transaction.firstName} {transaction.lastName}</Link></p>
 		</div>
 		<div className="amount">
-			<p>${transaction.amount.toFixed(0)}</p>
+			{!transferee && <p>${transaction.amount.toFixed(0)}</p>}
 		</div>
 		<div className="products">
 			<ul>
@@ -27,7 +27,7 @@ const TransactionsListItem = ({ transaction, productsById }) => (
 			<p>{format(new Date(transaction.created), 'MMM do, h:mma', {timeZone: 'America/Los_Angeles'}) }</p>
 		</div>
 		<div className="confirmation">
-			<p>{transaction.braintreeTransactionId}</p>
+			<p>{transferee ? transaction.originalTransactionId.substring(0, 8) : transaction.braintreeTransactionId}</p>
 		</div>
 		<div className="email">
 			<p>{transaction.email}</p>
@@ -37,7 +37,8 @@ const TransactionsListItem = ({ transaction, productsById }) => (
 
 TransactionsListItem.propTypes = {
 	transaction: PropTypes.object.isRequired,
-	productsById: PropTypes.object.isRequired
+	productsById: PropTypes.object.isRequired,
+	transferee: PropTypes.oneOfType([PropTypes.object, PropTypes.bool])
 };
 
 export default TransactionsListItem;

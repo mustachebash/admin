@@ -66,7 +66,12 @@ const TransactionsList = ({ transactions, products, sortBy, sortOrder, sortTrans
 					</h5>
 				</div>
 			</li>
-			{transactions.map(transaction => <TransactionsListItem key={transaction.id} transaction={transaction} productsById={productsById} />)}
+			{transactions.map(transaction =>
+				<>
+					<TransactionsListItem key={transaction.id} transaction={transaction} productsById={productsById} />
+					{transaction.transfer && <TransactionsListItem key={transaction.transfer.id} transferee transaction={transaction.transfer} productsById={productsById} />}
+				</>
+			)}
 		</ul>
 	);
 };
