@@ -46,6 +46,7 @@ const Guest = ({ id }) => {
 			transactionId,
 			confirmationId,
 			checkedIn,
+			vip,
 			updatedBy
 		} = guest,
 		{ name: eventName } = event,
@@ -56,7 +57,7 @@ const Guest = ({ id }) => {
 			<h1>Guest - {eventName}</h1>
 			<div className="flex-row">
 				<div className="flex-item">
-					<h2><span>{firstName} {lastName}</span></h2>
+					<h2><span>{firstName} {lastName}</span>{!!vip && <span title={updatedBy} className="vip">&nbsp;- VIP</span>}</h2>
 					<h3><span>Created:</span> {format(new Date(created), 'M/dd/yy - HH:mm')}</h3>
 					<h3>
 						<span>Status:</span> {

@@ -100,12 +100,12 @@ const CheckIn = () => {
 
 	return (
 		<div className="check-in">
-			<div className={classnames('status', {inputting, success: checkInResponse, error: checkInError})} onClick={reset}>
+			<div className={classnames('status', {inputting, success: checkInResponse, error: checkInError, vip: !!checkInResponse?.guest?.vip})} onClick={reset}>
 				<p className="status-text">
 					{inputting
 						? 'Scanning...'
 						: checkInResponse
-							? `${checkInResponse.guest.firstName} ${checkInResponse.guest.lastName}`
+							? `${checkInResponse.guest.firstName} ${checkInResponse.guest.lastName}${checkInResponse.guest.vip ? ' - VIP' : ''}`
 							: checkInError?.message || 'Ready!'
 					}
 				</p>
