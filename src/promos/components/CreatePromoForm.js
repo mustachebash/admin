@@ -87,7 +87,7 @@ export default class CompedPromoForm extends Component {
 				<form className="flex-row" onSubmit={this.addPromo}>
 					<input type="text" name="recipient" placeholder="Name" value={recipient} onChange={this.handleChange} ref={el => this.firstInput = el} />
 					<input type="text" name="email" placeholder="Email" value={email} onChange={this.handleChange} />
-					<input type="text" name="price" placeholder="0" value={price} onChange={this.handleChange} />
+					<input type="text" name="price" placeholder="$0" value={price} onChange={this.handleChange} />
 					<div className="select-wrap">
 						<select name="eventId" value={eventId} onChange={this.handleChange}>
 							<option disabled value="">Select an Event...</option>
