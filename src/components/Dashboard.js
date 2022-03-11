@@ -31,7 +31,7 @@ const Dashboard = () => {
 				.then(setEventChart)
 				.catch(e => console.error('Chart API Error', e));
 
-			if(event.salesOn) {
+			if(event.salesOn && event.currentTicket) {
 				apiClient.get(`/products/${event.currentTicket}`)
 					.then(setCurrentTicket)
 					.catch(e => console.error('Product API Error', e));
@@ -58,6 +58,8 @@ const Dashboard = () => {
 		totalGuests,
 		totalRevenue,
 		totalPromoRevenue,
+		salesTiers,
+		averageQuantity,
 		guestsToday,
 		revenueToday,
 		totalCompedGuests,
@@ -165,7 +167,19 @@ const Dashboard = () => {
 								</div>
 							}
 						</div>
-						{event.salesOn && (add2020Stats || event.id !== 'a0ae862c-1755-497c-b843-8457b5696a2a') &&
+						<div className="stats flex-row">
+							{salesTiers.map(t => (
+								<div className="tier-sales" key={t.name}>
+									<h5>{t.name} - ${t.price || `${(totalPromoRevenue / t.quantity).toFixed(2)} avg.`}</h5>
+									<p>{formatThousands(t.quantity)}</p>
+								</div>
+							))}
+							<div className="tier-sales" data-tooltip="Avg. tickets sold per transaction">
+								<h5>Avg. Qty Per Transaction</h5>
+								<p>{averageQuantity.toFixed(2)}</p>
+							</div>
+						</div>
+						{event.salesOn && currentTicket && (add2020Stats || event.id !== 'a0ae862c-1755-497c-b843-8457b5696a2a') &&
 							<>
 								<div className="stats flex-row">
 									<div className="break-even-sales">
