@@ -6,7 +6,7 @@ import classnames from 'classnames';
 import UserContext from 'UserContext';
 import GuestsListItem from './GuestsListItem';
 
-const GuestsList = ({ guests, event, sortBy, sortOrder, sortGuests, switchGuestsOrder }) => {
+const GuestsList = ({ guests, updateGuest, event, sortBy, sortOrder, sortGuests, switchGuestsOrder }) => {
 	const { user } = useContext(UserContext);
 
 	return (
@@ -62,6 +62,7 @@ const GuestsList = ({ guests, event, sortBy, sortOrder, sortGuests, switchGuests
 			</li>
 			{guests.map(guest => <GuestsListItem
 				key={guest.id}
+				updateGuest={updateGuest}
 				guest={guest}
 				event={event}
 				role={user.role}
@@ -75,6 +76,7 @@ export default GuestsList;
 GuestsList.propTypes = {
 	guests: PropTypes.array.isRequired,
 	event: PropTypes.object.isRequired,
+	updateGuest: PropTypes.func.isRequired,
 	sortGuests: PropTypes.func.isRequired,
 	switchGuestsOrder: PropTypes.func.isRequired,
 	sortBy: PropTypes.string.isRequired,

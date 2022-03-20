@@ -63,6 +63,7 @@ const Dashboard = () => {
 		guestsToday,
 		revenueToday,
 		totalCompedGuests,
+		totalVIPGuests,
 		checkedIn
 	} = eventSummary;
 
@@ -71,6 +72,7 @@ const Dashboard = () => {
 		totalRevenue: totalRevenue2020,
 		totalPromoRevenue: totalPromoRevenue2020,
 		totalCompedGuests: totalCompedGuests2020,
+		totalVIPGuests: totalVIPGuests2020,
 		checkedIn: checkedIn2020
 	} = event2020Summary;
 
@@ -111,6 +113,12 @@ const Dashboard = () => {
 						<div className="comped">
 							<h5>Comped Guests</h5>
 							<p>{formatThousands(totalCompedGuests + (add2020Stats ? totalCompedGuests2020 : 0))}</p>
+						</div>
+					}
+					{checkScope(user.role, 'admin') &&
+						<div className="vip">
+							<h5>VIP Guests</h5>
+							<p>{formatThousands(totalVIPGuests + (add2020Stats ? totalVIPGuests2020 : 0))}</p>
 						</div>
 					}
 					<div className="revenue">
