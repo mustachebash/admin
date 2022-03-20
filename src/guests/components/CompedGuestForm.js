@@ -16,6 +16,7 @@ export default class CompedGuestForm extends PureComponent {
 	state = {
 		firstName: '',
 		lastName: '',
+		notes: '',
 		events: [],
 		eventId: ''
 	};
@@ -40,7 +41,7 @@ export default class CompedGuestForm extends PureComponent {
 	addGuest(e) {
 		e.preventDefault();
 
-		const { firstName, lastName, eventId } = this.state;
+		const { firstName, lastName, notes, eventId } = this.state;
 
 		if(this.submitting || !firstName || !lastName || !eventId) return;
 
@@ -49,13 +50,15 @@ export default class CompedGuestForm extends PureComponent {
 		apiClient.post('/guests', {
 			firstName,
 			lastName,
+			...notes && {notes},
 			eventId
 		}).then(guest => {
 			this.props.onAdd(guest);
 
 			this.setState({
 				firstName: '',
-				lastName: ''
+				lastName: '',
+				notes: ''
 			}, () => {
 				this.firstInput.focus();
 				this.submitting = false;
@@ -64,7 +67,7 @@ export default class CompedGuestForm extends PureComponent {
 	}
 
 	render() {
-		const { firstName, lastName, eventId, events } = this.state;
+		const { firstName, lastName, notes, eventId, events } = this.state;
 
 		return (
 			<div className="comped-guest-form">
@@ -72,6 +75,7 @@ export default class CompedGuestForm extends PureComponent {
 				<form className="flex-row" onSubmit={this.addGuest}>
 					<input type="text" name="firstName" placeholder="First Name" value={firstName} onChange={this.handleChange} ref={el => this.firstInput = el} />
 					<input type="text" name="lastName" placeholder="Last Name" value={lastName} onChange={this.handleChange} />
+					<input type="text" name="notes" placeholder="Notes" value={notes} onChange={this.handleChange} />
 					<div className="select-wrap">
 						<select name="eventId" value={eventId} onChange={this.handleChange}>
 							<option disabled value="">Select an Event...</option>

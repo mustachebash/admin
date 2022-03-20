@@ -1,6 +1,6 @@
 import './Guest.less';
 
-import React, { useState, useEffect, useContext, memo } from 'react';
+import React, { useState, useEffect, useCallback, useContext, memo } from 'react';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
@@ -12,7 +12,9 @@ import TicketsList from 'components/TicketsList';
 const Guest = ({ id }) => {
 	const [guest, setGuest] = useState(),
 		[event, setEvent] = useState(),
-		[tickets, setTickets] = useState([]);
+		[tickets, setTickets] = useState([]),
+		[editingNotes, setEditingNotes] = useState(''),
+		[notesInput, setNotesInput] = useState('');
 
 	const { user } = useContext(UserContext);
 
@@ -29,11 +31,20 @@ const Guest = ({ id }) => {
 	useEffect(() => {
 		if(!guest) return;
 
+		if(guest.notes) setNotesInput(guest.notes);
+
 		const { eventId } = guest;
 		apiClient.get(`/events/${eventId}`)
 			.then(setEvent)
 			.catch(e => console.error('Event API Error', e));
 	}, [guest]);
+
+	const saveNotes = useCallback(() => {
+		apiClient.patch(`/guests/${id}`, {notes: notesInput})
+			.then(setGuest)
+			.then(() => setEditingNotes(false))
+			.catch(e => console.error('Guest API Error', e));
+	}, [notesInput, id]);
 
 	if(!guest || !event) return <p>Loading...</p>;
 
@@ -46,6 +57,7 @@ const Guest = ({ id }) => {
 			transactionId,
 			confirmationId,
 			checkedIn,
+			notes,
 			vip,
 			updatedBy
 		} = guest,
@@ -64,6 +76,16 @@ const Guest = ({ id }) => {
 							checkedIn
 								? <>Checked In {format(new Date(checkedIn), 'M/dd/yy - HH:mm')}</>
 								: status
+						}
+					</h3>
+					<h3>
+						<span>Notes:</span> {
+							editingNotes
+								? <fieldset>
+									<input type="text" name="notes" placeholder="Notes" value={notesInput} onChange={e => setNotesInput(e.currentTarget.value)} />
+									<button className="white" onClick={saveNotes}>Save</button><button onClick={() => (setEditingNotes(false), setNotesInput(notes))}>Cancel</button>
+								</fieldset>
+								: <>{notes || ' n/a '} <a href="#" onClick={e => (e.preventDefault(), setEditingNotes(true))}>edit</a></>
 						}
 					</h3>
 

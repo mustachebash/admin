@@ -1,6 +1,6 @@
 import './GuestsTable.less';
 
-import React, { useState, useEffect, useContext, memo } from 'react';
+import React, { useState, useEffect, useCallback, useContext, memo } from 'react';
 import UserContext from 'UserContext';
 import EventContext from 'EventContext';
 import { checkScope } from 'utils';
@@ -44,11 +44,28 @@ const GuestsTable = () => {
 
 	useEffect(() => {
 		if(event) {
-			apiClient.get('/guests', {eventId: event.id})
+			// If we're getting the 2022 guests,also get the 2020 guests
+			// Write the query string manually since it needs duplicate keys for 2022
+			apiClient.get(`/guests?eventId=${event.id}${event.id === 'a0ae862c-1755-497c-b843-8457b5696a2a' ? '&eventId=34a99b2a-f826-406a-8227-921efd03ebff' : ''}`)
 				.then(setGuests)
 				.catch(e => console.error('Guest API Error', e));
 		}
 	}, [event]);
+
+	const updateGuest = useCallback((id, updates) => {
+		apiClient.patch(`/guests/${id}`, updates)
+			.then(guest => {
+				const oldGuestIndex = guests.findIndex(g => g.id === id);
+
+				if(~oldGuestIndex) {
+					const guestsCopy = [...guests];
+					guestsCopy.splice(oldGuestIndex, 1, guest);
+
+					setGuests(guestsCopy);
+				}
+			})
+			.catch(e => console.error('Guest API Error', e));
+	}, [guests]);
 
 	function sortGuests(sortBy) {
 		setSort({
@@ -94,6 +111,7 @@ const GuestsTable = () => {
 
 			{event && <GuestsList
 				guests={filteredGuests}
+				updateGuest={updateGuest}
 				sortGuests={sortGuests}
 				switchGuestsOrder={switchGuestsOrder}
 				sortBy={sort.sortBy}
