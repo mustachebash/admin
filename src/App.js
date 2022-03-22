@@ -10,6 +10,7 @@ import LoginView from './views/LoginView';
 import DashboardView from './views/DashboardView';
 import SettingsView from './views/SettingsView';
 import CheckInView from './views/CheckInView';
+import InspectView from './views/InspectView';
 import TransactionsView from './transactions/views/TransactionsView';
 import TransactionView from './transactions/views/TransactionView';
 import GuestsView from './guests/views/GuestsView';
@@ -52,6 +53,7 @@ const App = () => (
 								<PrivateRoute exclude={['doorman']} exact path="/" component={DashboardView} />
 								<PrivateRoute scope="admin" path="/transactions/:id" component={TransactionView} />
 								<PrivateRoute scope="admin" path="/transactions" component={TransactionsView} />
+								<PrivateRoute scope="admin" path="/inspect" component={InspectView} />
 								<PrivateRoute path="/check-in" component={CheckInView} />
 								<PrivateRoute path="/guests/:id" component={GuestView} />
 								<PrivateRoute path="/guests" component={GuestsView} />

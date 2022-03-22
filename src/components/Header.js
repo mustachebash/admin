@@ -52,6 +52,7 @@ class Header extends Component {
 									{checkScope(user.role, 'admin') &&
 										<React.Fragment>
 											<li><NavLink to="/transactions">Transactions</NavLink></li>
+											<li><NavLink to="/inspect">Inspect</NavLink></li>
 											<li><NavLink to="/promos">Promos</NavLink></li>
 											<li><NavLink to="/settings">Settings</NavLink></li>
 										</React.Fragment>
