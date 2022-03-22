@@ -48,4 +48,27 @@
 			}
 		}
 	}
+
+	.camera-scan {
+		margin: 3em auto;
+		position: relative;
+		height: 300px;
+		width: 300px;
+		border: 3px dashed fade(@white, 40%);
+		border-radius: 8px;
+
+		.scan-text {
+			z-index: 99999;
+			color: fade(@white, 40%);
+			text-transform: uppercase;
+			font-weight: 700;
+			margin: 0;
+			padding: 0;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			text-align: center;
+			transform: translate(-50%, -50%);
+		}
+	}
 }
