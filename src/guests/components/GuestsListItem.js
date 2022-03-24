@@ -7,6 +7,7 @@ import classnames from 'classnames';
 import { format } from 'date-fns';
 import { checkScope } from 'utils';
 
+/* eslint-disable no-alert */
 const GuestsListItem = ({ guest, updateGuest, event, role }) => (
 	<li className="guests-list-item">
 		<div className="checked-in">
@@ -15,7 +16,10 @@ const GuestsListItem = ({ guest, updateGuest, event, role }) => (
 				: <span
 					className={classnames(guest.checkedIn ? 'checked' : 'unchecked', {comped: guest.confirmationId === 'COMPED'})}
 					title={guest.checkedIn ? format(new Date(guest.checkedIn), 'MMM do, h:mma', {timeZone: 'America/Los_Angeles'}) : 'Check In'}
-					onClick={() => guest.confirmationId === 'COMPED' && updateGuest(guest.id, {checkedIn: !guest.checkedIn})}
+					onClick={() => (
+						guest.confirmationId === 'COMPED' ||
+						(!guest.checkedIn && window.confirm('Are you sure you want to manually update this guest?'))
+					) && updateGuest(guest.id, {checkedIn: !guest.checkedIn})}
 				>
 				</span>
 			}
@@ -49,6 +53,7 @@ const GuestsListItem = ({ guest, updateGuest, event, role }) => (
 		</div>
 	</li>
 );
+/* eslint-enable */
 
 GuestsListItem.propTypes = {
 	guest: PropTypes.object.isRequired,
