@@ -8,6 +8,7 @@ import apiClient from 'utils/apiClient';
 import GuestsList from './GuestsList';
 import CompedGuestForm from '../components/CompedGuestForm';
 import Search from 'components/Search';
+import Toggle from 'components/Toggle';
 import EventSelector from 'components/EventSelector';
 
 function getGuestComparator({sortBy, sortOrder}) {
@@ -37,7 +38,9 @@ function getGuestComparator({sortBy, sortOrder}) {
 const GuestsTable = () => {
 	const [guests, setGuests] = useState([]),
 		[filter, setFilter] = useState(''),
-		[sort, setSort] = useState({sortBy: 'date', sortOrder: -1}); // asc
+		[sort, setSort] = useState({sortBy: 'date', sortOrder: -1}), // asc
+		[limit, setLimit] = useState(100),
+		[excludeCheckedIn, setExcludeCheckedIn] = useState(false);
 
 	const { event } = useContext(EventContext),
 		{ user } = useContext(UserContext);
@@ -83,19 +86,18 @@ const GuestsTable = () => {
 
 	const filterRegEx = new RegExp(filter, 'i');
 
-	let filteredGuests = guests.filter(g => {
+	const filteredGuests = guests.filter(g => {
+		if(excludeCheckedIn && g.checkedIn) return false;
 		if(!filter) return true;
 
 		return (
 			filterRegEx.test(g.firstName + ' ' + g.lastName) ||
-			filterRegEx.test(g.confirmationId)
+			filterRegEx.test(g.confirmationId) ||
+			filterRegEx.test(g.notes ?? '')
 		);
 	});
 
 	filteredGuests.sort(getGuestComparator(sort));
-
-	// No one needs to see more than 100 guests at a time
-	filteredGuests = filteredGuests.slice(0, 100);
 
 	return (
 		<div className="guests-table">
@@ -105,12 +107,29 @@ const GuestsTable = () => {
 			<div className="filters flex-row">
 				<div><Search handleQueryChange={setFilter} /></div>
 				<div><EventSelector /></div>
+				<div>
+					<div className="select-wrap">
+						<select name="guests-limit" value={limit} onChange={e => setLimit(Number(e.currentTarget.value))}>
+							<option value={100}>Display 100</option>
+							<option value={500}>Display 500</option>
+							<option value={1000}>Display 1000</option>
+							<option value={5000}>Display 5000</option>
+						</select>
+					</div>
+				</div>
 			</div>
 
-			<p>Showing {filteredGuests.length} of {guests.length} total</p>
+			<div>
+				<div className="checked-in-toggle">
+					<label>Exclude Checked In Guests</label>
+					<Toggle toggleState={excludeCheckedIn} handleToggle={() => setExcludeCheckedIn(!excludeCheckedIn)} />
+				</div>
+			</div>
+
+			<p>Showing {limit > filteredGuests.length ? filteredGuests.length : limit} of {filteredGuests.length} total</p>
 
 			{event && <GuestsList
-				guests={filteredGuests}
+				guests={filteredGuests.slice(0, limit)}
 				updateGuest={updateGuest}
 				sortGuests={sortGuests}
 				switchGuestsOrder={switchGuestsOrder}
