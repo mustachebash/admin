@@ -13,6 +13,8 @@ import Toggle from 'components/Toggle';
 
 const Dashboard = () => {
 	const [ eventSummary, setEventSummary ] = useState(null),
+		[ showExtendedStats, setShowExtendedStats ] = useState(false),
+		[ extendedStats, setExtendedStats ] = useState(null),
 		[ event2020Summary, setEvent2020Summary ] = useState(null),
 		[ combine2020Stats, setCombine2020Stats ] = useState(true),
 		[ eventChart, setEventChart ] = useState(null),
@@ -42,30 +44,48 @@ const Dashboard = () => {
 	}, [event]);
 
 	useEffect(() => {
-		apiClient.get('/events/34a99b2a-f826-406a-8227-921efd03ebff/summary')
-			.then(setEvent2020Summary)
-			.catch(e => console.error('Summary API Error', e));
-	}, []);
+		if(event && showExtendedStats) {
+			apiClient.get(`/events/${event.id}/extended-stats`)
+				.then(setExtendedStats)
+				.catch(e => console.error('Extended Stats API Error', e));
+		}
+	}, [event, showExtendedStats]);
 
-	if(!eventSummary || !event || !event2020Summary || event?.id !== eventSummary?.eventId) return <Loader />;
+	useEffect(() => {
+		if(event?.id === EVENT_2022_ID && !event2020Summary) {
+			apiClient.get(`/events/${EVENT_2020_ID}/summary`)
+				.then(setEvent2020Summary)
+				.catch(e => console.error('Summary API Error', e));
+		}
+	}, [event, event2020Summary]);
+
+	if(
+		!eventSummary ||
+		!event ||
+		(event.id === EVENT_2022_ID && !event2020Summary) ||
+		event?.id !== eventSummary?.eventId
+	) return <Loader />;
 
 	const {
 		name,
+		totalGuests,
+		guestsToday,
+		totalCompedGuests,
+		totalVIPGuests,
+		checkedIn
+	} = eventSummary || {};
+
+	const {
 		eventBudget,
 		eventMaxCapacity,
 		alcoholRevenue,
 		foodRevenue,
-		totalGuests,
 		totalRevenue,
 		totalPromoRevenue,
 		salesTiers,
 		averageQuantity,
-		guestsToday,
 		revenueToday,
-		totalCompedGuests,
-		totalVIPGuests,
-		checkedIn
-	} = eventSummary;
+	} = extendedStats || {};
 
 	const {
 		totalGuests: totalGuests2020,
@@ -74,21 +94,25 @@ const Dashboard = () => {
 		totalCompedGuests: totalCompedGuests2020,
 		totalVIPGuests: totalVIPGuests2020,
 		checkedIn: checkedIn2020
-	} = event2020Summary;
+	} = event2020Summary || {};
 
 	// Switch on the set event id for 2022
-	const add2020Stats = combine2020Stats && event.id === 'a0ae862c-1755-497c-b843-8457b5696a2a';
+	const add2020Stats = combine2020Stats && event.id === EVENT_2022_ID;
 
 	return (
 		<div className="dashboard">
-			{eventChart
+			{event.id === eventChart?.eventId
 				? <EventsChart chartData={eventChart} />
 				: <Loader />
 			}
 
 			<div className="filters flex-row">
 				<EventSelector />
-				{event.id === 'a0ae862c-1755-497c-b843-8457b5696a2a' &&
+				<div className="event-sales-toggle">
+					<label>Show Extended Stats</label>
+					<Toggle toggleState={showExtendedStats} handleToggle={() => setShowExtendedStats(!showExtendedStats)} />
+				</div>
+				{event.id === EVENT_2022_ID &&
 					<div className="event-sales-toggle">
 						<label>Aggregate 2020 Data with 2022</label>
 						<Toggle toggleState={combine2020Stats} handleToggle={() => setCombine2020Stats(!combine2020Stats)} />
@@ -121,16 +145,6 @@ const Dashboard = () => {
 							<p>{formatThousands(totalVIPGuests + (add2020Stats ? totalVIPGuests2020 : 0))}</p>
 						</div>
 					}
-					<div className="revenue">
-						<h5 data-tooltip="Ticket revenue based on all ticket sales volume (price X quantity)">Revenue</h5>
-						<p>${formatThousands(totalRevenue + totalPromoRevenue + (add2020Stats ? (totalRevenue2020 + totalPromoRevenue2020) : 0))}</p>
-					</div>
-					{event.status === 'active' &&
-						<div className="revenue-today">
-							<h5 data-tooltip="Ticket revenue today based on all ticket sales volume (price X quantity)">Revenue Today</h5>
-							<p>${formatThousands(revenueToday)}</p>
-						</div>
-					}
 					{checkScope(user.role, 'root') &&
 						<div className="checked-in">
 							<h5>Checked In</h5>
@@ -138,108 +152,125 @@ const Dashboard = () => {
 						</div>
 					}
 				</div>
-				{checkScope(user.role, 'admin') &&
-					<>
-						<div className="stats flex-row">
-							<div className="promo-revenue">
-								<h5 data-tooltip="Ticket revenue based on promo ticket sales volume only (price X quantity)">Promo Revenue</h5>
-								<p>${formatThousands(totalPromoRevenue + (add2020Stats ? totalPromoRevenue2020 : 0))}</p>
+			</div>
+			{checkScope(user.role, 'admin') && showExtendedStats &&
+				<div className="extended-stats">
+					{!!extendedStats && extendedStats.eventId === event.id
+						? <>
+							<div className="stats flex-row">
+								<div className="revenue">
+									<h5 data-tooltip="Ticket revenue based on all ticket sales volume (price X quantity)">Revenue</h5>
+									<p>${formatThousands(totalRevenue + totalPromoRevenue + (add2020Stats ? (totalRevenue2020 + totalPromoRevenue2020) : 0))}</p>
+								</div>
+								{event.status === 'active' &&
+									<div className="revenue-today">
+										<h5 data-tooltip="Ticket revenue today based on all ticket sales volume (price X quantity)">Revenue Today</h5>
+										<p>${formatThousands(revenueToday)}</p>
+									</div>
+								}
+								<div className="avg-revenue">
+									<h5 data-tooltip="Average price paid per ticket (excludes comps, includes promos)">Avg. Ticket Revenue</h5>
+									<p>
+										${
+											(
+												(totalRevenue + totalPromoRevenue + (add2020Stats ? (totalRevenue2020 + totalPromoRevenue2020) : 0)) /
+												((totalGuests + (add2020Stats ? totalGuests2020 : 0)) - (totalCompedGuests + (add2020Stats ? totalCompedGuests2020 : 0)))
+											).toFixed(2)
+										}
+									</p>
+								</div>
+								<div className="tier-sales" data-tooltip="Avg. tickets sold per transaction">
+									<h5>Avg. Qty Per Transaction</h5>
+									<p>{averageQuantity.toFixed(2)}</p>
+								</div>
 							</div>
-							<div className="avg-revenue">
-								<h5 data-tooltip="Average price paid per ticket (excludes comps, includes promos)">Avg. Ticket Revenue</h5>
-								<p>
-									${
-										(
-											(totalRevenue + totalPromoRevenue + (add2020Stats ? (totalRevenue2020 + totalPromoRevenue2020) : 0)) /
-											((totalGuests + (add2020Stats ? totalGuests2020 : 0)) - (totalCompedGuests + (add2020Stats ? totalCompedGuests2020 : 0)))
-										).toFixed(2)
-									}
-								</p>
+							<div className="stats flex-row">
+								<div className="promo-revenue">
+									<h5 data-tooltip="Ticket revenue based on promo ticket sales volume only (price X quantity)">Promo Revenue</h5>
+									<p>${formatThousands(totalPromoRevenue + (add2020Stats ? totalPromoRevenue2020 : 0))}</p>
+								</div>
+								{((add2020Stats || event.id !== EVENT_2022_ID) && !!eventBudget) &&
+									<div className="avg-cost">
+										<h5 data-tooltip="Event cost per paid guest (based on budget numbers, excludes comps)">Cost per Guest</h5>
+										<p>${(eventBudget / ((totalGuests + (add2020Stats ? totalGuests2020 : 0)) - (totalCompedGuests + (add2020Stats ? totalCompedGuests2020 : 0)))).toFixed(2)}</p>
+									</div>
+								}
+								{((add2020Stats || event.id !== EVENT_2022_ID) && !!eventBudget) &&
+									<div className="avg-alcohol">
+										<h5 data-tooltip="Alcohol revenue per attendee (based on budget numbers, assumes sell out)">Expected Alcohol RPA</h5>
+										<p>${(alcoholRevenue / eventMaxCapacity).toFixed(2)}</p>
+									</div>
+								}
+								{((add2020Stats || event.id !== EVENT_2022_ID) && !!eventBudget) &&
+									<div className="avg-food">
+										<h5 data-tooltip="Food revenue per attendee (based on budget numbers, assumes sell out)">Expected Food RPA</h5>
+										<p>${(foodRevenue / eventMaxCapacity).toFixed(2)}</p>
+									</div>
+								}
 							</div>
-							{((add2020Stats || event.id !== 'a0ae862c-1755-497c-b843-8457b5696a2a') && !!eventBudget) &&
-								<div className="avg-cost">
-									<h5 data-tooltip="Event cost per paid guest (based on budget numbers, excludes comps)">Cost per Guest</h5>
-									<p>${(eventBudget / ((totalGuests + (add2020Stats ? totalGuests2020 : 0)) - (totalCompedGuests + (add2020Stats ? totalCompedGuests2020 : 0)))).toFixed(2)}</p>
-								</div>
-							}
-							{((add2020Stats || event.id !== 'a0ae862c-1755-497c-b843-8457b5696a2a') && !!eventBudget) &&
-								<div className="avg-alcohol">
-									<h5 data-tooltip="Alcohol revenue per attendee (based on budget numbers, assumes sell out)">Expected Alcohol RPA</h5>
-									<p>${(alcoholRevenue / eventMaxCapacity).toFixed(2)}</p>
-								</div>
-							}
-							{((add2020Stats || event.id !== 'a0ae862c-1755-497c-b843-8457b5696a2a') && !!eventBudget) &&
-								<div className="avg-food">
-									<h5 data-tooltip="Food revenue per attendee (based on budget numbers, assumes sell out)">Expected Food RPA</h5>
-									<p>${(foodRevenue / eventMaxCapacity).toFixed(2)}</p>
-								</div>
-							}
-						</div>
-						<div className="stats flex-row">
-							{salesTiers.map(t => (
-								<div className="tier-sales" key={t.name}>
-									<h5>{t.name} - ${t.price || `${(totalPromoRevenue / t.quantity).toFixed(2)} avg.`}</h5>
-									<p>{formatThousands(t.quantity)}</p>
-								</div>
-							))}
-							<div className="tier-sales" data-tooltip="Avg. tickets sold per transaction">
-								<h5>Avg. Qty Per Transaction</h5>
-								<p>{averageQuantity.toFixed(2)}</p>
+							<div className="stats flex-row">
+								{salesTiers.map(t => (
+									<div className="tier-sales" key={t.name}>
+										<h5>{t.name} - ${t.price}</h5>
+										<p>{formatThousands(t.quantity)}</p>
+									</div>
+								))}
 							</div>
-						</div>
-						{event.salesOn && currentTicket && (add2020Stats || event.id !== 'a0ae862c-1755-497c-b843-8457b5696a2a') &&
-							<>
-								<div className="stats flex-row">
-									<div className="break-even-sales">
-										<h5 data-tooltip="Ticket sales required at current tier to break even">Break Even Sales</h5>
-										{currentTicket &&
-											<p>{formatThousands(Math.ceil((eventBudget - (totalRevenue + totalPromoRevenue + (add2020Stats ? (totalRevenue2020 + totalPromoRevenue2020) : 0)))/currentTicket.price))}</p>
+							{event.salesOn && currentTicket && (add2020Stats || event.id !== EVENT_2022_ID) &&
+								<>
+									<div className="stats flex-row">
+										<div className="break-even-sales">
+											<h5 data-tooltip="Ticket sales required at current tier to break even">Break Even Sales</h5>
+											{currentTicket &&
+												<p>{formatThousands(Math.ceil((eventBudget - (totalRevenue + totalPromoRevenue + (add2020Stats ? (totalRevenue2020 + totalPromoRevenue2020) : 0)))/currentTicket.price))}</p>
+											}
+										</div>
+										<div className="comped">
+											<h5>Tickets Left</h5>
+											<p>{formatThousands(eventMaxCapacity - (totalGuests + (add2020Stats ? totalGuests2020 : 0)))}</p>
+										</div>
+										<div className="avg-revenue-allowed">
+											<h5 data-tooltip="Average price paid per ticket allowed for remaining capacity to break even">Avg. Ticket Revenue Allowable</h5>
+											<p>
+												${
+													(
+														(eventBudget - (totalRevenue + totalPromoRevenue + (add2020Stats ? (totalRevenue2020 + totalPromoRevenue2020) : 0)))/
+														(eventMaxCapacity - (totalGuests + (add2020Stats ? totalGuests2020 : 0)))
+													).toFixed(2)
+												}
+											</p>
+										</div>
+										{((add2020Stats || event.id !== EVENT_2022_ID) && !!eventBudget) &&
+											<div className="blended-cpa">
+												{/* eslint-disable max-len */}
+												<h5
+													data-tooltip="Blended CPA target for sellout (based on avg. revenue allowed and current ticket price) - this works because the fixed marketing budget is included in the total budget"
+												>
+													Target Blended CPA
+												</h5>
+												{/* eslint-enable */}
+												<p>${(
+													currentTicket.price - (
+														(eventBudget - (totalRevenue + totalPromoRevenue + (add2020Stats ? (totalRevenue2020 + totalPromoRevenue2020) : 0)))/
+															(eventMaxCapacity - (totalGuests + (add2020Stats ? totalGuests2020 : 0)))
+													)).toFixed(2)}</p>
+											</div>
 										}
 									</div>
-									<div className="comped">
-										<h5>Tickets Left</h5>
-										<p>{formatThousands(eventMaxCapacity - (totalGuests + (add2020Stats ? totalGuests2020 : 0)))}</p>
-									</div>
-									<div className="avg-revenue-allowed">
-										<h5 data-tooltip="Average price paid per ticket allowed for remaining capacity to break even">Avg. Ticket Revenue Allowable</h5>
-										<p>
-											${
-												(
-													(eventBudget - (totalRevenue + totalPromoRevenue + (add2020Stats ? (totalRevenue2020 + totalPromoRevenue2020) : 0)))/
-													(eventMaxCapacity - (totalGuests + (add2020Stats ? totalGuests2020 : 0)))
-												).toFixed(2)
-											}
-										</p>
-									</div>
-									{((add2020Stats || event.id !== 'a0ae862c-1755-497c-b843-8457b5696a2a') && !!eventBudget) &&
-										<div className="blended-cpa">
-											{/* eslint-disable max-len */}
-											<h5
-												data-tooltip="Blended CPA target for sellout (based on avg. revenue allowed and current ticket price) - this works because the fixed marketing budget is included in the total budget"
-											>
-												Target Blended CPA
-											</h5>
-											{/* eslint-enable */}
-											<p>${(
-												currentTicket.price - (
-													(eventBudget - (totalRevenue + totalPromoRevenue + (add2020Stats ? (totalRevenue2020 + totalPromoRevenue2020) : 0)))/
-														(eventMaxCapacity - (totalGuests + (add2020Stats ? totalGuests2020 : 0)))
-												)).toFixed(2)}</p>
-										</div>
-									}
-								</div>
-								<ProjectionChart
-									budget={eventBudget}
-									maxCapacity={eventMaxCapacity}
-									currentAttendance={totalGuests + (add2020Stats ? totalGuests2020 : 0)}
-									currentTicketPrice={currentTicket.price}
-									currentRevenue={totalRevenue + totalPromoRevenue + (add2020Stats ? (totalRevenue2020 + totalPromoRevenue2020) : 0)}
-								/>
-							</>
-						}
-					</>
-				}
-			</div>
+									<ProjectionChart
+										budget={eventBudget}
+										maxCapacity={eventMaxCapacity}
+										currentAttendance={totalGuests + (add2020Stats ? totalGuests2020 : 0)}
+										currentTicketPrice={currentTicket.price}
+										currentRevenue={totalRevenue + totalPromoRevenue + (add2020Stats ? (totalRevenue2020 + totalPromoRevenue2020) : 0)}
+									/>
+								</>
+							}
+						</>
+						: <Loader />
+					}
+				</div>
+			}
 		</div>
 	);
 };
