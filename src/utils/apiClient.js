@@ -1,5 +1,3 @@
-import urlUtil from 'url';
-
 /**
  * Custom error type for Mustachebash API
  * @param {Object|String} settings - Message or object with error information
@@ -44,7 +42,7 @@ function makeRequest(path, { method = 'GET', body, query, requestCount = 0 }) {
 			method,
 			headers: new Headers()
 		},
-		queryString = query ? urlUtil.format({query}) : '';
+		queryString = query ? `?${(new URLSearchParams(query)).toString()}` : '';
 
 	if(body) {
 		reqOpts.headers.append('Content-Type', 'application/json');

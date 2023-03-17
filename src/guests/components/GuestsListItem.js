@@ -33,7 +33,7 @@ const GuestsListItem = ({ guest, updateGuest, event, role }) => (
 			<p>{format(new Date(guest.created), 'MMM do, h:mma', {timeZone: 'America/Los_Angeles'})}</p>
 		</div>
 		<div className="event">
-			<p>{guest.eventId === '34a99b2a-f826-406a-8227-921efd03ebff' ? 'Mustache Bash 2020' : event.name}</p>
+			<p>{guest.eventId === EVENT_2020_ID ? 'Mustache Bash 2020' : event.name}</p>
 		</div>
 		<div className="confirmation">
 			<p>
