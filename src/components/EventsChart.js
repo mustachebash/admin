@@ -1,6 +1,6 @@
 import './EventsChart.less';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, memo } from 'react';
 import PropTypes from 'prop-types';
 import { format, set } from 'date-fns';
 import { Line } from 'react-chartjs-2';
@@ -146,4 +146,4 @@ EventsChart.propTypes = {
 	chartData: PropTypes.object.isRequired
 };
 
-export default EventsChart;
+export default memo(EventsChart);
