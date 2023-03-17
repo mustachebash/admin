@@ -23,6 +23,8 @@ module.exports = {
 	],
 	globals: {
 		API_HOST: false,
+		EVENT_2020_ID: false,
+		EVENT_2022_ID: false,
 		fetch: false
 	},
 	extends: [
