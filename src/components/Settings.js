@@ -15,7 +15,7 @@ const Settings = () => {
 		apiClient.get('/sites/mustachebash.com/privileged-settings')
 			.then(({ events: siteEvents, products: siteProducts, settings: privilegedSettings }) => {
 				// This is not ideal, but works for this year
-				setSelectedEventId(siteEvents[1].id);
+				setSelectedEventId(siteEvents[0].id);
 				setSiteSettings(privilegedSettings);
 				setEvents(siteEvents);
 				setProducts(siteProducts.sort((a, b) => a.price > b.price ? -1 : 1));
