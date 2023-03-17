@@ -49,7 +49,7 @@ const GuestsTable = () => {
 		if(event) {
 			// If we're getting the 2022 guests,also get the 2020 guests
 			// Write the query string manually since it needs duplicate keys for 2022
-			apiClient.get(`/guests?eventId=${event.id}${event.id === 'a0ae862c-1755-497c-b843-8457b5696a2a' ? '&eventId=34a99b2a-f826-406a-8227-921efd03ebff' : ''}`)
+			apiClient.get(`/guests?eventId=${event.id}${event.id === EVENT_2022_ID ? `&eventId=${EVENT_2020_ID}` : ''}`)
 				.then(setGuests)
 				.catch(e => console.error('Guest API Error', e));
 		}
