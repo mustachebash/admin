@@ -13,26 +13,30 @@ const CheckIn = () => {
 		[ scanWithCamera, setScanWithCamera ] = useState('');
 
 	const inspectTicket = useCallback(ticketToken => {
-		const {aud: guestId} = jwtDecode(ticketToken);
+		try {
+			const {aud: guestId} = jwtDecode(ticketToken);
 
-		apiClient.get(`/guests/${guestId}`)
-			.then(setGuest)
-			.catch(err => {
-				console.error('Ticket Inspect API Error', err);
+			apiClient.get(`/guests/${guestId}`)
+				.then(setGuest)
+				.catch(err => {
+					console.error('Ticket Inspect API Error', err);
 
-				let errorMessage;
-				switch(err.statusCode) {
-					case 404:
-						errorMessage = 'Guest not found';
-						break;
+					let errorMessage;
+					switch(err.statusCode) {
+						case 404:
+							errorMessage = 'Guest not found';
+							break;
 
-					default:
-						errorMessage = 'Something went wrong - scan again';
-						break;
-				}
+						default:
+							errorMessage = 'Something went wrong - scan again';
+							break;
+					}
 
-				setGuestError(errorMessage);
-			});
+					setGuestError(errorMessage);
+				});
+		} catch(e) {
+			setGuestError(`Failed to decode. QR contents: '${ticketToken}'`);
+		}
 	}, []);
 
 	const {
