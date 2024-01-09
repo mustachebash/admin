@@ -14,8 +14,7 @@ export default class CompedPromoForm extends Component {
 	};
 
 	state = {
-		recipient: '',
-		email: '',
+		recipientName: '',
 		price: '',
 		events: [],
 		products: [],
@@ -47,9 +46,9 @@ export default class CompedPromoForm extends Component {
 	addPromo(e) {
 		e.preventDefault();
 
-		const { recipient, email, price, productId } = this.state;
+		const { recipientName, price, productId } = this.state;
 
-		if(this.submitting || !recipient || !price || !productId) return;
+		if(this.submitting || !recipientName || !price || !productId) return;
 
 		const priceInt = Number(price);
 		if(Number.isNaN(priceInt)) return;
@@ -59,34 +58,34 @@ export default class CompedPromoForm extends Component {
 		apiClient.post('/promos', {
 			type: 'single-use',
 			price: priceInt,
-			recipient,
-			email,
+			recipientName,
 			productId
 		})
 			.then(promo => {
 				this.props.onAdd(promo);
 
 				this.setState({
-					recipient: '',
-					email: ''
+					recipientName: ''
 				}, () => {
 					this.firstInput.focus();
 					this.submitting = false;
 				});
 			})
-			.catch(err => console.error('Promos API Error', err));
+			.catch(err => {
+				console.error('Promos API Error', err)
+				this.submitting = false;
+			});
 	}
 
 	render() {
-		const { events, products, eventId, productId, recipient, email, price } = this.state;
+		const { events, products, eventId, productId, recipientName, price } = this.state;
 
 		return (
 			<div className="create-promo-form">
 				<h4>Create a Promo</h4>
 
 				<form className="flex-row" onSubmit={this.addPromo}>
-					<input type="text" name="recipient" placeholder="Name" value={recipient} onChange={this.handleChange} ref={el => this.firstInput = el} />
-					<input type="text" name="email" placeholder="Email" value={email} onChange={this.handleChange} />
+					<input type="text" name="recipientName" placeholder="Name" value={recipientName} onChange={this.handleChange} ref={el => this.firstInput = el} />
 					<input type="text" name="price" placeholder="$0" value={price} onChange={this.handleChange} />
 					<div className="select-wrap">
 						<select name="eventId" value={eventId} onChange={this.handleChange}>

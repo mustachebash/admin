@@ -48,9 +48,11 @@ export default class CompedGuestForm extends PureComponent {
 		this.submitting = true;
 
 		apiClient.post('/guests', {
+			// TODO: have tier dropdown between stachepass and sponsor
+			admissionTier: 'stachepass',
 			firstName,
 			lastName,
-			...notes && {notes},
+			...notes && {meta: {notes}},
 			eventId
 		}).then(guest => {
 			this.props.onAdd(guest);
@@ -63,7 +65,10 @@ export default class CompedGuestForm extends PureComponent {
 				this.firstInput.focus();
 				this.submitting = false;
 			});
-		}).catch(err => console.error('Event API Error', err));
+		}).catch(err => {
+			this.submitting = false;
+			console.error('Event API Error', err);
+		});
 	}
 
 	render() {

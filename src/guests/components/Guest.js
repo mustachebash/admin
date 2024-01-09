@@ -12,9 +12,8 @@ import TicketsList from 'components/TicketsList';
 const Guest = ({ id }) => {
 	const [guest, setGuest] = useState(),
 		[event, setEvent] = useState(),
-		[tickets, setTickets] = useState([]),
-		[editingNotes, setEditingNotes] = useState(''),
-		[notesInput, setNotesInput] = useState('');
+		[editingComment, setEditingComment] = useState(''),
+		[commentInput, setCommentInput] = useState('');
 
 	const { user } = useContext(UserContext);
 
@@ -22,16 +21,12 @@ const Guest = ({ id }) => {
 		apiClient.get(`/guests/${id}`)
 			.then(setGuest)
 			.catch(e => console.error('Guest API Error', e));
-
-		apiClient.get(`/guests/${id}/tickets`)
-			.then(setTickets)
-			.catch(e => console.error('Guest Tickets API Error', e));
 	}, [id]);
 
 	useEffect(() => {
 		if(!guest) return;
 
-		if(guest.notes) setNotesInput(guest.notes);
+		if(guest.meta.comment) setCommentInput(guest.meta.comment);
 
 		const { eventId } = guest;
 		apiClient.get(`/events/${eventId}`)
@@ -39,12 +34,12 @@ const Guest = ({ id }) => {
 			.catch(e => console.error('Event API Error', e));
 	}, [guest]);
 
-	const saveNotes = useCallback(() => {
-		apiClient.patch(`/guests/${id}`, {notes: notesInput})
+	const saveComment = useCallback(() => {
+		apiClient.patch(`/guests/${id}`, {meta: {comment: commentInput}})
 			.then(setGuest)
-			.then(() => setEditingNotes(false))
+			.then(() => setEditingComment(false))
 			.catch(e => console.error('Guest API Error', e));
-	}, [notesInput, id]);
+	}, [commentInput, id]);
 
 	if(!guest || !event) return <p>Loading...</p>;
 
@@ -53,13 +48,13 @@ const Guest = ({ id }) => {
 			lastName,
 			created,
 			createdBy,
+			createdReason,
 			status,
-			transactionId,
-			confirmationId,
-			checkedIn,
-			notes,
-			vip,
-			updatedBy
+			orderId,
+			admissionTier,
+			checkInTime,
+			updatedBy,
+			meta
 		} = guest,
 		{ name: eventName } = event,
 		{ role } = user;
@@ -69,42 +64,38 @@ const Guest = ({ id }) => {
 			<h1>Guest - {eventName}</h1>
 			<div className="flex-row">
 				<div className="flex-item">
-					<h2><span>{firstName} {lastName}</span>{!!vip && <span title={updatedBy} className="vip">&nbsp;- VIP</span>}</h2>
+					<h2><span>{firstName} {lastName}</span>{admissionTier === 'vip' && <span title={updatedBy || createdReason} className="vip">&nbsp;- VIP</span>}</h2>
 					<h3><span>Created:</span> {format(new Date(created), 'M/dd/yy - HH:mm')}</h3>
 					<h3>
 						<span>Status:</span> {
-							checkedIn
-								? <>Checked In {format(new Date(checkedIn), 'M/dd/yy - HH:mm')}</>
+							status === 'checked_in'
+								? <>Checked In {format(new Date(checkInTime), 'M/dd/yy - HH:mm')}</>
 								: status
 						}
 					</h3>
 					<h3>
-						<span>Notes:</span> {
-							editingNotes
+						<span>Comment:</span> {
+							editingComment
 								? <fieldset>
-									<input type="text" name="notes" placeholder="Notes" value={notesInput} onChange={e => setNotesInput(e.currentTarget.value)} />
-									<button className="white" onClick={saveNotes}>Save</button><button onClick={() => (setEditingNotes(false), setNotesInput(notes))}>Cancel</button>
+									<input type="text" name="comment" placeholder="Comment" value={commentInput} onChange={e => setCommentInput(e.currentTarget.value)} />
+									<button className="white" onClick={saveComment}>Save</button><button onClick={() => (setEditingComment(false), setCommentInput(guest.meta.comment))}>Cancel</button>
 								</fieldset>
-								: <>{notes || ' n/a '} <a href="#" onClick={e => (e.preventDefault(), setEditingNotes(true))}>edit</a></>
+								: <>{meta.comment || ' n/a '} <a href="#" onClick={e => (e.preventDefault(), setEditingComment(true))}>edit</a></>
 						}
 					</h3>
 
 					<h3>
 						{checkScope(role, 'admin')
-							? createdBy === 'purchase'
-								? <><span>Confirmation Id:</span> <Link to={`/transactions/${transactionId}`}>{confirmationId}</Link></>
-								: transactionId === 'COMPED'
+							? createdReason === 'purchase'
+								? <><span>Confirmation Id:</span> <Link to={`/orders/${orderId}`}>{orderId}</Link></>
+								: createdReason === 'comp'
 									? <><span>Comped by:</span> {createdBy}</>
-									: <><span>Created by:</span> {createdBy}/{transactionId}</>
-							: <><span>Confirmation Id:</span> {confirmationId}</>
+									: <><span>Created by:</span> {createdBy}/{orderId}</>
+							: <><span>Confirmation Id:</span> {orderId}</>
 						}
 					</h3>
 
 					{checkScope(role, 'admin') && updatedBy && <h3><span>Updated by:</span> {updatedBy}</h3>}
-				</div>
-				<div className="flex-item">
-					<h4>Tickets</h4>
-					<TicketsList tickets={tickets} />
 				</div>
 			</div>
 		</div>

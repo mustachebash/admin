@@ -47,9 +47,16 @@ const GuestsTable = () => {
 
 	useEffect(() => {
 		if(event) {
-			// If we're getting the 2022 guests,also get the 2020 guests
-			// Write the query string manually since it needs duplicate keys for 2022
-			apiClient.get(`/guests?eventId=${event.id}${event.id === EVENT_2022_ID ? `&eventId=${EVENT_2020_ID}` : ''}`)
+			apiClient.get('/guests', {eventId: event.id})
+				.then(guests => {
+					// If we're getting the 2022 guests, also concat the 2020 guests
+					if(event.id === EVENT_2022_ID) {
+						return apiClient.get('/guests', {eventId: EVENT_2020_ID})
+							.then(guests2020 => guests.concat(guests2020));
+					} else {
+						return guests;
+					}
+				})
 				.then(setGuests)
 				.catch(e => console.error('Guest API Error', e));
 		}

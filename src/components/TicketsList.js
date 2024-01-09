@@ -7,9 +7,8 @@ const TicketsList = ({ tickets }) => (
 	<ul className="tickets-list">
 		{tickets.map(({
 			id,
-			createdBy,
 			status
-		}) => <li key={id}>{id.substring(0, 8)} - {status} {createdBy !== 'purchase' && `(${createdBy})`}</li>)}
+		}) => <li key={id}>{id.substring(0, 8)} - {status}</li>)}
 	</ul>
 );
 

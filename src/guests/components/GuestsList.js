@@ -49,9 +49,9 @@ const GuestsList = ({ guests, updateGuest, event, sortBy, sortOrder, sortGuests,
 						Event
 					</h5>
 				</div>
-				<div className="confirmation">
+				<div className="order-id">
 					<h5>
-						Confirmation
+						Order ID
 					</h5>
 				</div>
 				<div className="vip">
