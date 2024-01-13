@@ -73,7 +73,7 @@ const Settings = () => {
 							<div className="event-ticket">
 								<label>Current Ticket</label>
 								<div className="select-wrap" key={`ticket-select-${event.id}`}>
-									<select name={`currentTicket-${event.id}`} defaultValue={event.meta.currentTicket} onChange={ev => updateEvent(event.id, {...event.meta, currentTicket: ev.target.value})}>
+									<select name={`currentTicket-${event.id}`} defaultValue={event.meta.currentTicket} onChange={ev => updateEvent(event.id, {meta: {...event.meta, currentTicket: ev.target.value}})}>
 										<option key="option-none" value="">None</option>
 										{products.map(p => {
 											if(p.promo) return false;
