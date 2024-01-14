@@ -48,13 +48,13 @@ const GuestsTable = () => {
 	useEffect(() => {
 		if(event) {
 			apiClient.get('/guests', {eventId: event.id})
-				.then(guests => {
+				.then(responseGuests => {
 					// If we're getting the 2022 guests, also concat the 2020 guests
 					if(event.id === EVENT_2022_ID) {
 						return apiClient.get('/guests', {eventId: EVENT_2020_ID})
-							.then(guests2020 => guests.concat(guests2020));
+							.then(guests2020 => responseGuests.concat(guests2020));
 					} else {
-						return guests;
+						return responseGuests;
 					}
 				})
 				.then(setGuests)

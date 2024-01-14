@@ -10,7 +10,7 @@
 		"start:debug": "react-devtools & npm start -- --env.debug",
 		"analyze": "webpack --mode production --profile --json > stats.json && webpack-bundle-analyzer stats.json dist/",
 		"build": "webpack --mode production",
-		"test": "exit 0"
+		"test": "eslint src"
 	},
 	"browserslist": [
 		"last 1 version",

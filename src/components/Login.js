@@ -8,8 +8,6 @@ import UserContext from 'UserContext';
 import apiClient from 'utils/apiClient';
 import { GoogleLogin } from '@react-oauth/google';
 
-export default
-@withRouter
 class Login extends Component {
 	static propTypes = {
 		location: PropTypes.object.isRequired
@@ -58,7 +56,7 @@ class Login extends Component {
 				{loginError && <p>{loginError}</p>}
 				<GoogleLogin
 					onSuccess={logInWithGoogle}
-					onError={(e) => {
+					onError={e => {
 						console.error(e);
 						this.setState({loginError: 'Something went wrong, please try again'});
 					}}
@@ -71,3 +69,5 @@ class Login extends Component {
 		/* eslint-enable */
 	}
 }
+
+export default withRouter(Login);

@@ -20,6 +20,8 @@ module.exports = {
 		API_HOST: false,
 		EVENT_2020_ID: false,
 		EVENT_2022_ID: false,
+		BRAINTREE_HOST: false,
+		TICKET_LINK_HOST: false,
 		fetch: false
 	},
 	extends: [
@@ -52,7 +54,7 @@ module.exports = {
 		'no-shadow': 2,
 		'no-unneeded-ternary': [2, { defaultAssignment: false }],
 		'no-unused-expressions': 2,
-		'no-unused-vars': 2,
+		'no-unused-vars': 1,
 		'no-var': 2,
 		'object-shorthand': 2,
 		'padded-blocks': [ 2, 'never' ],

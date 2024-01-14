@@ -72,7 +72,7 @@ export default class CompedPromoForm extends Component {
 				});
 			})
 			.catch(err => {
-				console.error('Promos API Error', err)
+				console.error('Promos API Error', err);
 				this.submitting = false;
 			});
 	}

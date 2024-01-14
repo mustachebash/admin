@@ -33,7 +33,8 @@ const Settings = () => {
 
 	function updateEvent(id, updates) {
 		apiClient.patch(`/events/${id}`, updates)
-			.then(updatedEvent => setEvents([...events.filter(ev => ev.id !== id), updatedEvent]))
+			// TODO: refresh events from context
+			// .then(updatedEvent => setEvents([...events.filter(ev => ev.id !== id), updatedEvent]))
 			.catch(e => console.error('Events API Error', e));
 	}
 

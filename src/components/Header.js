@@ -11,8 +11,6 @@ function logOut() {
 	window.location.assign('/');
 }
 
-export default
-@withRouter
 class Header extends Component {
 	static contextType = UserContext;
 
@@ -75,3 +73,5 @@ class Header extends Component {
 		);
 	}
 }
+
+export default withRouter(Header);

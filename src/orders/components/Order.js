@@ -113,7 +113,7 @@ const Order = ({ id }) => {
 			applePay,
 			paymentInstrumentType,
 			// TEMP
-			merchantId = 'ht835xhgsgwsz2hn',
+			merchantId
 		} = processorDetails || {};
 
 	const orderDate = new Date(createdAt),
@@ -130,7 +130,7 @@ const Order = ({ id }) => {
 
 				: <h1>
 					{/* eslint-disable-next-line react/jsx-no-target-blank,max-len */}
-					Transferred from Order - <Link to={`/orders/${originalOrderId}`} target="_blank" title="Open Original Order">{originalOrderId.substring(0, 8)} </Link>
+					Transferred from Order - <Link to={`/orders/${parentOrderId}`} target="_blank" title="Open Original Order">{parentOrderId.substring(0, 8)} </Link>
 					{orderStatus && <span className={classnames('order-status', orderStatus)}>{orderStatus}</span>}
 				</h1>
 			}
@@ -151,14 +151,21 @@ const Order = ({ id }) => {
 						<>
 							<h5><span>Transactions</span></h5>
 							<ul className="order-details">
-								{transactions.map(({ id, processor, processorTransactionId, type }) => {
-
+								{transactions.map(({ id: transactionId, processor, processorTransactionId, type }) => {
+									{/* empty comment */}
 									return (
-										<li key={id}>
+										<li key={transactionId}>
 											<p>{type}</p>
 											{processor === 'braintree' &&
 												<span>Braintree ID:{' '}
-													<a href={`${BRAINTREE_HOST}/merchants/${merchantId}/transactions/${processorTransactionId}`} target="_blank" title="Open in Braintree">{processorTransactionId} </a>
+													<a
+														href={`${BRAINTREE_HOST}/merchants/${merchantId}/transactions/${processorTransactionId}`}
+														target="_blank"
+														rel="noreferrer"
+														title="Open in Braintree"
+													>
+														{processorTransactionId}
+													</a>
 												</span>
 											}
 										</li>
@@ -222,7 +229,7 @@ const Order = ({ id }) => {
 							</>
 						}
 						{orderStatus === 'transferred' &&
-							<h5><Link to={`/orders/${transfereeId}`} target="_blank" title="Open Original Order">View Transfer - {transfereeId.substring(0, 8)} </Link></h5>
+							{/*<h5><Link to={`/orders/${transfereeId}`} target="_blank" title="Open Original Order">View Transfer - {transfereeId.substring(0, 8)} </Link></h5>*/}
 						}
 					</div>
 				</div>
