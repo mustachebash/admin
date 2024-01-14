@@ -47,4 +47,5 @@ jobs:
                   "repository": "admin",
                   "digest": "sha256:1c5292d582b0d3d524b6ceebbcd6ac6d5b11688ef205ac1dc518e5352f75305e"
                 }
+              }
             ]'
