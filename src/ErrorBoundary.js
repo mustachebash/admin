@@ -4,11 +4,8 @@
  */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
 
-export default
-@withRouter
-class ErrorBoundary extends Component {
+export default class ErrorBoundary extends Component {
 	static propTypes = {
 		children: PropTypes.node.isRequired
 	};

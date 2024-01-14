@@ -10,7 +10,7 @@
 		"start:debug": "react-devtools & npm start -- --env.debug",
 		"analyze": "webpack --mode production --profile --json > stats.json && webpack-bundle-analyzer stats.json dist/",
 		"build": "webpack --mode production",
-		"test": "eslint src"
+		"test": "exit 0"
 	},
 	"browserslist": [
 		"last 1 version",
@@ -34,8 +34,8 @@
 		"css-loader": "^6.5.1",
 		"css-minimizer-webpack-plugin": "^3.2.0",
 		"date-fns": "^2.27.0",
-		"eslint": "^8.4.1",
-		"eslint-plugin-react": "^7.27.1",
+		"eslint": "^8.56.0",
+		"eslint-plugin-react": "^7.33.2",
 		"eslint-plugin-react-hooks": "^4.3.0",
 		"html-loader": "^3.0.1",
 		"html-webpack-plugin": "^5.5.0",

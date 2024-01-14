@@ -1,16 +1,11 @@
 module.exports = {
-	parser: '@babel/eslint-parser',
 	parserOptions: {
-		ecmaVersion: 2021,
+		ecmaVersion: 2022,
 		sourceType: 'module',
 		ecmaFeatures: {
 			jsx: true
 		},
-		requireConfigFile: false,
-		babelOptions: {
-			presets: ['@babel/preset-react'],
-			plugins: [['@babel/proposal-decorators', {legacy: true}], '@babel/proposal-class-properties']
-		}
+		requireConfigFile: false
 	},
 	settings: {
 		react: {
