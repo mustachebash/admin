@@ -26,6 +26,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push
+        id: build
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -45,7 +46,7 @@ jobs:
                   "registry_type": "GHCR",
                   "registry": "mustachebash",
                   "repository": "admin",
-                  "digest": "sha256:1c5292d582b0d3d524b6ceebbcd6ac6d5b11688ef205ac1dc518e5352f75305e"
+                  "digest": ${{ steps.build.outputs.digest }}
                 }
               }
             ]'

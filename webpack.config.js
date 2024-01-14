@@ -126,7 +126,7 @@ module.exports = (env = {}, argv) => {
 				}
 			}),
 			new webpack.DefinePlugin({
-				API_HOST: JSON.stringify(devMode ? 'https://localhost:5000' : 'https://api2.mustachebash.com'),
+				API_HOST: JSON.stringify(devMode ? 'https://localhost:5000' : 'https://api.mustachebash.com'),
 				TICKET_LINK_HOST: JSON.stringify(devMode ? 'https://localhost:8081' : 'https://mustachebash.com'),
 				BRAINTREE_HOST: JSON.stringify(devMode ? 'https://sandbox.braintreegateway.com' : 'https://www.braintreegateway.com'),
 				// These need special pairing in admin
