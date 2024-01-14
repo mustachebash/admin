@@ -56,7 +56,7 @@ jobs:
                   "registry_type": "GHCR",
                   "registry": "mustachebash",
                   "repository": "admin",
-                  "digest": ${{ steps.build.outputs.digest }}
+                  "digest": "${{ steps.build.outputs.digest }}"
                 }
               }
             ]'
