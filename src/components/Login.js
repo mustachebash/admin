@@ -6,9 +6,8 @@ import { Redirect, withRouter } from 'react-router-dom';
 import jwtDecode from 'jwt-decode';
 import UserContext from 'UserContext';
 import apiClient from 'utils/apiClient';
+import { GoogleLogin } from '@react-oauth/google';
 
-export default
-@withRouter
 class Login extends Component {
 	static propTypes = {
 		location: PropTypes.object.isRequired
@@ -17,30 +16,15 @@ class Login extends Component {
 	static contextType = UserContext;
 
 	state = {
-		username: '',
-		password: '',
 		loginError: ''
 	};
 
-	handleInputChange = this.handleInputChange.bind(this);
-	logIn = this.logIn.bind(this);
+	logInWithGoogle = this.logInWithGoogle.bind(this);
 
-	handleInputChange(e) {
-		this.setState({
-			[e.target.name]: e.target.value
-		});
-	}
+	logInWithGoogle(credentialResponse) {
+		const { setUser } = this.context;
 
-	logIn(e) {
-		e.preventDefault();
-
-		const { username, password } = this.state,
-			{ setUser } = this.context;
-
-		// eslint-disable-next-line
-		if(!username || !password) return alert('Username and Password is required');
-
-		apiClient.post('/authenticate', {username, password})
+		apiClient.post('/authenticate', {token: credentialResponse.credential, authority: 'google'})
 			.then(({accessToken, refreshToken}) => {
 				window.localStorage.setItem('accessToken', accessToken);
 				window.localStorage.setItem('refreshToken', refreshToken);
@@ -56,9 +40,9 @@ class Login extends Component {
 
 	render() {
 		const { location } = this.props,
-			{ username, password, loginError } = this.state,
+			{ loginError } = this.state,
 			{ user } = this.context,
-			{ handleInputChange, logIn } = this;
+			{ logInWithGoogle } = this;
 
 		if(user) return <Redirect to={(user.role === 'doorman' && {pathname: '/guests'}) || (location.state && location.state.from) || {pathname: '/'}} />;
 
@@ -70,13 +54,20 @@ class Login extends Component {
 				</div>
 
 				{loginError && <p>{loginError}</p>}
-				<form onSubmit={logIn}>
-					<input type="text" onChange={handleInputChange} name="username" value={username} placeholder="Username" />
-					<input type="password" onChange={handleInputChange} name="password" value={password} placeholder="Password" />
-					<button className="white" type="submit">Submit</button>
-				</form>
+				<GoogleLogin
+					onSuccess={logInWithGoogle}
+					onError={e => {
+						console.error(e);
+						this.setState({loginError: 'Something went wrong, please try again'});
+					}}
+					size="large"
+					theme="filled_black"
+					hosted_domain="mustachebash.com"
+				/>
 			</section>
 		);
 		/* eslint-enable */
 	}
 }
+
+export default withRouter(Login);

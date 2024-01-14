@@ -11,8 +11,6 @@ function logOut() {
 	window.location.assign('/');
 }
 
-export default
-@withRouter
 class Header extends Component {
 	static contextType = UserContext;
 
@@ -51,7 +49,7 @@ class Header extends Component {
 
 									{checkScope(user.role, 'admin') &&
 										<React.Fragment>
-											<li><NavLink to="/transactions">Transactions</NavLink></li>
+											<li><NavLink to="/orders">Orders</NavLink></li>
 											<li><NavLink to="/inspect">Inspect</NavLink></li>
 											<li><NavLink to="/promos">Promos</NavLink></li>
 											<li><NavLink to="/settings">Settings</NavLink></li>
@@ -75,3 +73,5 @@ class Header extends Component {
 		);
 	}
 }
+
+export default withRouter(Header);

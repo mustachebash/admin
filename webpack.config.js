@@ -127,6 +127,8 @@ module.exports = (env = {}, argv) => {
 			}),
 			new webpack.DefinePlugin({
 				API_HOST: JSON.stringify(devMode ? 'https://localhost:5000' : 'https://api.mustachebash.com'),
+				TICKET_LINK_HOST: JSON.stringify(devMode ? 'https://localhost:8081' : 'https://mustachebash.com'),
+				BRAINTREE_HOST: JSON.stringify(devMode ? 'https://sandbox.braintreegateway.com' : 'https://www.braintreegateway.com'),
 				// These need special pairing in admin
 				EVENT_2020_ID: JSON.stringify('34a99b2a-f826-406a-8227-921efd03ebff'),
 				EVENT_2022_ID: JSON.stringify('a0ae862c-1755-497c-b843-8457b5696a2a')

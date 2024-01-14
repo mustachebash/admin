@@ -14,12 +14,12 @@ const GuestsListItem = ({ guest, updateGuest, event, role }) => (
 			{guest.status === 'archived'
 				? <span className="no-entry">&#x26D4; No entry</span>
 				: <span
-					className={classnames(guest.checkedIn ? 'checked' : 'unchecked', {comped: guest.confirmationId === 'COMPED'})}
-					title={guest.checkedIn ? format(new Date(guest.checkedIn), 'MMM do, h:mma', {timeZone: 'America/Los_Angeles'}) : 'Check In'}
+					className={classnames(guest.status === 'checked_in' ? 'checked' : 'unchecked', {comped: guest.createdReason === 'comp'})}
+					title={guest.status === 'checked_in' ? format(new Date(guest.checkInTime), 'MMM do, h:mma', {timeZone: 'America/Los_Angeles'}) : 'Check In'}
 					onClick={() => (
-						guest.confirmationId === 'COMPED' ||
-						(!guest.checkedIn && window.confirm('Are you sure you want to manually update this guest?'))
-					) && updateGuest(guest.id, {checkedIn: !guest.checkedIn})}
+						guest.createdReason === 'comp' ||
+						window.confirm('Are you sure you want to manually update this guest?')
+					) && updateGuest(guest.id, {status: guest.status === 'checked_in' ? 'active' : 'checked_in'})}
 				>
 				</span>
 			}
@@ -35,21 +35,16 @@ const GuestsListItem = ({ guest, updateGuest, event, role }) => (
 		<div className="event">
 			<p>{guest.eventId === EVENT_2020_ID ? 'Mustache Bash 2020' : event.name}</p>
 		</div>
-		<div className="confirmation">
+		<div className="order-id">
 			<p>
-				{guest.confirmationId === 'COMPED'
-					? guest.confirmationId
-					: <Link to={`/transactions/${guest.transactionId}`}>{guest.confirmationId}</Link>
+				{['stachepass', 'sponsor'].includes(guest.admissionTier)
+					? guest.admissionTier
+					: <Link to={`/orders/${guest.orderId}`}>{guest.orderId}</Link>
 				}
 			</p>
 		</div>
-		<div className={classnames('vip', {'is-vip': guest.vip})}>
-			{checkScope(role, 'admin')
-				? <button onClick={() => updateGuest(guest.id, {vip: !guest.vip})}>{guest.vip ? '\u2713' : 'Make'} VIP</button>
-				: guest.vip
-					? <p>&#9989;</p>
-					: ''
-			}
+		<div className={classnames('vip', {'is-vip': guest.admissionTier === 'vip'})}>
+			{guest.admissionTier === 'vip' && <p>&#9989;</p>}
 		</div>
 	</li>
 );

@@ -1,16 +1,11 @@
 module.exports = {
-	parser: '@babel/eslint-parser',
 	parserOptions: {
-		ecmaVersion: 2021,
+		ecmaVersion: 2022,
 		sourceType: 'module',
 		ecmaFeatures: {
 			jsx: true
 		},
-		requireConfigFile: false,
-		babelOptions: {
-			presets: ['@babel/preset-react'],
-			plugins: [['@babel/proposal-decorators', {legacy: true}], '@babel/proposal-class-properties']
-		}
+		requireConfigFile: false
 	},
 	settings: {
 		react: {
@@ -25,6 +20,8 @@ module.exports = {
 		API_HOST: false,
 		EVENT_2020_ID: false,
 		EVENT_2022_ID: false,
+		BRAINTREE_HOST: false,
+		TICKET_LINK_HOST: false,
 		fetch: false
 	},
 	extends: [
@@ -57,7 +54,7 @@ module.exports = {
 		'no-shadow': 2,
 		'no-unneeded-ternary': [2, { defaultAssignment: false }],
 		'no-unused-expressions': 2,
-		'no-unused-vars': 2,
+		'no-unused-vars': 1,
 		'no-var': 2,
 		'object-shorthand': 2,
 		'padded-blocks': [ 2, 'never' ],
