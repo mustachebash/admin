@@ -33,4 +33,18 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-      # TODO: Push to Digitalocean
+      - name: DigitalOcean App Platform deployment
+        uses: digitalocean/app_action@v1.1.6
+        with:
+          app_name: mustachebash-admin
+          token: ${{ secrets.DIGITALOCEAN_PAT }}
+          images: '[
+              {
+                "name": "static-server",
+                "image":{
+                  "registry_type": "GHCR",
+                  "registry": "mustachebash",
+                  "repository": "admin",
+                  "digest": "sha256:1c5292d582b0d3d524b6ceebbcd6ac6d5b11688ef205ac1dc518e5352f75305e"
+                }
+            ]'
