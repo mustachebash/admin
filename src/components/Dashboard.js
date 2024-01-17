@@ -6,7 +6,6 @@ import EventContext from 'EventContext';
 import { formatThousands, checkScope } from 'utils';
 import apiClient from 'utils/apiClient';
 import EventsChart from 'components/EventsChart';
-import ProjectionChart from 'components/ProjectionChart';
 import Loader from 'components/Loader';
 import EventSelector from 'components/EventSelector';
 import Toggle from 'components/Toggle';
@@ -16,9 +15,7 @@ const Dashboard = () => {
 		[ showExtendedStats, setShowExtendedStats ] = useState(false),
 		[ extendedStats, setExtendedStats ] = useState(null),
 		[ event2020Summary, setEvent2020Summary ] = useState(null),
-		[ combine2020Stats, setCombine2020Stats ] = useState(true),
-		[ eventChart, setEventChart ] = useState(null),
-		[ currentTicket, setCurrentTicket ] = useState(null);
+		[ combine2020Stats, setCombine2020Stats ] = useState(true);
 
 	const { event } = useContext(EventContext),
 		{ user } = useContext(UserContext);
@@ -28,18 +25,6 @@ const Dashboard = () => {
 			apiClient.get(`/events/${event.id}/summary`)
 				.then(setEventSummary)
 				.catch(e => console.error('Summary API Error', e));
-
-			apiClient.get(`/events/${event.id}/chart`)
-				.then(setEventChart)
-				.catch(e => console.error('Chart API Error', e));
-
-			if(event.salesOn && event.currentTicket) {
-				apiClient.get(`/products/${event.currentTicket}`)
-					.then(setCurrentTicket)
-					.catch(e => console.error('Product API Error', e));
-			} else {
-				setCurrentTicket(null);
-			}
 		}
 	}, [event]);
 
@@ -101,10 +86,7 @@ const Dashboard = () => {
 
 	return (
 		<div className="dashboard">
-			{event.id === eventChart?.eventId
-				? <EventsChart chartData={eventChart} />
-				: <Loader />
-			}
+			<EventsChart />
 
 			<div className="filters flex-row">
 				<EventSelector />
