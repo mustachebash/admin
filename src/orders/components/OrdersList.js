@@ -57,7 +57,7 @@ const OrdersList = ({ orders, products, sortBy, sortOrder, sortOrders, switchOrd
 				</div>
 				<div className="confirmation">
 					<h5>
-						Confirmation
+						ID
 					</h5>
 				</div>
 				<div className="email">

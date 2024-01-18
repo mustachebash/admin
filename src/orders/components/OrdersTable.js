@@ -67,19 +67,13 @@ const OrdersTable = () => {
 
 	const filterRegExp = new RegExp(filter, 'i');
 
-	let filteredOrders = orders.filter(t => {
+	let filteredOrders = orders.filter(o => {
 		if(!filter) return true;
 
 		return (
-			filterRegExp.test(t.firstName + ' ' + t.lastName) ||
-			filterRegExp.test(t.braintreeOrderId) ||
-			filterRegExp.test(t.email)
-		) || (
-			t.transfer && (
-				filterRegExp.test(t.transfer.firstName + ' ' + t.transfer.lastName) ||
-				filterRegExp.test(t.transfer.originalOrderId.substring(0, 8)) ||
-				filterRegExp.test(t.transfer.email)
-			)
+			filterRegExp.test(o.customerFirstName + ' ' + o.customerLastName) ||
+			filterRegExp.test(o.id) ||
+			filterRegExp.test(o.customerEmail)
 		);
 	});
 
