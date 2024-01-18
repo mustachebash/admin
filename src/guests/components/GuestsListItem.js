@@ -39,7 +39,7 @@ const GuestsListItem = ({ guest, updateGuest, event, role }) => (
 			<p>
 				{['stachepass', 'sponsor'].includes(guest.admissionTier)
 					? guest.admissionTier
-					: <Link to={`/orders/${guest.orderId}`}>{guest.orderId}</Link>
+					: <Link to={`/orders/${guest.orderId}`}>{guest.orderId.slice(0, 8)}</Link>
 				}
 			</p>
 		</div>

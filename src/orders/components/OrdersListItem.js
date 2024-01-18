@@ -26,8 +26,8 @@ const OrdersListItem = ({ order, productsById, transferee }) => (
 		<div className="date">
 			<p>{format(new Date(order.created), 'MMM do, h:mma', {timeZone: 'America/Los_Angeles'}) }</p>
 		</div>
-		<div className="confirmation">
-			<p>{transferee ? order.parentOrderId.substring(0, 8) : order.processorTransactionId}</p>
+		<div className="order-id">
+			<p title={order.id}><Link to={`/orders/${order.id}`}>{transferee ? order.parentOrderId.substring(0, 8) : order.id.slice(0, 8)}</Link></p>
 		</div>
 		<div className="email">
 			<p>{order.customerEmail}</p>

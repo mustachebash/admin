@@ -86,7 +86,7 @@ const Settings = () => {
 							</div>
 							<div className="event-sales-toggle">
 								<label>Sales</label>
-								<Toggle toggleState={event.salesEnabled} handleToggle={() => updateEvent(event.id, {salesOn: !event.salesEnabled})} />
+								<Toggle toggleState={event.salesEnabled} handleToggle={() => updateEvent(event.id, {salesEnabled: !event.salesEnabled})} />
 							</div>
 						</div>
 					</div>

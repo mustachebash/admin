@@ -99,7 +99,7 @@ const GuestsTable = () => {
 
 		return (
 			filterRegEx.test(g.firstName + ' ' + g.lastName) ||
-			filterRegEx.test(g.confirmationId) ||
+			filterRegEx.test(g.orderId) ||
 			filterRegEx.test(g.notes ?? '')
 		);
 	});
