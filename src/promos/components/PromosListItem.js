@@ -15,7 +15,7 @@ const PromosListItem = ({ promo, product, event, disablePromo }) => (
 			</span>
 		</div>
 		<div className="recipient">
-			<p>{promo.recipient}</p>
+			<p>{promo.recipientName}</p>
 		</div>
 		<div className="date">
 			<p>{format(new Date(promo.created), 'MMM do, h:mma', {timeZone: 'America/Los_Angeles'}) }</p>
@@ -27,7 +27,7 @@ const PromosListItem = ({ promo, product, event, disablePromo }) => (
 			<p title={`$${promo.price} - ${promo.createdBy}`}>{product?.name}</p>
 		</div>
 		<div className="link">
-			<p><a href={`https://mustachebash.com/?promo=${promo.id}#tickets`} rel="noopener noreferrer" target="_blank">Promo Link</a></p>
+			<p><a href={`${TICKET_LINK_HOST}/san-diego?promo=${promo.id}#tickets`} rel="noopener noreferrer" target="_blank">Promo Link</a></p>
 		</div>
 		<div className="edit-promo">
 			{/* TODO: add ability to disable promo */}
