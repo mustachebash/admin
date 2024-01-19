@@ -12,7 +12,6 @@ import Toggle from 'components/Toggle';
 
 const Dashboard = () => {
 	const [ eventSummary, setEventSummary ] = useState(null),
-		[ showExtendedStats, setShowExtendedStats ] = useState(false),
 		[ extendedStats, setExtendedStats ] = useState(null),
 		[ event2020Summary, setEvent2020Summary ] = useState(null),
 		[ combine2020Stats, setCombine2020Stats ] = useState(true);
@@ -29,12 +28,12 @@ const Dashboard = () => {
 	}, [event]);
 
 	useEffect(() => {
-		if(event && showExtendedStats) {
+		if(event) {
 			apiClient.get(`/events/${event.id}/extended-stats`)
 				.then(setExtendedStats)
 				.catch(e => console.error('Extended Stats API Error', e));
 		}
-	}, [event, showExtendedStats]);
+	}, [event]);
 
 	useEffect(() => {
 		if(event?.id === EVENT_2022_ID && !event2020Summary) {
@@ -90,10 +89,6 @@ const Dashboard = () => {
 
 			<div className="filters flex-row">
 				<EventSelector />
-				<div className="event-sales-toggle">
-					<label>Show Extended Stats</label>
-					<Toggle toggleState={showExtendedStats} handleToggle={() => setShowExtendedStats(!showExtendedStats)} />
-				</div>
 				{event.id === EVENT_2022_ID &&
 					<div className="event-sales-toggle">
 						<label>Aggregate 2020 Data with 2022</label>
@@ -115,27 +110,24 @@ const Dashboard = () => {
 							<p>{guestsToday}</p>
 						</div>
 					}
-					{checkScope(user.role, 'admin') &&
-						<div className="comped">
-							<h5>Comped Guests</h5>
-							<p>{formatThousands(totalCompedGuests + (add2020Stats ? totalCompedGuests2020 : 0))}</p>
-						</div>
-					}
-					{checkScope(user.role, 'admin') &&
-						<div className="vip">
-							<h5>VIP Guests</h5>
-							<p>{formatThousands(totalVipGuests + (add2020Stats ? totalVipGuests2020 : 0))}</p>
-						</div>
-					}
-					{checkScope(user.role, 'root') &&
-						<div className="checked-in">
-							<h5>Checked In</h5>
-							<p>{formatThousands(checkedIn + (add2020Stats ? checkedIn2020 : 0))}</p>
-						</div>
-					}
+
+					<div className="comped">
+						<h5>Comped Guests</h5>
+						<p>{formatThousands(totalCompedGuests + (add2020Stats ? totalCompedGuests2020 : 0))}</p>
+					</div>
+
+					<div className="vip">
+						<h5>VIP Guests</h5>
+						<p>{formatThousands(totalVipGuests + (add2020Stats ? totalVipGuests2020 : 0))}</p>
+					</div>
+
+					<div className="checked-in">
+						<h5>Checked In</h5>
+						<p>{formatThousands(checkedIn + (add2020Stats ? checkedIn2020 : 0))}</p>
+					</div>
 				</div>
 			</div>
-			{checkScope(user.role, 'admin') && showExtendedStats &&
+			{checkScope(user.role, 'read') &&
 				<div className="extended-stats">
 					{!!extendedStats && extendedStats.eventId === event.id
 						? <>
@@ -174,13 +166,13 @@ const Dashboard = () => {
 										<p>${(eventBudget / ((totalGuests + (add2020Stats ? totalGuests2020 : 0)) - (totalCompedGuests + (add2020Stats ? totalCompedGuests2020 : 0)))).toFixed(2)}</p>
 									</div>
 								}
-								{((add2020Stats || event.id !== EVENT_2022_ID) && !!eventBudget) &&
+								{false && ((add2020Stats || event.id !== EVENT_2022_ID) && !!eventBudget) &&
 									<div className="avg-alcohol">
 										<h5 data-tooltip="Alcohol revenue per attendee (based on budget numbers, assumes sell out)">Expected Alcohol RPA</h5>
 										<p>${(alcoholRevenue / eventMaxCapacity).toFixed(2)}</p>
 									</div>
 								}
-								{((add2020Stats || event.id !== EVENT_2022_ID) && !!eventBudget) &&
+								{false && ((add2020Stats || event.id !== EVENT_2022_ID) && !!eventBudget) &&
 									<div className="avg-food">
 										<h5 data-tooltip="Food revenue per attendee (based on budget numbers, assumes sell out)">Expected Food RPA</h5>
 										<p>${(foodRevenue / eventMaxCapacity).toFixed(2)}</p>
