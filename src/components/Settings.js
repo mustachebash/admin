@@ -47,7 +47,7 @@ const Settings = () => {
 					<h1>Tickets</h1>
 					{products.map(p => (
 						<div className="settings-item" key={p.id}>
-							<h5>{p.name}</h5>
+							<h5>{p.name} {p.maxQuantity !== null ? `(max qty ${p.maxQuantity})` : ''}</h5>
 							<ul>
 								<li><strong>Event:</strong> {event.name}</li>
 								<li><strong>Price:</strong> ${p.price.toFixed(2)}</li>
