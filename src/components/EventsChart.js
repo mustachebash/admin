@@ -32,10 +32,12 @@ const availableTypes = [
 ];
 
 const generateDailyTicketsSeries = chartData => ({
-	labels: chartData.map(({ date }) => format(new Date(date), 'M/dd')),
+	// Set this 8 hours in the future since the ISO strings come back at 00:00 UTC
+	// This avoids using a timezone package since we can assume most dashboard viewing is in PT
+	labels: chartData.map(({ date }) => format((new Date(date)).setUTCHours(8), 'M/dd')),
 	datasets: [{
 		data: chartData.map(({ tickets }) => tickets),
-		label: `${chartData.name}: Daily Tickets Sold`,
+		label: 'Daily Tickets Sold',
 		lineTension: 0.3,
 		fill: false,
 		borderColor: 'rgb(73, 134, 210)',
@@ -45,7 +47,9 @@ const generateDailyTicketsSeries = chartData => ({
 });
 
 const generateTotalTicketsArea = chartData => ({
-	labels: chartData.map(({ date }) => format(new Date(date), 'M/dd')),
+	// Set this 8 hours in the future since the ISO strings come back at 00:00 UTC
+	// This avoids using a timezone package since we can assume most dashboard viewing is in PT
+	labels: chartData.map(({ date }) => format((new Date(date)).setUTCHours(8), 'M/dd')),
 	datasets: [{
 		data: chartData.reduce((acc, day) => {
 			acc.total += day.tickets;
@@ -53,7 +57,7 @@ const generateTotalTicketsArea = chartData => ({
 
 			return acc;
 		}, {set: [], total: 0}).set,
-		label: `${chartData.name}: Acc. Tickets Sold`,
+		label: 'Acc. Tickets Sold',
 		lineTension: 0.3,
 		backgroundColor: 'rgba(73, 134, 210, 0.3)',
 		borderColor: 'rgb(73, 134, 210)',
@@ -66,8 +70,7 @@ const generateOpeningDayTicketsSeries = chartData => ({
 	labels: chartData.map(({ minuteCreated }) => format(new Date(minuteCreated), 'HH:mm')),
 	datasets: [{
 		data: chartData.map(({ tickets }) => tickets),
-		// label: `${chartData.name}: Tickets Sold ${format(chartData[0]?.time ? new Date(chartData[0].time) : new Date(), 'MMM do, yyyy')}`,
-		label: 'TICKETS',
+		label: 'Tickets Sold',
 		lineTension: 0.3,
 		fill: false,
 		borderColor: 'rgb(73, 134, 210)',
@@ -80,7 +83,7 @@ const generateCheckInsSeries = chartData => ({
 	labels: chartData.map(({ hour, minutes }) => format(set(new Date(0), {hours: hour, minutes}), 'HH:mm')),
 	datasets: [{
 		data: chartData.checkIns.map(({ checkedIn }) => checkedIn),
-		label: `${chartData.name}: Check Ins`,
+		label: 'Check Ins',
 		lineTension: 0.3,
 		fill: false,
 		borderColor: 'rgb(73, 134, 210)',

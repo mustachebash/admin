@@ -67,7 +67,6 @@ const Dashboard = () => {
 		totalRevenue,
 		totalPromoRevenue,
 		salesTiers,
-		averageQuantity,
 		revenueToday
 	} = extendedStats || {};
 
