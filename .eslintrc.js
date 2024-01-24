@@ -21,6 +21,7 @@ module.exports = {
 		EVENT_2020_ID: false,
 		EVENT_2022_ID: false,
 		BRAINTREE_HOST: false,
+		BRAINTREE_MERCHANT_ID: false,
 		TICKET_LINK_HOST: false,
 		fetch: false
 	},

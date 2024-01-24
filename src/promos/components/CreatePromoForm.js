@@ -15,7 +15,7 @@ export default class CompedPromoForm extends Component {
 
 	state = {
 		recipientName: '',
-		price: '',
+		quantity: '',
 		events: [],
 		products: [],
 		eventId: '',
@@ -46,18 +46,19 @@ export default class CompedPromoForm extends Component {
 	addPromo(e) {
 		e.preventDefault();
 
-		const { recipientName, price, productId } = this.state;
+		const { recipientName, quantity, productId } = this.state;
 
-		if(this.submitting || !recipientName || !price || !productId) return;
+		if(this.submitting || !recipientName || !quantity || !productId) return;
 
-		const priceInt = Number(price);
-		if(Number.isNaN(priceInt)) return;
+		const qtyInt = Number(quantity);
+		if(Number.isNaN(qtyInt) || qtyInt > 4) return;
 
 		this.submitting = true;
 
 		apiClient.post('/promos', {
 			type: 'single-use',
-			price: priceInt,
+			price: 80,
+			productQuantity: qtyInt,
 			recipientName,
 			productId
 		})
@@ -65,7 +66,8 @@ export default class CompedPromoForm extends Component {
 				this.props.onAdd(promo);
 
 				this.setState({
-					recipientName: ''
+					recipientName: '',
+					quantity: ''
 				}, () => {
 					this.firstInput.focus();
 					this.submitting = false;
@@ -78,7 +80,7 @@ export default class CompedPromoForm extends Component {
 	}
 
 	render() {
-		const { events, products, eventId, productId, recipientName, price } = this.state;
+		const { events, products, eventId, productId, recipientName, quantity } = this.state;
 
 		return (
 			<div className="create-promo-form">
@@ -86,7 +88,7 @@ export default class CompedPromoForm extends Component {
 
 				<form className="flex-row" onSubmit={this.addPromo}>
 					<input type="text" name="recipientName" placeholder="Name" value={recipientName} onChange={this.handleChange} ref={el => this.firstInput = el} />
-					<input type="text" name="price" placeholder="$0" value={price} onChange={this.handleChange} />
+					<input type="text" name="quantity" placeholder="Qty #" value={quantity} onChange={this.handleChange} />
 					<div className="select-wrap">
 						<select name="eventId" value={eventId} onChange={this.handleChange}>
 							<option disabled value="">Select an Event...</option>
