@@ -111,9 +111,7 @@ const Order = ({ id }) => {
 			refundId,
 			creditCard,
 			applePay,
-			paymentInstrumentType,
-			// TEMP
-			merchantId
+			paymentInstrumentType
 		} = processorDetails || {};
 
 	const orderDate = new Date(createdAt),
@@ -145,7 +143,7 @@ const Order = ({ id }) => {
 					<h3><span>Email:</span> {email}</h3>
 					{/*{orderStatus !== 'transferred' && <h3 className={classnames('processor-status', processorStatus)}><span>Processor Status:</span> {processorStatus}</h3>}*/}
 					{/* eslint-disable-next-line react/jsx-no-target-blank,max-len */}
-					{refundId && <h3><span>Refund Confirmation:</span> <a href={`${BRAINTREE_HOST}/merchants/${merchantId}/transactions/${refundId}`} target="_blank" title="Open in Braintree">{refundId}</a></h3>}
+					{refundId && <h3><span>Refund Confirmation:</span> <a href={`${BRAINTREE_HOST}/merchants/${BRAINTREE_MERCHANT_ID}/transactions/${refundId}`} target="_blank" title="Open in Braintree">{refundId}</a></h3>}
 
 					{orderStatus !== 'transferred' &&
 						<>
@@ -159,7 +157,7 @@ const Order = ({ id }) => {
 											{processor === 'braintree' &&
 												<span>Braintree ID:{' '}
 													<a
-														href={`${BRAINTREE_HOST}/merchants/${merchantId}/transactions/${processorTransactionId}`}
+														href={`${BRAINTREE_HOST}/merchants/${BRAINTREE_MERCHANT_ID}/transactions/${processorTransactionId}`}
 														target="_blank"
 														rel="noreferrer"
 														title="Open in Braintree"
