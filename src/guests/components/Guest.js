@@ -85,7 +85,7 @@ const Guest = ({ id }) => {
 					</h3>
 
 					<h3>
-						{checkScope(role, 'admin')
+						{checkScope(role, 'write')
 							? createdReason === 'purchase'
 								? <><span>Confirmation Id:</span> <Link to={`/orders/${orderId}`}>{orderId}</Link></>
 								: createdReason === 'comp'
@@ -95,7 +95,7 @@ const Guest = ({ id }) => {
 						}
 					</h3>
 
-					{checkScope(role, 'admin') && updatedBy && <h3><span>Updated by:</span> {updatedBy}</h3>}
+					{checkScope(role, 'write') && updatedBy && <h3><span>Updated by:</span> {updatedBy}</h3>}
 				</div>
 			</div>
 		</div>

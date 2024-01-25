@@ -55,8 +55,8 @@ const App = () => (
 								<Header />
 								<Switch>
 									<PrivateRoute exclude={['doorman']} exact path="/" component={DashboardView} />
-									<PrivateRoute scope="admin" path="/orders/:id" component={OrderView} />
-									<PrivateRoute scope="admin" path="/orders" component={OrdersView} />
+									<PrivateRoute scope="write" path="/orders/:id" component={OrderView} />
+									<PrivateRoute scope="write" path="/orders" component={OrdersView} />
 									<PrivateRoute scope="admin" path="/transactions/:id" component={TransactionView} />
 									<PrivateRoute scope="admin" path="/transactions" component={TransactionsView} />
 									<PrivateRoute scope="admin" path="/inspect" component={InspectView} />
@@ -64,7 +64,7 @@ const App = () => (
 									<PrivateRoute path="/guests/:id" component={GuestView} />
 									<PrivateRoute path="/guests" component={GuestsView} />
 									<PrivateRoute scope="admin" path="/settings" component={SettingsView} />
-									<PrivateRoute scope="admin" path="/promos" component={PromosView} />
+									<PrivateRoute scope="write" path="/promos" component={PromosView} />
 								</Switch>
 							</EventProvider>
 						</PrivateRoute>

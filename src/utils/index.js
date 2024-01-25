@@ -13,6 +13,7 @@ export function checkScope(userRole, scopeRequired) {
 		'root',
 		'god',
 		'admin',
+		'write',
 		'doorman',
 		'read'
 	];
