@@ -47,13 +47,17 @@ class Header extends Component {
 									<li><NavLink to="/check-in">Check-in</NavLink></li>
 									<li><NavLink to="/guests">Guests</NavLink></li>
 
-									{checkScope(user.role, 'admin') &&
-										<React.Fragment>
+									{checkScope(user.role, 'write') &&
+										<>
 											<li><NavLink to="/orders">Orders</NavLink></li>
-											<li><NavLink to="/inspect">Inspect</NavLink></li>
 											<li><NavLink to="/promos">Promos</NavLink></li>
+										</>
+									}
+									{checkScope(user.role, 'admin') &&
+										<>
+											<li><NavLink to="/inspect">Inspect</NavLink></li>
 											<li><NavLink to="/settings">Settings</NavLink></li>
-										</React.Fragment>
+										</>
 									}
 
 									<li><button className="white" onClick={logOut} title={`Logged in as ${user.name}`}>Log Out</button></li>
