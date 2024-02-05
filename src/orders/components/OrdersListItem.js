@@ -6,7 +6,7 @@ import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
 
 const OrdersListItem = ({ order, productsById, transferee }) => (
-	<li className={`orders-list-item ${['refunded', 'voided', 'transferred'].includes(order.status) ? 'refunded' : ''} ${transferee ? 'transferee' : ''}`}>
+	<li className={`orders-list-item ${order.status}`}>
 		<div className="name">
 			<p><Link to={`/orders/${order.id}`}>{order.customerFirstName} {order.customerLastName}</Link></p>
 		</div>

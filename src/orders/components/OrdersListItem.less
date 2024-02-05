@@ -5,8 +5,12 @@
 	justify-content: space-between;
 	padding: 0.625em; /* 10/16 */
 
-	&.refunded {
+	&.canceled {
 		background: fade(@red, 40%) !important;
+	}
+
+	&.transferred {
+		border-left: 0.25em solid @teal;
 	}
 
 	&.transferee {

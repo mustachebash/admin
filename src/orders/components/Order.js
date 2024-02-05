@@ -12,6 +12,7 @@ const Order = ({ id }) => {
 	const [order, setOrder] = useState(),
 		[customer, setCustomer] = useState(),
 		[transactions, setTransactions] = useState(),
+		[transfers, setTransfers] = useState(),
 		[processorDetails, setProcessorDetails] = useState(),
 		[orderToken, setOrderToken] = useState(''),
 		[events, setEvents] = useState([]),
@@ -42,12 +43,28 @@ const Order = ({ id }) => {
 	}, [id]);
 
 	useEffect(() => {
+		if(transactions?.length) {
+			Promise.all(transactions.map(({ id: transactionId }) => apiClient.get(`/transactions/${transactionId}/processor-details`)))
+				.then(setProcessorDetails)
+				.catch(e => console.error('Order API Error', e));
+		}
+	}, [id, transactions]);
+
+	useEffect(() => {
 		if(order?.customerId) {
 			apiClient.get(`/customers/${order.customerId}`)
 				.then(setCustomer)
 				.catch(e => console.error('Customer API Error', e));
 		}
 	}, [order?.customerId]);
+
+	useEffect(() => {
+		if(order?.status === 'transferred') {
+			apiClient.get(`/orders/${order.id}/transfers`)
+				.then(setTransfers)
+				.catch(e => console.error('Order API Error', e));
+		}
+	}, [order?.id, order?.status]);
 
 	useEffect(() => {
 		apiClient.get('/products')
@@ -79,9 +96,12 @@ const Order = ({ id }) => {
 		setTransferring(true);
 
 		apiClient.post(`/orders/${id}/transfers`, {
-			firstName: transfereeFirstName,
-			lastName: transfereeLastName,
-			email: transfereeEmail
+			transferee: {
+				firstName: transfereeFirstName,
+				lastName: transfereeLastName,
+				email: transfereeEmail
+			},
+			guestIds: tickets.map(t => t.id)
 		})
 			.then(() => Promise.all([
 				apiClient.get(`/orders/${id}`)
@@ -89,7 +109,7 @@ const Order = ({ id }) => {
 			]))
 			.catch(e => console.error('Order API Error', e))
 			.finally(() => setTransferring(false));
-	}, [id, transfereeFirstName, transfereeLastName, transfereeEmail]);
+	}, [id, transfereeFirstName, transfereeLastName, transfereeEmail, tickets]);
 
 	if(!order || !products.length || !events.length || !customer) return null;
 
@@ -112,7 +132,7 @@ const Order = ({ id }) => {
 			creditCard,
 			applePay,
 			paymentInstrumentType
-		} = processorDetails || {};
+		} = processorDetails?.find(({ type }) => type === 'sale') || {};
 
 	const orderDate = new Date(createdAt),
 		refundCutoff = Date.now() - (90 * 24 * 60 * 60 * 1000), // 90 days
@@ -120,7 +140,7 @@ const Order = ({ id }) => {
 
 	return (
 		<div className="order">
-			{orderStatus !== 'transferred'
+			{!parentOrderId
 				? <h1>
 					{/* eslint-disable-next-line react/jsx-no-target-blank,max-len */}
 					Order - {orderStatus && <span className={classnames('order-status', orderStatus)}>{orderStatus}</span>}
@@ -138,14 +158,14 @@ const Order = ({ id }) => {
 					<h3><span>Amount:</span> ${amount}</h3>
 					{paymentInstrumentType === 'credit_card' && <h3><span>Card Used:</span> {creditCard.cardType} (...{creditCard.last4}) - exp. {creditCard.expirationDate}</h3>}
 					{paymentInstrumentType === 'apple_pay_card' && <h3><span>Apple Pay Used:</span> {applePay.paymentInstrumentName}</h3>}
-					{orderStatus !== 'transferred' && <h3><span>Purchased:</span> {format(new Date(created), 'M/dd/yy - HH:mm')}</h3>}
-					{orderStatus === 'transferred' && <h3><span>Transferred:</span> {format(new Date(created), 'M/dd/yy - HH:mm')}</h3>}
+					<h3><span>Purchased:</span> {format(new Date(created), 'M/dd/yy - HH:mm')}</h3>
+					{parentOrderId && <h3><span>Transferred:</span> {format(new Date(created), 'M/dd/yy - HH:mm')}</h3>}
 					<h3><span>Email:</span> {email}</h3>
 					{/*{orderStatus !== 'transferred' && <h3 className={classnames('processor-status', processorStatus)}><span>Processor Status:</span> {processorStatus}</h3>}*/}
 					{/* eslint-disable-next-line react/jsx-no-target-blank,max-len */}
 					{refundId && <h3><span>Refund Confirmation:</span> <a href={`${BRAINTREE_HOST}/merchants/${BRAINTREE_MERCHANT_ID}/transactions/${refundId}`} target="_blank" title="Open in Braintree">{refundId}</a></h3>}
 
-					{orderStatus !== 'transferred' &&
+					{!parentOrderId &&
 						<>
 							<h5><span>Transactions</span></h5>
 							<ul className="order-details">
@@ -186,6 +206,18 @@ const Order = ({ id }) => {
 							</ul>
 						</>
 					}
+					{orderStatus === 'transferred' && transfers &&
+						<>
+							<h5><span>Transfers</span></h5>
+							<ul className="order-details">
+								{transfers.map(t => (
+									<li key={t.id}>
+										Transferred {format(new Date(t.created), 'M/dd/yy - HH:mm')} - <Link to={`/orders/${t.id}`} target="_blank" title="Open Transfer Order">{t.id.substring(0, 8)} </Link>
+									</li>
+								))}
+							</ul>
+						</>
+					}
 				</div>
 				<div className="flex-item">
 					<h4>Tickets</h4>
@@ -195,10 +227,10 @@ const Order = ({ id }) => {
 
 					<h4>Actions</h4>
 					<div>
-						{orderStatus !== 'transferred' &&
-							<button className="red" onClick={refund} disabled={['refunded', 'voided'].includes(orderStatus) || refunding || !refundAllowed}>
+						{!parentOrderId &&
+							<button className="red" onClick={refund} disabled={['canceled', 'transferred'].includes(orderStatus) || refunding || !refundAllowed}>
 								{/* Ternaries for daaaaaayyyyysss */}
-								{!['refunded', 'voided'].includes(orderStatus)
+								{!['canceled', 'transferred'].includes(orderStatus)
 									? refunding
 										? 'Refunding...'
 										: refundAllowed
@@ -206,15 +238,15 @@ const Order = ({ id }) => {
 												? 'Refund'
 												: 'Void'
 											: 'Refund Disallowed'
-									: orderStatus === 'voided'
-										? 'Already Voided'
-										: 'Already Refunded'
+									: orderStatus === 'canceled'
+										? 'Already Canceled'
+										: `Order has been ${orderStatus}`
 								}
 							</button>
 						}
-						{!['refunded', 'voided', 'transferred'].includes(orderStatus) &&
+						{!['canceled', 'transferred'].includes(orderStatus) &&
 							<>
-								<h5>Transfer</h5>
+								<h5>Transfer All Tickets</h5>
 								<input type="text" name="transferee-first-name" placeholder="First Name" value={transfereeFirstName} onChange={e => setTransfereeFirstName(e.currentTarget.value)} />
 								<input type="text" name="transferee-last-name" placeholder="Last Name" value={transfereeLastName} onChange={e => setTransfereeLastName(e.currentTarget.value)} />
 								<input type="text" name="transferee-email" placeholder="Email" value={transfereeEmail} onChange={e => setTransfereeEmail(e.currentTarget.value)} />
@@ -225,9 +257,6 @@ const Order = ({ id }) => {
 									}
 								</button>
 							</>
-						}
-						{orderStatus === 'transferred' &&
-							{/*<h5><Link to={`/orders/${transfereeId}`} target="_blank" title="Open Original Order">View Transfer - {transfereeId.substring(0, 8)} </Link></h5>*/}
 						}
 					</div>
 				</div>
