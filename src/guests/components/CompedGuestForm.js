@@ -16,7 +16,7 @@ export default class CompedGuestForm extends PureComponent {
 	state = {
 		firstName: '',
 		lastName: '',
-		notes: '',
+		comment: '',
 		events: [],
 		eventId: ''
 	};
@@ -41,7 +41,7 @@ export default class CompedGuestForm extends PureComponent {
 	addGuest(e) {
 		e.preventDefault();
 
-		const { firstName, lastName, notes, eventId } = this.state;
+		const { firstName, lastName, comment, eventId } = this.state;
 
 		if(this.submitting || !firstName || !lastName || !eventId) return;
 
@@ -52,7 +52,7 @@ export default class CompedGuestForm extends PureComponent {
 			admissionTier: 'stachepass',
 			firstName,
 			lastName,
-			...notes && {meta: {notes}},
+			...comment && {meta: {comment}},
 			eventId
 		}).then(guest => {
 			this.props.onAdd(guest);
@@ -60,7 +60,7 @@ export default class CompedGuestForm extends PureComponent {
 			this.setState({
 				firstName: '',
 				lastName: '',
-				notes: ''
+				comment: ''
 			}, () => {
 				this.firstInput.focus();
 				this.submitting = false;
@@ -72,7 +72,7 @@ export default class CompedGuestForm extends PureComponent {
 	}
 
 	render() {
-		const { firstName, lastName, notes, eventId, events } = this.state;
+		const { firstName, lastName, comment, eventId, events } = this.state;
 
 		return (
 			<div className="comped-guest-form">
@@ -80,7 +80,7 @@ export default class CompedGuestForm extends PureComponent {
 				<form className="flex-row" onSubmit={this.addGuest}>
 					<input type="text" name="firstName" placeholder="First Name" value={firstName} onChange={this.handleChange} ref={el => this.firstInput = el} />
 					<input type="text" name="lastName" placeholder="Last Name" value={lastName} onChange={this.handleChange} />
-					<input type="text" name="notes" placeholder="Notes" value={notes} onChange={this.handleChange} />
+					<input type="text" name="comment" placeholder="comment" value={comment} onChange={this.handleChange} />
 					<div className="select-wrap">
 						<select name="eventId" value={eventId} onChange={this.handleChange}>
 							<option disabled value="">Select an Event...</option>

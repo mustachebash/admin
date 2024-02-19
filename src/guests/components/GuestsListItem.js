@@ -27,7 +27,7 @@ const GuestsListItem = ({ guest, updateGuest, event, role }) => (
 
 		<div className="name">
 			<p><Link to={`/guests/${guest.id}`}>{guest.firstName} {guest.lastName}</Link></p>
-			{guest.notes && <p className="guest-notes">Notes: {guest.notes}</p>}
+			{guest.meta.comment && <p className="guest-notes">Notes: {guest.meta.comment}</p>}
 		</div>
 		<div className="date">
 			<p>{format(new Date(guest.created), 'MMM do, h:mma', {timeZone: 'America/Los_Angeles'})}</p>
