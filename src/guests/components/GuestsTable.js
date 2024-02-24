@@ -109,7 +109,7 @@ const GuestsTable = () => {
 	return (
 		<div className="guests-table">
 
-			{checkScope(user.role, 'admin') && <CompedGuestForm onAdd={guest => setGuests([guest, ...guests])} />}
+			{checkScope(user.role, 'write') && <CompedGuestForm onAdd={guest => setGuests([guest, ...guests])} />}
 
 			<div className="filters flex-row">
 				<div><Search handleQueryChange={setFilter} /></div>
