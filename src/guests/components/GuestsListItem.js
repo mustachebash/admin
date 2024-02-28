@@ -44,7 +44,14 @@ const GuestsListItem = ({ guest, updateGuest, event, role }) => (
 			</p>
 		</div>
 		<div className={classnames('vip', {'is-vip': guest.admissionTier === 'vip'})}>
-			{guest.admissionTier === 'vip' && <p>&#9989;</p>}
+			{guest.admissionTier === 'vip'
+				? checkScope(role, 'write')
+					? <button onClick={() => confirm('Are you sure you want to downgrade this guest?') && updateGuest(guest.id, {admissionTier: 'general'})}>{'\u2713'} VIP</button>
+					: <p>&#9989;</p>
+				: checkScope(role, 'write')
+					? <button onClick={() => updateGuest(guest.id, {admissionTier: 'vip'})}>Make VIP</button>
+					: ''
+			}
 		</div>
 	</li>
 );

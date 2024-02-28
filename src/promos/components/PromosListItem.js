@@ -4,7 +4,7 @@ import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 
-const PromosListItem = ({ promo, product, event, disablePromo }) => (
+const PromosListItem = ({ promo, createdByName, product, event, disablePromo }) => (
 	<li className="promos-list-item">
 		<div className="status">
 			<span
@@ -24,7 +24,7 @@ const PromosListItem = ({ promo, product, event, disablePromo }) => (
 			<p>{event.name}</p>
 		</div>
 		<div className="product">
-			<p title={`$${promo.price} - ${promo.createdBy}`}>{product?.name}</p>
+			<p title={`${promo.productQuantity}qty @ $${promo.price} - ${createdByName}`}>{product?.name}</p>
 		</div>
 		<div className="link">
 			<p><a href={`${TICKET_LINK_HOST}/san-diego?promo=${promo.id}#tickets`} rel="noopener noreferrer" target="_blank">Promo Link</a></p>
@@ -38,6 +38,7 @@ const PromosListItem = ({ promo, product, event, disablePromo }) => (
 
 PromosListItem.propTypes = {
 	product: PropTypes.object.isRequired,
+	createdByName: PropTypes.string,
 	event: PropTypes.object.isRequired,
 	promo: PropTypes.object.isRequired,
 	disablePromo: PropTypes.func.isRequired

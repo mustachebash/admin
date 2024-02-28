@@ -12,6 +12,7 @@ import TicketsList from 'components/TicketsList';
 const Guest = ({ id }) => {
 	const [guest, setGuest] = useState(),
 		[event, setEvent] = useState(),
+		[users, setUsers] = useState(),
 		[editingComment, setEditingComment] = useState(''),
 		[commentInput, setCommentInput] = useState('');
 
@@ -22,6 +23,12 @@ const Guest = ({ id }) => {
 			.then(setGuest)
 			.catch(e => console.error('Guest API Error', e));
 	}, [id]);
+
+	useEffect(() => {
+		apiClient.get('/users')
+			.then(setUsers)
+			.catch(e => console.error('Users API Error', e));
+	}, []);
 
 	useEffect(() => {
 		if(!guest) return;
@@ -59,6 +66,16 @@ const Guest = ({ id }) => {
 		{ name: eventName } = event,
 		{ role } = user;
 
+	let createdByName = '';
+	if (createdBy) {
+		createdByName = users.find(u => u.id === createdBy)?.displayName;
+	}
+
+	let updatedByName = '';
+	if (updatedBy) {
+		updatedByName = users.find(u => u.id === updatedBy)?.displayName;
+	}
+
 	return (
 		<div className="guest">
 			<h1>Guest - {eventName}</h1>
@@ -89,13 +106,13 @@ const Guest = ({ id }) => {
 							? createdReason === 'purchase'
 								? <><span>Confirmation Id:</span> <Link to={`/orders/${orderId}`}>{orderId}</Link></>
 								: createdReason === 'comp'
-									? <><span>Comped by:</span> {createdBy}</>
-									: <><span>Created by:</span> {createdBy}/{orderId}</>
+									? <><span>Comped by:</span> {createdByName}</>
+									: <><span>Created by:</span> {createdByName}/{orderId}</>
 							: <><span>Confirmation Id:</span> {orderId}</>
 						}
 					</h3>
 
-					{checkScope(role, 'write') && updatedBy && <h3><span>Updated by:</span> {updatedBy}</h3>}
+					{checkScope(role, 'write') && updatedBy && <h3><span>Updated by:</span> {updatedByName}</h3>}
 				</div>
 			</div>
 		</div>
