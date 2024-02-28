@@ -71,6 +71,11 @@ const Guest = ({ id }) => {
 		createdByName = users.find(u => u.id === createdBy)?.displayName;
 	}
 
+	let updatedByName = '';
+	if (updatedBy) {
+		updatedByName = users.find(u => u.id === updatedBy)?.displayName;
+	}
+
 	return (
 		<div className="guest">
 			<h1>Guest - {eventName}</h1>
@@ -107,7 +112,7 @@ const Guest = ({ id }) => {
 						}
 					</h3>
 
-					{checkScope(role, 'write') && updatedBy && <h3><span>Updated by:</span> {updatedBy}</h3>}
+					{checkScope(role, 'write') && updatedBy && <h3><span>Updated by:</span> {updatedByName}</h3>}
 				</div>
 			</div>
 		</div>
