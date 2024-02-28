@@ -20,9 +20,9 @@ function getPromoComparator({sortBy, sortOrder}) {
 
 			default:
 			case 'recipient':
-				sort = a.recipient > b.recipient
+				sort = a.recipientName > b.recipientName
 					? 1
-					: a.recipient === b.recipient
+					: a.recipientName === b.recipientName
 						? 0
 						: -1;
 				break;
@@ -35,6 +35,7 @@ function getPromoComparator({sortBy, sortOrder}) {
 const PromosTable = () => {
 	const [promos, setPromos] = useState([]),
 		[products, setProducts] = useState([]),
+		[users, setUsers] = useState(),
 		[filter, setFilter] = useState(''),
 		[sort, setSort] = useState({sortBy: 'recipient', sortOrder: 1}); // asc
 
@@ -50,6 +51,10 @@ const PromosTable = () => {
 		apiClient.get('/products')
 			.then(setProducts)
 			.catch(e => console.error('Products API Error', e));
+
+		apiClient.get('/users')
+			.then(setUsers)
+			.catch(e => console.error('Users API Error', e));
 	}, []);
 
 	function sortPromos(sortBy) {
@@ -87,7 +92,7 @@ const PromosTable = () => {
 		if(!filter) return true;
 
 		return (
-			filterRegExp.test(p.recipient) ||
+			filterRegExp.test(p.recipientName) ||
 			filterRegExp.test(p.email)
 		);
 	});
@@ -112,6 +117,7 @@ const PromosTable = () => {
 				promos={filteredPromos}
 				event={event}
 				products={filteredProducts}
+				users={users}
 				sortPromos={sortPromos}
 				switchPromosOrder={switchPromosOrder}
 				sortBy={sort.sortBy}

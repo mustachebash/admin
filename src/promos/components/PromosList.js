@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import PromosListItem from './PromosListItem';
 
-const PromosList = ({ promos, products, event, sortBy, sortOrder, sortPromos, switchPromosOrder, disablePromo }) => {
+const PromosList = ({ promos, products, users, event, sortBy, sortOrder, sortPromos, switchPromosOrder, disablePromo }) => {
 	const productsById = products.reduce((obj, cur) => (obj[cur.id] = cur, obj), {});
 
 	return (
@@ -66,6 +66,7 @@ const PromosList = ({ promos, products, event, sortBy, sortOrder, sortPromos, sw
 				event={event}
 				product={productsById[promo.productId]}
 				promo={promo}
+				createdByName={users.find(u => u.id === promo.createdBy)?.displayName}
 				disablePromo={disablePromo}
 			/>)}
 		</ul>
@@ -77,6 +78,7 @@ export default PromosList;
 PromosList.propTypes = {
 	promos: PropTypes.array.isRequired,
 	products: PropTypes.array.isRequired,
+	users: PropTypes.array.isRequired,
 	event: PropTypes.object.isRequired,
 	sortPromos: PropTypes.func.isRequired,
 	switchPromosOrder: PropTypes.func.isRequired,
