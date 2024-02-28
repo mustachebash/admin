@@ -66,7 +66,7 @@ const PromosList = ({ promos, products, users, event, sortBy, sortOrder, sortPro
 				event={event}
 				product={productsById[promo.productId]}
 				promo={promo}
-				createdByName={users.find(u => u.id === promo.createdBy)?.displayName}
+				createdByName={users?.find(u => u.id === promo.createdBy)?.displayName}
 				disablePromo={disablePromo}
 			/>)}
 		</ul>

@@ -67,12 +67,12 @@ const Guest = ({ id }) => {
 		{ role } = user;
 
 	let createdByName = '';
-	if (createdBy) {
+	if (createdBy && users) {
 		createdByName = users.find(u => u.id === createdBy)?.displayName;
 	}
 
 	let updatedByName = '';
-	if (updatedBy) {
+	if (updatedBy && users) {
 		updatedByName = users.find(u => u.id === updatedBy)?.displayName;
 	}
 
