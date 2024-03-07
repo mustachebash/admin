@@ -2,6 +2,7 @@ import './TicketsList.less';
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 function sortTickets(a, b) {
 	// Rank by tier first
@@ -35,7 +36,7 @@ const TicketsList = ({ tickets }) => {
 					id,
 					admissionTier,
 					status
-				}) => <li key={id}><strong>{admissionTier}</strong>: {id.substring(0, 8)} - <span className={`ticket-status-${status}`}>{status}</span></li>)}
+				}) => <li key={id}><strong>{admissionTier}</strong>: <Link to={`/guests/${id}`}>{id.substring(0, 8)}</Link> - <span className={`ticket-status-${status}`}>{status}</span></li>)}
 			</ul>
 		</div>
 	));
