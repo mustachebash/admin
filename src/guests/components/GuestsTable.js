@@ -100,6 +100,7 @@ const GuestsTable = () => {
 		return (
 			filterRegEx.test(g.firstName + ' ' + g.lastName) ||
 			filterRegEx.test(g.orderId) ||
+			filterRegEx.test(g.createdReason ?? '') ||
 			filterRegEx.test(g.meta.comment ?? '')
 		);
 	});

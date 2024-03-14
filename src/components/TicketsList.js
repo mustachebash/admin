@@ -32,7 +32,7 @@ const TicketsList = ({ tickets }) => {
 		<div key={eventId}>
 			<h5>{eventName}</h5>
 			<ul className="tickets-list">
-				{[...tickets].sort(sortTickets).map(({
+				{[...eventTickets].sort(sortTickets).map(({
 					id,
 					admissionTier,
 					status
