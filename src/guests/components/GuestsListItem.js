@@ -48,7 +48,7 @@ const GuestsListItem = ({ guest, updateGuest, event, role }) => (
 				? checkScope(role, 'write')
 					? <button onClick={() => confirm('Are you sure you want to downgrade this guest?') && updateGuest(guest.id, {admissionTier: 'general'})}>{'\u2713'} VIP</button>
 					: <p>&#9989;</p>
-				: checkScope(role, 'write')
+				: checkScope(role, 'write') && guest.admissionTier === 'general'
 					? <button onClick={() => updateGuest(guest.id, {admissionTier: 'vip'})}>Make VIP</button>
 					: ''
 			}
