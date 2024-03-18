@@ -15,15 +15,15 @@ ChartJS.register(CategoryScale, LineElement, PointElement, LinearScale, Title, T
 const availableTypes = [
 	{
 		id: 'openingSales',
-		name: 'Opening Day Ticket Sales'
+		name: 'Opening Day Tickets'
 	},
 	{
 		id: 'tickets',
-		name: 'Daily Ticket Sales'
+		name: 'Daily Tickets'
 	},
 	{
 		id: 'ticketsAcc',
-		name: 'Acc. Ticket Sales'
+		name: 'Acc. Tickets'
 	},
 	{
 		id: 'checkIns',
@@ -34,9 +34,10 @@ const availableTypes = [
 const generateDailyTicketsSeries = chartData => ({
 	// Set this 8 hours in the future since the ISO strings come back at 00:00 UTC
 	// This avoids using a timezone package since we can assume most dashboard viewing is in PT
-	labels: chartData.map(({ date }) => format((new Date(date)).setUTCHours(8), 'M/dd')),
+	// Also, skip the opening day of sales (which blows the scale off)
+	labels: chartData.slice(1).map(({ date }) => format((new Date(date)).setUTCHours(8), 'M/dd')),
 	datasets: [{
-		data: chartData.map(({ tickets }) => tickets),
+		data: chartData.slice(1).map(({ tickets }) => tickets),
 		label: 'Daily Tickets Sold',
 		lineTension: 0.3,
 		fill: false,
@@ -151,6 +152,7 @@ const EventsChart = () => {
 					))}
 				</select>
 			</div>
+			{graphType === 'tickets' && <small>(excludes {ticketsChartData[0].tickets} from opening day)</small>}
 			<div className="chart-wrapper">
 				<Line
 					data={data}
