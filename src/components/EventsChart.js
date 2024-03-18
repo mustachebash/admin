@@ -81,9 +81,9 @@ const generateOpeningDayTicketsSeries = chartData => ({
 });
 
 const generateCheckInsSeries = chartData => ({
-	labels: chartData.map(({ hour, minutes }) => format(set(new Date(0), {hours: hour, minutes}), 'HH:mm')),
+	labels: chartData.map(({ minuteCheckedIn }) => format(new Date(minuteCheckedIn), 'HH:mm')),
 	datasets: [{
-		data: chartData.checkIns.map(({ checkedIn }) => checkedIn),
+		data: chartData.map(({ checkins }) => checkins),
 		label: 'Check Ins',
 		lineTension: 0.3,
 		fill: false,
