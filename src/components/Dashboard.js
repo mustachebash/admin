@@ -103,17 +103,19 @@ const Dashboard = () => {
 						<h5 data-tooltip="Total guests on the list for this event">Total Attendance</h5>
 						<p>{formatThousands(totalGuests + (add2020Stats ? totalGuests2020 : 0))}</p>
 					</div>
-					{event.status === 'active' &&
+					{event.status === 'active' && checkScope(user.role, 'write') &&
 						<div className="guests-today">
 							<h5 data-tooltip="Paying guests added today">Guests Today</h5>
 							<p>{guestsToday}</p>
 						</div>
 					}
 
-					<div className="comped">
-						<h5>Comped Guests</h5>
-						<p>{formatThousands(totalCompedGuests + (add2020Stats ? totalCompedGuests2020 : 0))}</p>
-					</div>
+					{checkScope(user.role, 'write') &&
+						<div className="comped">
+							<h5>Comped Guests</h5>
+							<p>{formatThousands(totalCompedGuests + (add2020Stats ? totalCompedGuests2020 : 0))}</p>
+						</div>
+					}
 
 					<div className="vip">
 						<h5>VIP Guests</h5>
@@ -126,7 +128,7 @@ const Dashboard = () => {
 					</div>
 				</div>
 			</div>
-			{checkScope(user.role, 'read') &&
+			{checkScope(user.role, 'write') &&
 				<div className="extended-stats">
 					{!!extendedStats && extendedStats.eventId === event.id
 						? <>
