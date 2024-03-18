@@ -33,7 +33,7 @@ const CheckIn = () => {
 				console.error('Check In API Error', err);
 
 				const errData = {},
-					{ ticket, guest, event } = err.responseBody || {};
+					guest = err.responseBody;
 
 				switch(err.statusCode) {
 					case 404:
@@ -41,25 +41,25 @@ const CheckIn = () => {
 						break;
 
 					case 409:
-						errData.message = `Guest already checked in at ${format(new Date(guest.checkedIn), 'HH:mm')}`;
+						errData.message = `Guest already checked in at ${format(new Date(guest.checkInTime), 'HH:mm')}`;
 						errData.context = <p><Link to={`/guests/${guest.id}`}>See details for {`${guest.firstName} ${guest.lastName}`}</Link></p>;
 						break;
 
 					case 410:
 						errData.message = 'Event no longer available';
-						errData.context = <p>Ticket is for {event.name} - {format(new Date(event.date), 'M/dd/yy')}</p>;
+						errData.context = <p>Ticket is for {guest.eventName} - {format(new Date(guest.eventDate), 'M/dd/yy')}</p>;
 						break;
 
 					case 412:
 						errData.message = 'Event has not started';
-						errData.context = <p>Check In for {event.name} available at {format(new Date(event.date), 'M/dd/yy - HH:mm')}</p>;
+						errData.context = <p>Check In for {guest.eventName} available at {format(new Date(guest.eventDate), 'M/dd/yy - HH:mm')}</p>;
 						break;
 
 					case 423:
 						errData.message = 'Ticket no longer valid';
 						errData.context = <p>
-							Ticket status is {ticket.status},&nbsp;
-							<Link to={`/guests/${guest.id}`}>Guest status is {guest.status}</Link> {guest.checkedIn && `and has already checked in at ${format(new Date(guest.checkedIn), 'HH:mm')}`}
+							Ticket status is {guest.status},&nbsp;
+							<Link to={`/guests/${guest.id}`}>Guest status is {guest.status}</Link> {guest.checkedIn && `and has already checked in at ${format(new Date(guest.checkInTime), 'HH:mm')}`}
 						</p>;
 						break;
 
@@ -105,12 +105,12 @@ const CheckIn = () => {
 
 	return (
 		<div className="check-in">
-			<div className={classnames('status', {inputting, success: checkInResponse, error: checkInError, vip: !!checkInResponse?.guest?.vip})} onClick={reset}>
+			<div className={classnames('status', {inputting, success: checkInResponse, error: checkInError, vip: checkInResponse?.admissionTier === 'vip'})} onClick={reset}>
 				<p className="status-text">
 					{inputting
 						? 'Scanning...'
 						: checkInResponse
-							? `${checkInResponse.guest.firstName} ${checkInResponse.guest.lastName}${checkInResponse.guest.vip ? ' - VIP' : ''}`
+							? `${checkInResponse.firstName} ${checkInResponse.lastName}${checkInResponse.admissionTier === 'vip' ? ' - VIP 🕺' : ''}`
 							: checkInError?.message || 'Ready!'
 					}
 				</p>
