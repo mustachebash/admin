@@ -167,29 +167,31 @@ const Order = ({ id }) => {
 
 					{!parentOrderId &&
 						<>
-							<h5><span>Transactions</span></h5>
-							<ul className="order-details">
-								{transactions.map(({ id: transactionId, processor, processorTransactionId, type }) => {
-									{/* empty comment */}
-									return (
-										<li key={transactionId}>
-											<p>{type}</p>
-											{processor === 'braintree' &&
-												<span>Braintree ID:{' '}
-													<a
-														href={`${BRAINTREE_HOST}/merchants/${BRAINTREE_MERCHANT_ID}/transactions/${processorTransactionId}`}
-														target="_blank"
-														rel="noreferrer"
-														title="Open in Braintree"
-													>
-														{processorTransactionId}
-													</a>
-												</span>
-											}
-										</li>
-									);
-								})}
-							</ul>
+							{!!transactions?.length && <>
+								<h5><span>Transactions</span></h5>
+								<ul className="order-details">
+									{transactions.map(({ id: transactionId, processor, processorTransactionId, type }) => {
+										{/* empty comment */}
+										return (
+											<li key={transactionId}>
+												<p>{type}</p>
+												{processor === 'braintree' &&
+													<span>Braintree ID:{' '}
+														<a
+															href={`${BRAINTREE_HOST}/merchants/${BRAINTREE_MERCHANT_ID}/transactions/${processorTransactionId}`}
+															target="_blank"
+															rel="noreferrer"
+															title="Open in Braintree"
+														>
+															{processorTransactionId}
+														</a>
+													</span>
+												}
+											</li>
+										);
+									})}
+								</ul>
+							</>}
 
 							<h5><span>Order Details</span></h5>
 							<ul className="order-details">
