@@ -18,6 +18,7 @@ const Order = ({ id }) => {
 		[events, setEvents] = useState([]),
 		[products, setProducts] = useState([]),
 		[tickets, setTickets] = useState([]),
+		[selectedTickets, setSelectedTickets] = useState([]),
 		[refunding, setRefunding] = useState(false),
 		[transfereeFirstName, setTransfereeFirstName] = useState(''),
 		[transfereeLastName, setTransfereeLastName] = useState(''),
@@ -91,7 +92,10 @@ const Order = ({ id }) => {
 	}, [id]);
 
 	const transfer = useCallback(() => {
-		if(!(transfereeFirstName && transfereeLastName && transfereeEmail && /.+@.+\..+/.test(transfereeEmail))) return;
+		if(
+			!selectedTickets.length ||
+			!(transfereeFirstName && transfereeLastName && transfereeEmail && /.+@.+\..+/.test(transfereeEmail))
+		) return;
 
 		setTransferring(true);
 
@@ -101,15 +105,23 @@ const Order = ({ id }) => {
 				lastName: transfereeLastName,
 				email: transfereeEmail
 			},
-			guestIds: tickets.map(t => t.id)
+			guestIds: selectedTickets
 		})
 			.then(() => Promise.all([
 				apiClient.get(`/orders/${id}`)
-					.then(setOrder)
+					.then(setOrder),
+				apiClient.get(`/orders/${order.id}/transfers`)
+					.then(setTransfers),
+				apiClient.get(`/orders/${id}/tickets`)
+					.then(setTickets),
+				setSelectedTickets([]),
+				setTransfereeFirstName(''),
+				setTransfereeLastName(''),
+				setTransfereeEmail('')
 			]))
 			.catch(e => console.error('Order API Error', e))
 			.finally(() => setTransferring(false));
-	}, [id, transfereeFirstName, transfereeLastName, transfereeEmail, tickets]);
+	}, [selectedTickets, transfereeFirstName, transfereeLastName, transfereeEmail, id, order?.id]);
 
 	if(!order || !products.length || !events.length || !customer) return null;
 
@@ -225,30 +237,33 @@ const Order = ({ id }) => {
 					<h4>Tickets</h4>
 					{/* eslint-disable-next-line react/jsx-no-target-blank */}
 					{orderToken && <p><a href={`${TICKET_LINK_HOST}/mytickets?t=${orderToken}`} target="_blank">Ticket Link</a></p>}
-					{!!tickets.length && <TicketsList tickets={tickets} />}
+					{!!tickets.length && <TicketsList setSelectedTickets={setSelectedTickets} selectedTickets={selectedTickets} tickets={tickets} />}
 
 					<h4>Actions</h4>
 					<div>
 						{!parentOrderId &&
-							<button className="red" onClick={refund} disabled={['canceled', 'transferred'].includes(orderStatus) || refunding || !refundAllowed}>
-								{/* Ternaries for daaaaaayyyyysss */}
-								{!['canceled', 'transferred'].includes(orderStatus)
-									? refunding
-										? 'Refunding...'
-										: refundAllowed
-											? ['settled', 'settling'].includes(processorStatus)
-												? 'Refund'
-												: 'Void'
-											: 'Refund Disallowed'
-									: orderStatus === 'canceled'
-										? 'Already Canceled'
-										: `Order has been ${orderStatus}`
-								}
-							</button>
-						}
-						{!['canceled', 'transferred'].includes(orderStatus) &&
 							<>
-								<h5>Transfer All Tickets</h5>
+								<h5>Refund Entire Order</h5>
+								<button className="red" onClick={refund} disabled={['canceled', 'transferred'].includes(orderStatus) || refunding || !refundAllowed}>
+									{/* Ternaries for daaaaaayyyyysss */}
+									{!['canceled', 'transferred'].includes(orderStatus)
+										? refunding
+											? 'Refunding...'
+											: refundAllowed
+												? ['settled', 'settling'].includes(processorStatus)
+													? 'Refund'
+													: 'Void'
+												: 'Refund Disallowed'
+										: orderStatus === 'canceled'
+											? 'Already Canceled'
+											: `Order has been ${orderStatus}`
+									}
+								</button>
+							</>
+						}
+						{!['canceled'].includes(orderStatus) &&
+							<>
+								<h5>Transfer Selected Tickets</h5>
 								<input type="text" name="transferee-first-name" placeholder="First Name" value={transfereeFirstName} onChange={e => setTransfereeFirstName(e.currentTarget.value)} />
 								<input type="text" name="transferee-last-name" placeholder="Last Name" value={transfereeLastName} onChange={e => setTransfereeLastName(e.currentTarget.value)} />
 								<input type="text" name="transferee-email" placeholder="Email" value={transfereeEmail} onChange={e => setTransfereeEmail(e.currentTarget.value)} />
