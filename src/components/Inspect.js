@@ -2,7 +2,6 @@ import './Inspect.less';
 
 import React, { useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import jwtDecode from 'jwt-decode';
 import { format } from 'date-fns';
 import { QrReader } from 'react-qr-reader';
 import apiClient from 'utils/apiClient';
@@ -13,44 +12,37 @@ const CheckIn = () => {
 		[ scanWithCamera, setScanWithCamera ] = useState('');
 
 	const inspectTicket = useCallback(ticketToken => {
-		try {
-			const {aud: guestId} = jwtDecode(ticketToken);
+		apiClient.post('/inspect', {ticketToken})
+			.then(setGuest)
+			.catch(err => {
+				console.error('Ticket Inspect API Error', err);
 
-			apiClient.get(`/guests/${guestId}`)
-				.then(setGuest)
-				.catch(err => {
-					console.error('Ticket Inspect API Error', err);
+				let errorMessage;
+				switch(err.statusCode) {
+					case 404:
+						errorMessage = 'Guest not found';
+						break;
 
-					let errorMessage;
-					switch(err.statusCode) {
-						case 404:
-							errorMessage = 'Guest not found';
-							break;
+					default:
+						errorMessage = 'Something went wrong - scan again';
+						break;
+				}
 
-						default:
-							errorMessage = 'Something went wrong - scan again';
-							break;
-					}
-
-					setGuestError(errorMessage);
-				});
-		} catch(e) {
-			setGuestError(`Failed to decode. QR contents: '${ticketToken}'`);
-		}
+				setGuestError(errorMessage);
+			});
 	}, []);
 
 	const {
 		firstName,
 		lastName,
 		created,
-		createdBy,
+		createdReason,
 		status,
-		transactionId,
-		confirmationId,
-		checkedIn,
-		notes,
-		vip,
-		updatedBy
+		orderId,
+		meta,
+		admissionTier,
+		checkInTime,
+		eventName
 	} = guest || {};
 
 	return (
@@ -67,27 +59,22 @@ const CheckIn = () => {
 			{guestError && <p>{guestError}</p>}
 			{guest &&
 				<div className="ticket-data">
-					<h2><span>{firstName} {lastName}</span>{!!vip && <span title={updatedBy} className="vip">&nbsp;- VIP</span>}</h2>
+					<h2><span>{firstName} {lastName}</span>{admissionTier === 'vip' && <span className="vip">&nbsp;- VIP</span>}</h2>
 					<h3><span>Created:</span> {format(new Date(created), 'M/dd/yy - HH:mm')}</h3>
+					<h3><span>Event:</span> {eventName}</h3>
 					<h3>
 						<span>Status:</span> {
-							checkedIn
-								? <>Checked In {format(new Date(checkedIn), 'M/dd/yy - HH:mm')}</>
+							status === 'checked_in'
+								? <>Checked In {format(new Date(checkInTime), 'M/dd/yy - HH:mm')}</>
 								: status
 						}
 					</h3>
-					<h3><span>Notes:</span> {notes || ' n/a '}</h3>
+					<h3><span>Notes:</span> {meta.comment || ' n/a '}</h3>
 
 					<h3>
-						{createdBy === 'purchase'
-							? <><span>Confirmation Id:</span> <Link to={`/transactions/${transactionId}`}>{confirmationId}</Link></>
-							: transactionId === 'COMPED'
-								? <><span>Comped by:</span> {createdBy}</>
-								: <><span>Created by:</span> {createdBy}/{transactionId}</>
-						}
+						<span>Order Id:</span> <Link to={`/orders/${orderId}`}>{orderId}</Link>
+						{createdReason === 'transfer' && 'TRANSFER RECIPIENT'}
 					</h3>
-
-					{updatedBy && <h3><span>Updated by:</span> {updatedBy}</h3>}
 				</div>
 			}
 		</div>
