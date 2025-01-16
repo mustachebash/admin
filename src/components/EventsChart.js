@@ -152,7 +152,7 @@ const EventsChart = () => {
 					))}
 				</select>
 			</div>
-			{graphType === 'tickets' && <small>(excludes {ticketsChartData[0].tickets} from opening day)</small>}
+			{graphType === 'tickets' && <small>(excludes {ticketsChartData[0]?.tickets} from opening day)</small>}
 			<div className="chart-wrapper">
 				<Line
 					data={data}
