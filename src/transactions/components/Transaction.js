@@ -159,7 +159,7 @@ const Transaction = ({ id }) => {
 				<div className="flex-item">
 					<h4>Tickets</h4>
 					{/* eslint-disable-next-line react/jsx-no-target-blank */}
-					{transactionToken && <p><a href={`https://mustachebash.com/mytickets?t=${transactionToken}`} target="_blank">Ticket Link</a></p>}
+					{transactionToken && <p><a href={`https://mustachebash.com/my-tickets?t=${transactionToken}`} target="_blank">Ticket Link</a></p>}
 					{!!tickets.length && <TicketsList tickets={tickets} />}
 
 					<h4>Actions</h4>

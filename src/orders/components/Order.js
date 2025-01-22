@@ -236,7 +236,7 @@ const Order = ({ id }) => {
 				<div className="flex-item">
 					<h4>Tickets</h4>
 					{/* eslint-disable-next-line react/jsx-no-target-blank */}
-					{orderToken && <p><a href={`${TICKET_LINK_HOST}/mytickets?t=${orderToken}`} target="_blank">Ticket Link</a></p>}
+					{orderToken && <p><a href={`${TICKET_LINK_HOST}/my-tickets?t=${orderToken}`} target="_blank">Ticket Link</a></p>}
 					{!!tickets.length && <TicketsList setSelectedTickets={setSelectedTickets} selectedTickets={selectedTickets} tickets={tickets} />}
 
 					<h4>Actions</h4>
