@@ -33,7 +33,12 @@ module.exports = (env = {}, argv) => {
 			publicPath: '/'
 		},
 		devServer: {
-			port: 8082,
+			host: '0.0.0.0',
+			allowedHosts: 'all',
+			port: 8080,
+			client: {
+				webSocketURL: 'auto://0.0.0.0:0/ws'
+			},
 			historyApiFallback: {
 				disableDotRule: true
 			}
@@ -126,8 +131,8 @@ module.exports = (env = {}, argv) => {
 				}
 			}),
 			new webpack.DefinePlugin({
-				API_HOST: JSON.stringify(devMode ? 'https://localhost:8888' : 'https://api.mustachebash.com'),
-				TICKET_LINK_HOST: JSON.stringify(devMode ? 'https://localhost:8081' : 'https://mustachebash.com'),
+				API_HOST: JSON.stringify(devMode ? 'https://api-mustachebash.local.mrstache.io' : 'https://api.mustachebash.com'),
+				TICKET_LINK_HOST: JSON.stringify(devMode ? 'https://mustachebash.local.mrstache.io' : 'https://mustachebash.com'),
 				BRAINTREE_HOST: JSON.stringify(devMode ? 'https://sandbox.braintreegateway.com' : 'https://www.braintreegateway.com'),
 				BRAINTREE_MERCHANT_ID: JSON.stringify(devMode ? 'ht835xhgsgwsz2hn' : 't7bcxj3vjz92bxr2'),
 				// These need special pairing in admin
