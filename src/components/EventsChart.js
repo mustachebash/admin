@@ -31,21 +31,31 @@ const availableTypes = [
 	}
 ];
 
-const generateDailyTicketsSeries = chartData => ({
-	// Set this 8 hours in the future since the ISO strings come back at 00:00 UTC
-	// This avoids using a timezone package since we can assume most dashboard viewing is in PT
-	// Also, skip the opening day of sales (which blows the scale off)
-	labels: chartData.slice(1).map(({ date }) => format((new Date(date)).setUTCHours(8), 'M/dd')),
-	datasets: [{
-		data: chartData.slice(1).map(({ tickets }) => tickets),
-		label: 'Daily Tickets Sold',
-		lineTension: 0.3,
-		fill: false,
-		borderColor: 'rgb(73, 134, 210)',
-		pointBorderColor: 'rgba(73, 134, 210, 0.5)',
-		pointBackgroundColor: 'rgba(73, 134, 210, 0.5)'
-	}]
-});
+const generateDailyTicketsSeries = (chartData, openingSales) => {
+	// Skip the opening day of sales (which blows the scale off)
+	let dailyChartData;
+	if(openingSales) {
+		const openingIndex = chartData.findIndex(({ date }) => (new Date(date)).setUTCHours(0) === (new Date(openingSales)).setUTCHours(0));
+		dailyChartData = chartData.slice(openingIndex + 1);
+	} else {
+		dailyChartData = chartData.slice(1);
+	}
+
+	return {
+		// Set this 8 hours in the future since the ISO strings come back at 00:00 UTC
+		// This avoids using a timezone package since we can assume most dashboard viewing is in PT
+		labels: dailyChartData.map(({ date }) => format((new Date(date)).setUTCHours(8), 'M/dd')),
+		datasets: [{
+			data: dailyChartData.map(({ tickets }) => tickets),
+			label: 'Daily Tickets Sold',
+			lineTension: 0.3,
+			fill: false,
+			borderColor: 'rgb(73, 134, 210)',
+			pointBorderColor: 'rgba(73, 134, 210, 0.5)',
+			pointBackgroundColor: 'rgba(73, 134, 210, 0.5)'
+		}]
+	};
+};
 
 const generateTotalTicketsArea = chartData => ({
 	// Set this 8 hours in the future since the ISO strings come back at 00:00 UTC
@@ -126,7 +136,7 @@ const EventsChart = () => {
 				return openingSalesChartData && generateOpeningDayTicketsSeries(openingSalesChartData);
 
 			case 'tickets':
-				return ticketsChartData && generateDailyTicketsSeries(ticketsChartData);
+				return ticketsChartData && generateDailyTicketsSeries(ticketsChartData, event?.openingSales);
 
 			case 'ticketsAcc':
 				return ticketsChartData && generateTotalTicketsArea(ticketsChartData);
@@ -134,7 +144,7 @@ const EventsChart = () => {
 			case 'checkIns':
 				return checkInsChartData && generateCheckInsSeries(checkInsChartData);
 		}
-	}, [ticketsChartData, openingSalesChartData, checkInsChartData, graphType]);
+	}, [ticketsChartData, openingSalesChartData, checkInsChartData, graphType, event]);
 
 	if(
 		graphType === 'openingSales' && !openingSalesChartData ||
@@ -142,6 +152,12 @@ const EventsChart = () => {
 		graphType === 'checkIns' && !checkInsChartData ||
 		graphType === 'ticketsAcc' && !ticketsChartData
 	) return <Loader />;
+
+	// Find the opening day of sales
+	let openingIndex = 0;
+	if(event?.openingSales) {
+		openingIndex = ticketsChartData.findIndex(({ date }) => (new Date(date)).setUTCHours(0) === (new Date(event?.openingSales)).setUTCHours(0));
+	}
 
 	return (
 		<div className="events-chart">
@@ -152,7 +168,7 @@ const EventsChart = () => {
 					))}
 				</select>
 			</div>
-			{graphType === 'tickets' && <small>(excludes {ticketsChartData[0]?.tickets} from opening day)</small>}
+			{graphType === 'tickets' && <small>(excludes {ticketsChartData[openingIndex]?.tickets} from opening day)</small>}
 			<div className="chart-wrapper">
 				<Line
 					data={data}
