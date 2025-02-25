@@ -34,6 +34,7 @@ FROM build-deps AS build
 RUN --mount=type=cache,target=/root/.npm \
 	# --mount=type=bind,source=tsconfig.json,target=tsconfig.json \
 	# --mount=type=bind,source=types.d.ts,target=types.d.ts \
+	--mount=type=bind,source=webpack.config.js,target=webpack.config.js \
 	--mount=type=bind,source=src,target=src \
 	npm run build
 
