@@ -32,12 +32,9 @@ RUN --mount=type=cache,target=/root/.npm \
 FROM build-deps AS build
 # https://docs.docker.com/build/guide/mounts/
 RUN --mount=type=cache,target=/root/.npm \
-	--mount=type=bind,source=astro.config.mjs,target=astro.config.mjs \
-	--mount=type=bind,source=tsconfig.json,target=tsconfig.json \
-	--mount=type=bind,source=types.d.ts,target=types.d.ts \
+	# --mount=type=bind,source=tsconfig.json,target=tsconfig.json \
+	# --mount=type=bind,source=types.d.ts,target=types.d.ts \
 	--mount=type=bind,source=src,target=src \
-	--mount=type=bind,source=public,target=public \
-	--mount=type=bind,source=.env.production,target=.env.production \
 	npm run build
 
 # release
