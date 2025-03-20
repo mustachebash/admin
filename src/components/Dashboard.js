@@ -53,6 +53,7 @@ const Dashboard = () => {
 	const {
 		name,
 		totalGuests,
+		totalPaidGuests,
 		guestsToday,
 		totalCompedGuests,
 		totalVipGuests,
@@ -72,6 +73,7 @@ const Dashboard = () => {
 
 	const {
 		totalGuests: totalGuests2020,
+		totalPaidGuests: totalPaidGuests2020,
 		totalRevenue: totalRevenue2020,
 		totalPromoRevenue: totalPromoRevenue2020,
 		totalCompedGuests: totalCompedGuests2020,
@@ -105,7 +107,7 @@ const Dashboard = () => {
 					</div>
 					{event.status === 'active' && checkScope(user.role, 'write') &&
 						<div className="guests-today">
-							<h5 data-tooltip="Paying guests added today">Guests Today</h5>
+							<h5 data-tooltip="Paying tickets sold today">Tickets Sold Today</h5>
 							<p>{guestsToday}</p>
 						</div>
 					}
@@ -160,10 +162,13 @@ const Dashboard = () => {
 								</div>
 							</div>
 							<div className="stats flex-row">
-
+								<div className="total-ticket-sales">
+									<h5 data-tooltip="All tickets purchased (includes promos)">Total Ticket Sales</h5>
+									<p>{formatThousands(totalPaidGuests + (add2020Stats ? totalPaidGuests2020 : 0))}</p>
+								</div>
 								{((add2020Stats || event.id !== EVENT_2022_ID) && !!eventBudget) &&
 									<div className="avg-cost">
-										<h5 data-tooltip="Event cost per paid guest (based on budget numbers, excludes comps)">Cost per Guest</h5>
+										<h5 data-tooltip="Event cost per paid guest (based on budget numbers, excludes comps)">Cost per Paid Guest</h5>
 										<p>${(eventBudget / ((totalGuests + (add2020Stats ? totalGuests2020 : 0)) - (totalCompedGuests + (add2020Stats ? totalCompedGuests2020 : 0)))).toFixed(2)}</p>
 									</div>
 								}
