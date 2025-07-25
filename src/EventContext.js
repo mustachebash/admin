@@ -10,7 +10,7 @@ const EventContext = createContext({
 export default EventContext;
 
 export function EventProvider({ children }) {
-	const [eventId, setEventId] = useState('0fe92cbb-a22c-4b25-993e-773ca016a5f1'),
+	const [eventId, setEventId] = useState('ade03d8e-9744-483e-8cbf-67f8d9c4055c'),
 		[event, setEvent] = useState(null);
 
 	useEffect(() => {
