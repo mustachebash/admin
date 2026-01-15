@@ -14,6 +14,7 @@ const Settings = () => {
 
 	useEffect(() => {
 		if(event) {
+			setProducts([]); // Clear stale products to show loader
 			apiClient.get('/products', {eventId: event.id})
 				.then(eventProducts => {
 					setProducts(eventProducts.sort((a, b) => a.price > b.price ? -1 : 1));
@@ -73,8 +74,8 @@ const Settings = () => {
 						<div className="flex-row">
 							<div className="event-ticket">
 								<label>Current Ticket</label>
-								<div className="select-wrap" key={`ticket-select-${event.id}`}>
-									<select name={`currentTicket-${event.id}`} defaultValue={event.meta.currentTicket} onChange={ev => updateEvent(event.id, {meta: {...event.meta, currentTicket: ev.target.value}})}>
+								<div className="select-wrap">
+									<select key={`ticket-select-${event.id}`} name={`currentTicket-${event.id}`} defaultValue={event.meta.currentTicket} onChange={ev => updateEvent(event.id, {meta: {...event.meta, currentTicket: ev.target.value}})}>
 										<option key="option-none" value="">None</option>
 										{products.map(p => {
 											if(p.promo) return false;
