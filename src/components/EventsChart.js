@@ -104,7 +104,7 @@ const generateCheckInsSeries = chartData => ({
 });
 
 const EventsChart = () => {
-	const [ graphType, setGraphType ] = useState('tickets'),
+	const [ graphType, setGraphType ] = useState('openingSales'),
 		[ ticketsChartData, setTicketsChartData ] = useState(null),
 		[ openingSalesChartData, setOpeningSalesChartData ] = useState(null),
 		[ checkInsChartData, setCheckInsChartData ] = useState(null),
@@ -156,7 +156,7 @@ const EventsChart = () => {
 	// Find the opening day of sales
 	let openingIndex = 0;
 	if(event?.openingSales) {
-		openingIndex = ticketsChartData.findIndex(({ date }) => (new Date(date)).setUTCHours(0) === (new Date(event?.openingSales)).setUTCHours(0));
+		openingIndex = ticketsChartData?.findIndex(({ date }) => (new Date(date)).setUTCHours(0) === (new Date(event?.openingSales)).setUTCHours(0));
 	}
 
 	return (
