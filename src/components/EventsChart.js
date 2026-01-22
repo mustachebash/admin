@@ -104,7 +104,7 @@ const generateCheckInsSeries = chartData => ({
 });
 
 const EventsChart = () => {
-	const [ graphType, setGraphType ] = useState('openingSales'),
+	const [ graphType, setGraphType ] = useState('tickets'),
 		[ ticketsChartData, setTicketsChartData ] = useState(null),
 		[ openingSalesChartData, setOpeningSalesChartData ] = useState(null),
 		[ checkInsChartData, setCheckInsChartData ] = useState(null),
