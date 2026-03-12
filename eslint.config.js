@@ -3,7 +3,7 @@ import tseslint from 'typescript-eslint';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
-import prettier from 'eslint-plugin-prettier/recommended';
+import prettier from 'eslint-config-prettier/flat';
 
 import { defineConfig } from 'eslint/config';
 
@@ -11,6 +11,7 @@ export default defineConfig([
 	js.configs.recommended,
 	tseslint.configs.recommended,
 	react.configs.flat['jsx-runtime'],
+	prettier,
 	{
 		files: ['**/*.{ts,tsx}'],
 		plugins: {
@@ -47,6 +48,5 @@ export default defineConfig([
 			'@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
 			'@typescript-eslint/no-explicit-any': 'warn'
 		}
-	},
-	prettier
+	}
 ]);

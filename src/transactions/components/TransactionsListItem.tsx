@@ -12,10 +12,12 @@ interface TransactionsListItemProps {
 }
 
 const TransactionsListItem = ({ transaction, productsById, transferee }: TransactionsListItemProps) => (
-	<li className={classnames(styles.transactionsListItem, {
-		[styles.refunded]: ['refunded', 'voided', 'transferred'].includes(transaction.status),
-		[styles.transferee]: transferee
-	})}>
+	<li
+		className={classnames(styles.transactionsListItem, {
+			[styles.refunded]: ['refunded', 'voided', 'transferred'].includes(transaction.status),
+			[styles.transferee]: transferee
+		})}
+	>
 		<div className="name">
 			<p>
 				<Link to={`/transactions/${transaction.id}`}>

@@ -8,12 +8,9 @@
 	"scripts": {
 		"start": "vite",
 		"build": "tsc --noEmit && vite build",
-		"preview": "vite preview",
-		"lint": "eslint .",
 		"lint:fix": "eslint . --fix",
 		"format": "prettier --write \"src/**/*.{ts,tsx,css}\"",
-		"format:check": "prettier --check \"src/**/*.{ts,tsx,css}\"",
-		"type-check": "tsc --noEmit"
+		"test": "eslint . && tsc --noEmit && prettier --check \"src/**/*.{ts,tsx,css}\""
 	},
 	"browserslist": [
 		"last 1 version",
@@ -41,8 +38,7 @@
 		"@types/react-dom": "^18.3.5",
 		"@vitejs/plugin-react": "^4.3.4",
 		"eslint": "^9.17.0",
-		"eslint-config-prettier": "^9.1.0",
-		"eslint-plugin-prettier": "^5.2.1",
+		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-react": "^7.37.3",
 		"eslint-plugin-react-hooks": "^5.1.0",
 		"eslint-plugin-react-refresh": "^0.4.16",

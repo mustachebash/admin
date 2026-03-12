@@ -12,11 +12,13 @@ interface OrdersListItemProps {
 }
 
 const OrdersListItem = ({ order, productsById, transferee }: OrdersListItemProps) => (
-	<li className={classnames(styles.ordersListItem, {
-		[styles.canceled]: order.status === 'canceled',
-		[styles.transferred]: order.status === 'transferred',
-		[styles.transferee]: transferee
-	})}>
+	<li
+		className={classnames(styles.ordersListItem, {
+			[styles.canceled]: order.status === 'canceled',
+			[styles.transferred]: order.status === 'transferred',
+			[styles.transferee]: transferee
+		})}
+	>
 		<div className="name">
 			<p>
 				<Link to={`/orders/${order.id}`}>

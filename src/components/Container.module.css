@@ -1,6 +1,6 @@
 .container {
-  max-width: 76.875em; /* 1230/16 */
-  box-sizing: border-box;
-  padding: 0 0.625em; /* 10/16 */
-  margin: 0 auto;
+	max-width: 76.875em; /* 1230/16 */
+	box-sizing: border-box;
+	padding: 0 0.625em; /* 10/16 */
+	margin: 0 auto;
 }
