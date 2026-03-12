@@ -1,0 +1,76 @@
+.guestsListItem {
+	display: flex;
+	justify-content: space-between;
+	padding: 0.625em; /* 10/16 */
+}
+
+.guestsListItem:nth-child(even) {
+	background: var(--color-light-gray);
+}
+
+.guestsListItem p {
+	margin: 0;
+}
+
+.guestsListItem > div {
+	flex: 1 1 0;
+}
+
+.guestNotes {
+	font-size: 11px;
+	font-style: italic;
+}
+
+.date {
+	@media (max-width: 600px) {
+		display: none;
+	}
+}
+
+.vip button {
+	border-color: var(--color-white);
+	color: var(--color-white);
+}
+
+.vip.isVip button {
+	background: var(--color-teal);
+	border-color: var(--color-teal);
+}
+
+.checkedIn span {
+	display: inline-block;
+	box-sizing: border-box;
+	border: 2px solid var(--color-white);
+	height: 1.2em;
+	width: 1.2em;
+	user-select: none;
+}
+
+.checkedIn span.noEntry {
+	border: none;
+	width: auto;
+	background: none;
+	color: var(--color-red);
+	text-transform: uppercase;
+}
+
+.checkedIn span.comped {
+	cursor: pointer;
+}
+
+.checkedIn span.checked {
+	background: var(--color-white);
+}
+
+.checkedIn span.checked:before {
+	content: '';
+	position: relative;
+	display: inline-block;
+	left: 50%;
+	width: 3px;
+	height: 10px;
+	border: 3px solid transparent;
+	transform: rotate(45deg) translateX(-50%);
+	border-bottom-color: var(--color-teal);
+	border-right-color: var(--color-teal);
+}

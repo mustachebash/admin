@@ -1,0 +1,29 @@
+.compedGuestForm {
+	margin-bottom: 4em;
+}
+
+.compedGuestForm input {
+	margin-bottom: 0;
+	margin-right: 0.5em;
+	flex: 1 0.5;
+}
+
+.compedGuestForm input[name='price'] {
+	flex: 0 0 5em;
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+	text-align: right;
+}
+
+.selectWrap {
+	flex: 1 0;
+	margin-right: 0.5em;
+}
+
+.selectWrap select {
+	margin-bottom: 0;
+}
+
+.compedGuestForm button {
+	display: block;
+}

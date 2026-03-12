@@ -1,0 +1,18 @@
+:root {
+	/* Colors */
+	--color-gray: #303032;
+	--color-light-gray: #4c4c4c;
+	--color-teal: #12a89d;
+	--color-green: #4dee6c;
+	--color-red: #e25740;
+	--color-black: #303032;
+	--color-white: #f2f2f2;
+
+	/* Typography */
+	--font-proxima: 'proxima-nova', Helvetica, Arial, sans-serif;
+	--font-league: 'league-gothic', Helvetica, Arial, sans-serif;
+	--font-brandon: 'brandon-grotesque', Helvetica, Arial, sans-serif;
+
+	/* Breakpoints */
+	--breakpoint-mobile: 600px;
+}

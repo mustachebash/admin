@@ -1,0 +1,12 @@
+.filters {
+	max-width: 65em;
+}
+
+.filters > div {
+	flex: 1 1 0;
+	margin-right: 0.5em;
+}
+
+.filters > div:last-child {
+	margin-right: 0;
+}

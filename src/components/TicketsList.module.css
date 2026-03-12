@@ -1,0 +1,12 @@
+.ticketsList {
+	padding: 0;
+	list-style: none;
+}
+
+.ticketsList li {
+	font-size: 12px;
+}
+
+.ticketStatusArchived {
+	color: var(--color-red);
+}

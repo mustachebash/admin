@@ -1,0 +1,55 @@
+.transactionsListItem {
+	display: flex;
+	justify-content: space-between;
+	padding: 0.625em; /* 10/16 */
+}
+
+.transactionsListItem.refunded {
+	background: color-mix(in srgb, var(--color-red) 40%, transparent) !important;
+}
+
+.transactionsListItem.transferee {
+	margin-left: 3em;
+}
+
+.transactionsListItem:nth-child(even) {
+	background: var(--color-light-gray);
+}
+
+.transactionsListItem p {
+	margin: 0;
+}
+
+.transactionsListItem > div {
+	flex: 1 1 0;
+}
+
+.transactionsListItem ul {
+	list-style: none;
+	padding: 0;
+}
+
+.amount {
+	flex: 0 0 5.25em !important; /* 100/16 */
+}
+
+.amount p {
+	text-align: right;
+	margin-right: 2em;
+}
+
+@media (max-width: 600px) {
+	.amount {
+		display: none;
+	}
+}
+
+.products {
+	font-size: 0.75em; /* 12/16 */
+}
+
+.date {
+	@media (max-width: 600px) {
+		display: none;
+	}
+}
