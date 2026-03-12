@@ -34,7 +34,8 @@ FROM build-deps AS build
 RUN --mount=type=cache,target=/root/.npm \
 	--mount=type=bind,source=tsconfig.json,target=tsconfig.json \
 	--mount=type=bind,source=tsconfig.node.json,target=tsconfig.node.json \
-	# --mount=type=bind,source=types.d.ts,target=types.d.ts \
+	--mount=type=bind,source=index.html,target=index.html \
+	--mount=type=bind,source=.env.production,target=.env.production \
 	--mount=type=bind,source=vite.config.ts,target=vite.config.ts \
 	--mount=type=bind,source=src,target=src \
 	npm run build
