@@ -1,0 +1,77 @@
+.status {
+	box-sizing: border-box;
+	border: 2px solid var(--color-white);
+	padding-top: 8em;
+	height: 400px;
+	background: var(--color-white);
+}
+
+.statusText {
+	text-align: center;
+	font-size: 1.5em; /* 24/16 */
+	font-weight: 700;
+	text-transform: uppercase;
+	color: var(--color-gray);
+}
+
+.status.inputting {
+	background: var(--color-light-gray);
+}
+
+.status.inputting .statusText {
+	color: var(--color-white);
+}
+
+.status.success {
+	background: var(--color-green);
+}
+
+.status.success .statusText {
+	color: var(--color-white);
+}
+
+.status.success.vip {
+	background: var(--color-teal);
+}
+
+.status.success.vip .statusText {
+	color: var(--color-green);
+}
+
+.status.error {
+	background: var(--color-red);
+}
+
+.status.error .statusText {
+	color: var(--color-white);
+}
+
+.cameraScan {
+	margin: 3em auto;
+	position: relative;
+	height: 300px;
+	width: 300px;
+	border: 3px dashed color-mix(in srgb, var(--color-white) 40%, transparent);
+	border-radius: 8px;
+}
+
+.scanText {
+	z-index: 99999;
+	color: color-mix(in srgb, var(--color-white) 40%, transparent);
+	text-transform: uppercase;
+	font-weight: 700;
+	margin: 0;
+	padding: 0;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	text-align: center;
+	transform: translate(-50%, -50%);
+}
+
+.scannerMount {
+	height: 100%;
+	width: 100%;
+	border-radius: 8px;
+	overflow: hidden;
+}

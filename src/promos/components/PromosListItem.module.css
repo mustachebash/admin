@@ -1,0 +1,50 @@
+.promosListItem {
+	padding: 0.625em; /* 10/16 */
+	display: flex;
+	justify-content: space-between;
+}
+
+.promosListItem:nth-child(even) {
+	background: var(--color-light-gray);
+}
+
+.promosListItem p {
+	margin: 0;
+}
+
+.promosListItem > div {
+	flex: 1 1 0;
+}
+
+.date {
+	@media (max-width: 600px) {
+		display: none;
+	}
+}
+
+.status {
+	flex: 0 1 115px !important;
+}
+
+.status span.checked {
+	background: var(--color-white);
+	color: var(--color-black);
+}
+
+.link {
+	flex: 0 1 115px !important;
+}
+
+.editPromo {
+	flex: 0 1 30px !important;
+}
+
+.editPromo p {
+	text-align: right;
+}
+
+@media (max-width: 600px) {
+	.editPromo {
+		display: none;
+	}
+}

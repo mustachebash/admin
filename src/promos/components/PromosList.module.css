@@ -1,0 +1,89 @@
+.promosList {
+	margin-top: 0;
+	margin-bottom: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.tableHeader {
+	background: var(--color-white);
+	padding: 10px;
+	cursor: default;
+	display: flex;
+	justify-content: space-between;
+}
+
+.tableHeader p {
+	margin: 0;
+}
+
+.tableHeader > div {
+	flex: 1 1 0;
+}
+
+.date {
+	@media (max-width: 600px) {
+		display: none;
+	}
+}
+
+.status {
+	flex: 0 1 115px !important;
+}
+
+.status span.checked {
+	background: var(--color-white);
+	color: var(--color-black);
+}
+
+.link {
+	flex: 0 1 115px !important;
+}
+
+.editPromo {
+	flex: 0 1 30px !important;
+}
+
+.editPromo p {
+	text-align: right;
+}
+
+@media (max-width: 600px) {
+	.editPromo {
+		display: none;
+	}
+}
+
+.tableHeader h5 {
+	position: relative;
+	padding: 0;
+	margin: 0;
+	user-select: none;
+	color: var(--color-gray);
+}
+
+.tableHeader h5.sortable {
+	cursor: pointer;
+}
+
+.tableHeader h5.asc:after,
+.tableHeader h5.desc:after {
+	content: '';
+	position: relative;
+	display: inline-block;
+	width: 0;
+	height: 0;
+	border: 4px solid transparent;
+	margin-left: 5px;
+	margin-right: -13px; /* Makes this essentially take up no space */
+}
+
+.tableHeader h5.sorted.asc:after {
+	top: -6px;
+	border-bottom-color: var(--color-black);
+}
+
+.tableHeader h5.sorted.desc:after {
+	top: -2px;
+	border-top-color: var(--color-black);
+}

@@ -1,0 +1,9 @@
+.flexRow {
+  display: flex;
+}
+
+@media (max-width: 600px) {
+  .flexRow:not(.noMobileStack) {
+    flex-direction: column;
+  }
+}

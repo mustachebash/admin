@@ -1,0 +1,41 @@
+.guest h2 {
+	border-bottom: none;
+	margin-bottom: 1em;
+}
+
+.guest h2 span {
+	border-bottom: 2px solid var(--color-white);
+}
+
+.guest h2 span.vip {
+	color: var(--color-green);
+}
+
+.flexRow {
+	display: flex;
+	justify-content: space-between;
+}
+
+.flexItem {
+	flex: 1 1 50%;
+}
+
+.guest h3 {
+	margin: 0.25em 0;
+}
+
+.guest h3 span {
+	color: color-mix(in srgb, var(--color-white) 40%, transparent);
+}
+
+.guest h3 a {
+	font-size: 0.75em;
+}
+
+.guest h3 fieldset {
+	border: 0;
+}
+
+.guest h4 {
+	margin: 1em 0 0.75em;
+}

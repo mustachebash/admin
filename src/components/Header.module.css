@@ -1,0 +1,147 @@
+.header {
+	padding: 1.5625em 0 0; /* 25/16 */
+	margin-bottom: 2em;
+}
+
+@media (min-width: 600px) {
+	.header {
+		margin-bottom: 4em;
+	}
+}
+
+.flexRow {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.logo {
+	width: 75px;
+}
+
+@media (min-width: 800px) {
+	.logo {
+		width: 118px;
+		height: 50px;
+	}
+}
+
+.menuIcon {
+	position: absolute;
+	width: 30px;
+	top: 37px;
+	right: 20px;
+}
+
+.menuIcon div {
+	height: 4px;
+	background: var(--color-white);
+	margin-bottom: 4px;
+	transition: all 300ms;
+}
+
+.menuIcon div:last-child {
+	margin-bottom: 0;
+}
+
+@media (min-width: 600px) {
+	.menuIcon {
+		display: none;
+	}
+}
+
+.menuIcon.open div {
+	opacity: 0;
+}
+
+.menuIcon.open div:first-child,
+.menuIcon.open div:last-child {
+	opacity: 1;
+}
+
+.menuIcon.open div:first-child {
+	transform: rotate(45deg) translate3d(5px, 6px, 0);
+}
+
+.menuIcon.open div:last-child {
+	transform: rotate(-45deg) translate3d(5px, -6px, 0);
+}
+
+.menuIcon.open + .nav {
+	max-height: 1000px;
+}
+
+.nav {
+	max-height: 0;
+	transition: max-height 300ms;
+	overflow: hidden;
+}
+
+@media (min-width: 600px) {
+	.nav {
+		max-height: 1000px;
+		padding-top: 5px;
+	}
+}
+
+.nav ul {
+	list-style: none;
+	text-align: center;
+	margin: 0;
+	padding: 1.5625em 0 0.3125em; /* 25/16 */ /* 5/16 */
+}
+
+@media (min-width: 600px) {
+	.nav ul {
+		padding: 0;
+		background: transparent;
+		display: flex;
+	}
+}
+
+.nav li {
+	padding: 0;
+	margin: 0 0.625rem 1.25rem; /* 10/16 */ /* 20/16 */
+	text-transform: uppercase;
+	font: 1.875em var(--font-league); /* 30/16 */
+	letter-spacing: 2px;
+	text-align: center;
+}
+
+.nav li a {
+	text-decoration: none;
+	color: var(--color-white);
+}
+
+.nav li a:global(.active) {
+	border-bottom: 2px solid var(--color-white);
+}
+
+.nav li button {
+	width: auto;
+	padding-right: 2em;
+	padding-left: 2em;
+	position: relative;
+	top: -5px;
+}
+
+@media (min-width: 600px) {
+	.nav li {
+		margin-bottom: 0;
+		font-size: 1.5em; /* 24/16 */
+	}
+}
+
+@media (min-width: 960px) {
+	.nav li {
+		margin: 0 1.25rem; /* 20/16 */
+	}
+
+	.nav li:last-child {
+		margin-right: 0;
+	}
+}
+
+.nav.open {
+	max-height: 31.25rem; /* 500/16 */
+}
