@@ -2,28 +2,50 @@
 	margin-bottom: 4em;
 }
 
-.createPromoForm input {
-	margin-bottom: 0;
-	margin-right: 0.5em;
+.field {
+	display: flex;
+	flex-direction: column;
 	flex: 1 0.5;
+	margin-right: 0.5em;
+	position: relative;
 }
 
-.createPromoForm input[name='price'] {
-	flex: 0 0 5em;
+.field label {
+	font-size: 0.7em;
+	font-weight: 700;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	opacity: 0.6;
+	margin-bottom: 0.3em;
+}
+
+.field input,
+.field select {
+	margin-bottom: 0;
+	flex: 1;
+}
+
+.fieldError {
+	position: absolute;
+	bottom: -1.4em;
+	left: 0;
+	font-size: 0.7em;
+	color: var(--color-red);
+}
+
+.fieldNarrow {
+	flex: 0 0 5.5em;
+}
+
+.fieldNarrow input {
 	padding-left: 0.5em;
 	padding-right: 0.5em;
 	text-align: right;
 }
 
-.selectWrap {
-	flex: 1 0;
-	margin-right: 0.5em;
-}
-
-.selectWrap select {
-	margin-bottom: 0;
-}
-
 .createPromoForm button {
-	display: block;
+	align-self: flex-end;
+	flex-shrink: 0;
+	height: 2.5rem;
+	box-sizing: border-box;
 }

@@ -2,13 +2,10 @@ import styles from './GuestsTable.module.css';
 
 import { useState, useEffect, useCallback, useContext, memo } from 'react';
 import FlexRow from '@/components/FlexRow';
-import UserContext from '@/UserContext';
 import EventContext from '@/EventContext';
-import { checkScope } from '@/utils';
 import { EVENT_2022_ID, EVENT_2020_ID } from '@/config';
 import apiClient from '@/utils/apiClient';
 import GuestsList from './GuestsList';
-import CompedGuestForm from '../components/CompedGuestForm';
 import Search from '@/components/Search';
 import Toggle from '@/components/Toggle';
 import EventSelector from '@/components/EventSelector';
@@ -40,8 +37,7 @@ const GuestsTable = () => {
 		[limit, setLimit] = useState(100),
 		[excludeCheckedIn, setExcludeCheckedIn] = useState(false);
 
-	const { event } = useContext(EventContext),
-		{ user } = useContext(UserContext);
+	const { event } = useContext(EventContext);
 
 	useEffect(() => {
 		if (event) {
@@ -106,8 +102,6 @@ const GuestsTable = () => {
 
 	return (
 		<div className={styles.guestsTable}>
-			{checkScope(user!.role, 'write') && <CompedGuestForm onAdd={guest => setGuests([guest, ...guests])} />}
-
 			<FlexRow className={styles.filters}>
 				<div>
 					<Search handleQueryChange={setFilter} />

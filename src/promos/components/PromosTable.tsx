@@ -34,7 +34,8 @@ const PromosTable = () => {
 		[products, setProducts] = useState<any[]>([]),
 		[users, setUsers] = useState<any[]>(),
 		[filter, setFilter] = useState(''),
-		[sort, setSort] = useState({ sortBy: 'recipient', sortOrder: 1 }); // asc
+		[sort, setSort] = useState({ sortBy: 'date', sortOrder: 1 }), // asc
+		[activeTab, setActiveTab] = useState<'single-use' | 'coupon'>('single-use');
 
 	const { event } = useContext(EventContext);
 
@@ -91,9 +92,19 @@ const PromosTable = () => {
 		filterRegExp = new RegExp(filter, 'i');
 
 	let filteredPromos = promos.filter((p: any) => {
+		if (p.type !== activeTab) return false;
 		if (!filter) return true;
 
-		return filterRegExp.test(p.recipientName) || filterRegExp.test(p.email);
+		const metaValues = Object.values(p.meta ?? {}).map((v: any) =>
+			typeof v === 'object' ? JSON.stringify(v) : String(v)
+		);
+
+		return (
+			filterRegExp.test(p.recipientName) ||
+			filterRegExp.test(p.email) ||
+			filterRegExp.test(p.code) ||
+			metaValues.some(v => filterRegExp.test(v))
+		);
 	});
 
 	filteredPromos.sort(getPromoComparator(sort));
@@ -101,10 +112,13 @@ const PromosTable = () => {
 	// No one needs to see more than 100 promos at a time
 	filteredPromos = filteredPromos.slice(0, 100);
 
+	function switchTab(tab: 'single-use' | 'coupon') {
+		setActiveTab(tab);
+		setSort({ sortBy: 'date', sortOrder: 1 });
+	}
+
 	return (
 		<div className={styles.promosTable}>
-			<CreatePromoForm onAdd={promo => setPromos([promo, ...promos])} />
-
 			<FlexRow className={styles.filters}>
 				<div>
 					<Search handleQueryChange={setFilter} />
@@ -114,13 +128,24 @@ const PromosTable = () => {
 				</div>
 			</FlexRow>
 
+			<div className={styles.tabs}>
+				<button className={`${styles.tab}${activeTab === 'single-use' ? ` ${styles.activeTab}` : ''}`} onClick={() => switchTab('single-use')}>
+					Single-Use
+				</button>
+				<button className={`${styles.tab}${activeTab === 'coupon' ? ` ${styles.activeTab}` : ''}`} onClick={() => switchTab('coupon')}>
+					Coupons
+				</button>
+			</div>
+
+			{activeTab === 'single-use' && <CreatePromoForm onAdd={promo => setPromos([promo, ...promos])} />}
+
 			<p>
-				Showing {filteredPromos.length} of {promos.length} total
+				Showing {filteredPromos.length} of {promos.filter((p: any) => p.type === activeTab).length} total
 			</p>
 			{event && (
 				<PromosList
+					type={activeTab}
 					promos={filteredPromos}
-					event={event}
 					products={filteredProducts}
 					users={users ?? []}
 					sortPromos={sortPromos}

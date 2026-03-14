@@ -72,6 +72,7 @@ const OrdersTable = () => {
 	const filterRegExp = new RegExp(filter, 'i');
 
 	let filteredOrders = orders.filter((o: any) => {
+		if (o.status === 'comped') return false;
 		if (!filter) return true;
 
 		return filterRegExp.test(o.customerFirstName + ' ' + o.customerLastName) || filterRegExp.test(o.id) || filterRegExp.test(o.customerEmail);
