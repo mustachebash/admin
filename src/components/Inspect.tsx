@@ -7,16 +7,19 @@ import apiClient from '@/utils/apiClient';
 import QrScanner from './QrScanner';
 
 interface InspectGuest {
+	id: string;
 	firstName: string;
 	lastName: string;
 	created: string;
-	createdReason: string;
+	createdReason?: string;
 	status: string;
 	orderId: string;
-	meta: { comment?: string };
 	admissionTier: string;
-	checkInTime: string;
+	checkInTime: string | null;
+	eventId: string;
 	eventName: string;
+	eventDate: string;
+	eventStatus: string;
 }
 
 const CheckIn = () => {
@@ -46,7 +49,7 @@ const CheckIn = () => {
 			});
 	}, []);
 
-	const { firstName, lastName, created, createdReason, status, orderId, meta, admissionTier, checkInTime, eventName } = guest || ({} as InspectGuest);
+	const { firstName, lastName, created, createdReason, status, orderId, admissionTier, checkInTime, eventName } = guest || ({} as InspectGuest);
 
 	return (
 		<div className={styles.inspect}>
@@ -80,10 +83,7 @@ const CheckIn = () => {
 						<span>Event:</span> {eventName}
 					</h3>
 					<h3>
-						<span>Status:</span> {status === 'checked_in' ? <>Checked In {format(new Date(checkInTime), 'M/dd/yy - HH:mm')}</> : status}
-					</h3>
-					<h3>
-						<span>Notes:</span> {meta?.comment || ' n/a '}
+						<span>Status:</span> {status === 'checked_in' && checkInTime ? <>Checked In {format(new Date(checkInTime), 'M/dd/yy - HH:mm')}</> : status}
 					</h3>
 
 					<h3>
