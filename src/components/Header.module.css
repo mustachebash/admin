@@ -9,7 +9,19 @@
 	}
 }
 
-.flexRow {
+.headerInner {
+	/* mobile: block — logoRow stacks above nav */
+}
+
+@media (min-width: 600px) {
+	.headerInner {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+}
+
+.logoRow {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -27,10 +39,9 @@
 }
 
 .menuIcon {
-	position: absolute;
 	width: 30px;
-	top: 37px;
-	right: 20px;
+	cursor: pointer;
+	flex-shrink: 0;
 }
 
 .menuIcon div {
@@ -65,10 +76,6 @@
 
 .menuIcon.open div:last-child {
 	transform: rotate(-45deg) translate3d(5px, -6px, 0);
-}
-
-.menuIcon.open + .nav {
-	max-height: 1000px;
 }
 
 .nav {
