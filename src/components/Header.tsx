@@ -91,33 +91,47 @@ const Header = () => {
 						<ul>
 							{user.role !== 'doorman' && (
 								<li>
-									<NavLink to="/" onClick={closeNav}>Dashboard</NavLink>
+									<NavLink to="/" onClick={closeNav}>
+										Dashboard
+									</NavLink>
 								</li>
 							)}
 							<li>
-								<NavLink to="/check-in" onClick={closeNav}>Check-in</NavLink>
+								<NavLink to="/check-in" onClick={closeNav}>
+									Check-in
+								</NavLink>
 							</li>
 							<li>
-								<NavLink to="/guests" onClick={closeNav}>Guests</NavLink>
+								<NavLink to="/guests" onClick={closeNav}>
+									Guests
+								</NavLink>
 							</li>
 
 							{checkScope(user.role, 'write') && (
 								<>
 									<li>
-										<NavLink to="/orders" onClick={closeNav}>Orders</NavLink>
+										<NavLink to="/orders" onClick={closeNav}>
+											Orders
+										</NavLink>
 									</li>
 									<li>
-										<NavLink to="/promos" onClick={closeNav}>Promos</NavLink>
+										<NavLink to="/promos" onClick={closeNav}>
+											Promos
+										</NavLink>
 									</li>
 								</>
 							)}
 							{checkScope(user.role, 'admin') && (
 								<>
 									<li>
-										<NavLink to="/inspect" onClick={closeNav}>Inspect</NavLink>
+										<NavLink to="/inspect" onClick={closeNav}>
+											Inspect
+										</NavLink>
 									</li>
 									<li>
-										<NavLink to="/settings" onClick={closeNav}>Settings</NavLink>
+										<NavLink to="/settings" onClick={closeNav}>
+											Settings
+										</NavLink>
 									</li>
 								</>
 							)}

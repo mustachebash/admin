@@ -15,9 +15,7 @@ interface PromosListItemProps {
 const PromosListItem = ({ type, promo, createdByName, product, disablePromo }: PromosListItemProps) => (
 	<li className={`${styles.promosListItem}${['claimed', 'disabled'].includes(promo.status) ? ` ${styles.claimed}` : ''}`}>
 		<div className={styles.status}>
-			<span title={promo.status === 'claimed' ? format(new Date(promo.updated), 'MMM do, h:mma') : ''}>
-				{promo.status}
-			</span>
+			<span title={promo.status === 'claimed' ? format(new Date(promo.updated), 'MMM do, h:mma') : ''}>{promo.status}</span>
 		</div>
 		{type === 'single-use' && (
 			<div className="recipient">
@@ -35,7 +33,9 @@ const PromosListItem = ({ type, promo, createdByName, product, disablePromo }: P
 		{type === 'coupon' && (
 			<div className={`meta ${styles.meta}`}>
 				{Object.entries(promo.meta ?? {}).map(([k, v]) => (
-					<p key={k}>{k}: {typeof v === 'object' ? JSON.stringify(v) : String(v)}</p>
+					<p key={k}>
+						{k}: {typeof v === 'object' ? JSON.stringify(v) : String(v)}
+					</p>
 				))}
 			</div>
 		)}

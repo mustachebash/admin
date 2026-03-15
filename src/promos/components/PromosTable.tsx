@@ -95,16 +95,9 @@ const PromosTable = () => {
 		if (p.type !== activeTab) return false;
 		if (!filter) return true;
 
-		const metaValues = Object.values(p.meta ?? {}).map((v: any) =>
-			typeof v === 'object' ? JSON.stringify(v) : String(v)
-		);
+		const metaValues = Object.values(p.meta ?? {}).map((v: any) => (typeof v === 'object' ? JSON.stringify(v) : String(v)));
 
-		return (
-			filterRegExp.test(p.recipientName) ||
-			filterRegExp.test(p.email) ||
-			filterRegExp.test(p.code) ||
-			metaValues.some(v => filterRegExp.test(v))
-		);
+		return filterRegExp.test(p.recipientName) || filterRegExp.test(p.email) || filterRegExp.test(p.code) || metaValues.some(v => filterRegExp.test(v));
 	});
 
 	filteredPromos.sort(getPromoComparator(sort));
