@@ -22,7 +22,8 @@
 .field input,
 .field select {
 	margin-bottom: 0;
-	flex: 1;
+	flex: none;
+	height: 2.5em;
 }
 
 .fieldError {
@@ -43,9 +44,46 @@
 	text-align: right;
 }
 
+.fieldRow {
+	display: flex;
+	flex-direction: row;
+	gap: 0.5em;
+	flex-shrink: 0;
+	margin-right: 0.5em;
+}
+
+.fieldRow .field {
+	margin-right: 0;
+}
+
 .createPromoForm button {
 	align-self: flex-end;
 	flex-shrink: 0;
-	height: 2.5rem;
+	height: 2.5em;
 	box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+	.field {
+		margin-right: 0;
+		margin-bottom: 0.75em;
+	}
+
+	.fieldRow {
+		margin-bottom: 0.75em;
+	}
+
+	.fieldRow .field {
+		flex: 1;
+		margin-bottom: 0;
+	}
+
+	.fieldNarrow input {
+		text-align: left;
+	}
+
+	.createPromoForm button {
+		align-self: stretch;
+		width: 100%;
+	}
 }

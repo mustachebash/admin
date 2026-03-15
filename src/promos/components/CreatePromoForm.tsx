@@ -106,25 +106,31 @@ export default function CreatePromoForm({ onAdd = () => {} }: CreatePromoFormPro
 					/>
 					<span className={styles.fieldError}>{emailError ? 'Email is required' : ''}</span>
 				</div>
-				<div className={`${styles.field} ${styles.fieldNarrow}`}>
-					<label>Qty</label>
-					<input
-						type="text"
-						name="quantity"
-						placeholder="1"
-						value={quantity}
-						onChange={e => setQuantity(e.target.value.replace(/\D/g, ''))}
-					/>
-				</div>
-				<div className={`${styles.field} ${styles.fieldNarrow}`}>
-					<label>Price</label>
-					<input
-						type="text"
-						name="price"
-						placeholder="80"
-						value={price}
-						onChange={e => setPrice(e.target.value.replace(/\D/g, ''))}
-					/>
+				<div className={styles.fieldRow}>
+					<div className={`${styles.field} ${styles.fieldNarrow}`}>
+						<label>Qty</label>
+						<input
+							type="text"
+							inputMode="numeric"
+							pattern="[0-9]*"
+							name="quantity"
+							placeholder="1"
+							value={quantity}
+							onChange={e => setQuantity(e.target.value.replace(/\D/g, ''))}
+						/>
+					</div>
+					<div className={`${styles.field} ${styles.fieldNarrow}`}>
+						<label>Price</label>
+						<input
+							type="text"
+							inputMode="numeric"
+							pattern="[0-9]*"
+							name="price"
+							placeholder="80"
+							value={price}
+							onChange={e => setPrice(e.target.value.replace(/\D/g, ''))}
+						/>
+					</div>
 				</div>
 				<div className={styles.field}>
 					<label>Product</label>
