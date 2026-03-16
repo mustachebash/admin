@@ -129,13 +129,6 @@ const Dashboard = () => {
 						</div>
 					)}
 
-					{checkScope(user.role, 'write') && (
-						<div className="comped">
-							<h5>Comped Guests</h5>
-							<p>{formatThousands(totalCompedGuests + (add2020Stats ? totalCompedGuests2020 : 0))}</p>
-						</div>
-					)}
-
 					<div className="vip">
 						<h5>VIP Guests</h5>
 						<p>{formatThousands(totalVipGuests + (add2020Stats ? totalVipGuests2020 : 0))}</p>
@@ -176,18 +169,6 @@ const Dashboard = () => {
 										).toFixed(2)}
 									</p>
 								</div>
-							</FlexRow>
-							<FlexRow className={styles.stats}>
-								<div className="total-ticket-sales">
-									<h5 data-tooltip="All tickets purchased (includes promos)">Total Ticket Sales</h5>
-									<p>{formatThousands(totalPaidGuests + (add2020Stats ? totalPaidGuests2020 : 0))}</p>
-								</div>
-								{(add2020Stats || event.id !== EVENT_2022_ID) && !!eventBudget && (
-									<div className={styles.avgCost}>
-										<h5 data-tooltip="Event cost per paid guest (based on budget numbers, excludes comps)">Cost per Paid Guest</h5>
-										<p>${(eventBudget / (totalGuests + (add2020Stats ? totalGuests2020 : 0) - (totalCompedGuests + (add2020Stats ? totalCompedGuests2020 : 0)))).toFixed(2)}</p>
-									</div>
-								)}
 							</FlexRow>
 							<FlexRow className={styles.stats}>
 								{salesTiers?.map(t => (

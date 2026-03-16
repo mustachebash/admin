@@ -114,7 +114,7 @@ const Guest = ({ id }: GuestProps) => {
 
 					<h3>
 						{checkScope(role, 'write') ? (
-							createdReason === 'purchase' ? (
+							orderId ? (
 								<>
 									<span>Confirmation Id:</span> <Link to={`/orders/${orderId}`}>{orderId}</Link>
 								</>
