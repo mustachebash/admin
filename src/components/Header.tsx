@@ -6,12 +6,6 @@ import UserContext from '@/UserContext';
 import { checkScope } from '@/utils';
 import Container from './Container';
 
-function logOut() {
-	window.localStorage.removeItem('accessToken');
-	window.localStorage.removeItem('refreshToken');
-	window.location.assign('/');
-}
-
 const Header = () => {
 	const { user } = useContext(UserContext);
 	const [navOpen, setNavOpen] = useState(false);
@@ -136,11 +130,6 @@ const Header = () => {
 								</>
 							)}
 
-							<li>
-								<button className="white" onClick={logOut} title={`Logged in as ${user.name}`}>
-									Log Out
-								</button>
-							</li>
 						</ul>
 					</nav>
 					{user.role === 'doorman' && (

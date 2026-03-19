@@ -6,6 +6,7 @@ import UserContext, { UserProvider } from './UserContext';
 import { EventProvider } from './EventContext';
 import ErrorBoundary from './ErrorBoundary';
 import Header from './components/Header';
+import Footer from './components/Footer';
 import LoginView from './views/LoginView';
 import DashboardView from './views/DashboardView';
 import SettingsView from './views/SettingsView';
@@ -64,9 +65,7 @@ const App = () => (
 						</Route>
 					</Routes>
 
-					<footer>
-						<p className="copyright">&copy;2024 Mustache Bash. All Rights Reserved.</p>
-					</footer>
+					<Footer />
 				</ErrorBoundary>
 			</Router>
 		</UserProvider>
