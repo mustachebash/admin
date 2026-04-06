@@ -15,7 +15,7 @@ const EventContext = createContext<EventContextValue>({
 export default EventContext;
 
 export function EventProvider({ children }: { children: React.ReactNode }) {
-	const [eventId, setEventId] = useState('d716bc1b-4fae-45e1-be80-b359da47a1ea'),
+	const [eventId, setEventId] = useState('86c2d349-1131-4f51-a750-34c3a2446897'),
 		[event, setEvent] = useState<Event | null>(null);
 
 	useEffect(() => {
